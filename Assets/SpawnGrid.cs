@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class SpawnGrid : MonoBehaviour
 {
-    public int seed;
-    public List<GameObject> lowLand, medLand, highLand, Special;
+    public int perlinSeed;
+    public List<GameObject> outerWall, lowLand, medLand, highLand, Special;
     public int rows, cols;
     public Node[,] gridNodes;
 
@@ -18,13 +18,18 @@ public class SpawnGrid : MonoBehaviour
             for (int j = 0; j < rows; j++)
             {
                 float perlinScale = 8f;
-                float xCord = seed + (float)i/(float)cols;
-                float yCord = seed + (float)j/(float)rows;
-                float perlinHeight = Mathf.PerlinNoise(xCord * perlinScale, yCord * perlinScale);
+                float xCord = (float)i/(float)cols;
+                float yCord = (float)j/(float)rows;
+                float perlinHeight = PerlinNoise(xCord, yCord, perlinScale, perlinSeed);
                 
                 GameObject gridCell = null;
 
-                if(Random.value >= 0.99f)
+                bool isWall = (i == 0 || j == 0 || i == cols-1 || j == rows-1);
+
+                if(isWall)
+                    gridCell = Instantiate(outerWall[Random.Range(0, outerWall.Count)]) as GameObject;
+
+                else if(Random.value >= 0.99f)
                     gridCell = Instantiate(Special[Random.Range(0, Special.Count)]) as GameObject;
 
                 else if(perlinHeight >= 0.8f)
@@ -39,14 +44,26 @@ public class SpawnGrid : MonoBehaviour
 
                 gridCell.name = $"[{i}, {j}]";
                 gridCell.transform.parent = transform;
-        
-                gridCell.transform.localPosition = new Vector3(i, perlinHeight * 2, j + (i%2*.5f));
+                gridCell.transform.localPosition = new Vector3(i * 0.85f, 0, j + (i%2*.5f));
                 gridCell.transform.Rotate(Vector3.up, 30);
-                //Vector3 scale = new Vector3(0.9f, perlinHeight * 16, 0.9f);
-                //gridCell.transform.localScale = scale;
 
-                //Color perlinColor = new Color(scale.y / 3f, 1, scale.y / 5f);
-                //gridCell.GetComponent<Renderer>().material.color = perlinColor;
+                Vector3 scale = isWall ? new Vector3(1f, 16f, 1f) : new Vector3(1f, (int)(perlinHeight * 8f) + 1, 1f);
+
+                gridCell.transform.localScale = scale;
+
+                for(int k = 0; k < gridCell.transform.childCount; k++)
+                {
+                    Transform child = gridCell.transform.GetChild(k);
+                    child.gameObject.SetActive(false);
+                    
+                    // Vector3 thisCellGlobalScale = gridCell.transform.lossyScale;
+                    // thisCellGlobalScale.x = 1f / thisCellGlobalScale.x;
+                    // thisCellGlobalScale.y = 1f / thisCellGlobalScale.y;
+                    // thisCellGlobalScale.z = 1f / thisCellGlobalScale.z;
+
+                    // child.localScale = thisCellGlobalScale;
+                    // child.localPosition = new Vector3(0, 0.1f + (child.localScale.y / 10f), 0);
+                }
 
                 gridNodes[i, j] = (gridCell.AddComponent<Node>());
                 
@@ -71,12 +88,6 @@ public class SpawnGrid : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     bool ClearBoard()
     {
         if(gridNodes == null || gridNodes[rows-1, cols-1] == null)
@@ -98,5 +109,17 @@ public class SpawnGrid : MonoBehaviour
     {
         if(ClearBoard())
             StartCoroutine(Start());
+    }
+
+
+    float PerlinNoise(float xCord, float yCord, float scale, long seed = 0, float maxValue = 1f)
+    {   
+        xCord += seed;
+        yCord += seed;
+
+        xCord *= scale;
+        yCord *= scale;
+
+        return Mathf.Clamp01(Mathf.PerlinNoise(xCord, yCord)) * maxValue;
     }
 }

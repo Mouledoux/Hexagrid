@@ -1,6 +1,6 @@
-﻿using System.Collections;
+﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Node : MonoBehaviour, IPointerClickHandler, IPointerUpHandler
@@ -25,16 +25,30 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerUpHandler
         if(!neighbors.Contains(newNeighbor))
             neighbors.Add(newNeighbor);
 
-        if(!newNeighbor.GetNegibors().Contains(this))
+        if(!newNeighbor.GetNeighbors().Contains(this))
             newNeighbor.AddNeighbor(this);
 
         return 0;
     }
 
-    public List<Node> GetNegibors()
+    public List<Node> GetNeighbors()
     {
         List<Node> myNeighbors = neighbors;
         return myNeighbors;
+    }
+
+
+    public void RemoveNeighbor(Node neighbor)
+    {
+        if(neighbors.Contains(neighbor))
+            neighbors.Remove(neighbor);
+    }
+    public void ClearNeighbors()
+    {
+        foreach(Node n in neighbors)
+            n.RemoveNeighbor(this);
+        
+        neighbors.Clear();
     }
 
     public IEnumerator PropigateOut(Node root, List<Node> affected, int maxProp)
