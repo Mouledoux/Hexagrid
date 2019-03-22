@@ -20,26 +20,31 @@ public class SpawnGrid : MonoBehaviour
                 float perlinScale = 8f;
                 float xCord = (float)i/(float)cols;
                 float yCord = (float)j/(float)rows;
-                float perlinHeight = PerlinNoise(xCord, yCord, perlinScale, perlinSeed);
+
+                float perlinHeight = GetPerlinNoiseValue(xCord, yCord, perlinScale, perlinSeed);
                 
+
                 GameObject gridCell = null;
 
                 bool isWall = (i == 0 || j == 0 || i == cols-1 || j == rows-1);
 
-                if(isWall)
-                    gridCell = Instantiate(outerWall[Random.Range(0, outerWall.Count)]) as GameObject;
+                float biomeScale = 8f;
+                int perlinFort = (int)GetPerlinNoiseValue(xCord, yCord, 32f, perlinSeed, 10);
 
-                else if(Random.value >= 0.99f)
-                    gridCell = Instantiate(Special[Random.Range(0, Special.Count)]) as GameObject;
+                if(isWall)
+                    gridCell = Instantiate(outerWall[(int)GetPerlinNoiseValue(xCord, yCord, biomeScale, perlinSeed/2, outerWall.Count)]) as GameObject;
+
+                else if(perlinFort == 9)
+                    gridCell = Instantiate(Special[(int)GetPerlinNoiseValue(xCord, yCord, biomeScale, perlinSeed/2, Special.Count)]) as GameObject;
 
                 else if(perlinHeight >= 0.8f)
-                    gridCell = Instantiate(highLand[Random.Range(0, highLand.Count)]) as GameObject;
+                    gridCell = Instantiate(highLand[(int)GetPerlinNoiseValue(xCord, yCord, biomeScale, perlinSeed/2, highLand.Count)]) as GameObject;
 
                 else  if(perlinHeight >= 0.4f)
-                    gridCell = Instantiate(medLand[Random.Range(0, medLand.Count)]) as GameObject;
+                    gridCell = Instantiate(medLand[(int)GetPerlinNoiseValue(xCord, yCord, biomeScale, perlinSeed/2, medLand.Count)]) as GameObject;
 
                 else
-                    gridCell = Instantiate(lowLand[Random.Range(0, lowLand.Count)]) as GameObject;
+                    gridCell = Instantiate(lowLand[(int)GetPerlinNoiseValue(xCord, yCord, biomeScale, perlinSeed/2, lowLand.Count)]) as GameObject;
 
 
                 gridCell.name = $"[{i}, {j}]";
@@ -47,22 +52,22 @@ public class SpawnGrid : MonoBehaviour
                 gridCell.transform.localPosition = new Vector3(i * 0.85f, 0, j + (i%2*.5f));
                 gridCell.transform.Rotate(Vector3.up, 30);
 
-                Vector3 scale = isWall ? new Vector3(1f, 16f, 1f) : new Vector3(1f, (int)(perlinHeight * 8f) + 1, 1f);
-
+                float height = (int)(perlinHeight * 8f) + 1;
+                Vector3 scale = isWall ? new Vector3(1f, 16f, 1f) : new Vector3(1f, height,  1f);
                 gridCell.transform.localScale = scale;
 
                 for(int k = 0; k < gridCell.transform.childCount; k++)
                 {
                     Transform child = gridCell.transform.GetChild(k);
                     child.gameObject.SetActive(false);
-                    
-                    // Vector3 thisCellGlobalScale = gridCell.transform.lossyScale;
-                    // thisCellGlobalScale.x = 1f / thisCellGlobalScale.x;
-                    // thisCellGlobalScale.y = 1f / thisCellGlobalScale.y;
-                    // thisCellGlobalScale.z = 1f / thisCellGlobalScale.z;
 
-                    // child.localScale = thisCellGlobalScale;
-                    // child.localPosition = new Vector3(0, 0.1f + (child.localScale.y / 10f), 0);
+                    Vector3 thisCellGlobalScale = gridCell.transform.lossyScale;
+                    thisCellGlobalScale.x = 1f / thisCellGlobalScale.x;
+                    thisCellGlobalScale.y = 1f / thisCellGlobalScale.y;
+                    thisCellGlobalScale.z = 1f / thisCellGlobalScale.z;
+
+                    child.localScale = thisCellGlobalScale;
+                    child.localPosition += Vector3.up * 0.16f;
                 }
 
                 gridNodes[i, j] = (gridCell.AddComponent<Node>());
@@ -78,14 +83,10 @@ public class SpawnGrid : MonoBehaviour
                     if(nextJ >= 0 && nextJ < rows)
                         gridNodes[i, j].AddNeighbor(gridNodes[i-1, nextJ]);
                 }
-                
-                //yield return null;
             }
             yield return null;
         }
-
         yield return null;
-        
     }
 
     bool ClearBoard()
@@ -112,7 +113,7 @@ public class SpawnGrid : MonoBehaviour
     }
 
 
-    float PerlinNoise(float xCord, float yCord, float scale, long seed = 0, float maxValue = 1f)
+    float GetPerlinNoiseValue(float xCord, float yCord, float scale, long seed = 0, float valueMod = 1f)
     {   
         xCord += seed;
         yCord += seed;
@@ -120,6 +121,6 @@ public class SpawnGrid : MonoBehaviour
         xCord *= scale;
         yCord *= scale;
 
-        return Mathf.Clamp01(Mathf.PerlinNoise(xCord, yCord)) * maxValue;
+        return Mathf.Clamp01(Mathf.PerlinNoise(xCord, yCord)) * valueMod;
     }
 }

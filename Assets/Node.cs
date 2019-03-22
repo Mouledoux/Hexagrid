@@ -5,50 +5,45 @@ using UnityEngine.EventSystems;
 
 public class Node : MonoBehaviour, IPointerClickHandler, IPointerUpHandler
 {
-    private List<Node> neighbors = new List<Node>();
+    private List<Node> _neighbors = new List<Node>();
+    private float _travelCost = 0f;
+    public float travelCost => _travelCost;
 
-    Vector3 originalPos;
-    private void Start()
-    {
-        originalPos = transform.localPosition;
-    }
-
-    private void Update()
-    {
-        //transform.localPosition = Vector3.Lerp(transform.localPosition, originalPos, Time.deltaTime);
-    }
     public int AddNeighbor(Node newNeighbor)
     {
         if(newNeighbor == null)
             return -1;
 
-        if(!neighbors.Contains(newNeighbor))
-            neighbors.Add(newNeighbor);
+        if(!_neighbors.Contains(newNeighbor))
+            _neighbors.Add(newNeighbor);
 
         if(!newNeighbor.GetNeighbors().Contains(this))
             newNeighbor.AddNeighbor(this);
 
         return 0;
     }
-
     public List<Node> GetNeighbors()
     {
-        List<Node> myNeighbors = neighbors;
+        List<Node> myNeighbors = _neighbors;
         return myNeighbors;
     }
-
-
-    public void RemoveNeighbor(Node neighbor)
+    public void RemoveNeighbor(Node oldNeighbor)
     {
-        if(neighbors.Contains(neighbor))
-            neighbors.Remove(neighbor);
+        if(_neighbors.Contains(oldNeighbor))
+            _neighbors.Remove(oldNeighbor);
     }
     public void ClearNeighbors()
     {
-        foreach(Node n in neighbors)
+        foreach(Node n in _neighbors)
             n.RemoveNeighbor(this);
         
-        neighbors.Clear();
+        _neighbors.Clear();
+    }
+
+
+    public float GetDistanceTo(Node goalNode)
+    {
+        return Vector3.Distance(transform.position, goalNode.transform.position);
     }
 
     public IEnumerator PropigateOut(Node root, List<Node> affected, int maxProp)
@@ -62,7 +57,7 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerUpHandler
         else if(affected.Count >= maxProp)
             yield break;
 
-        foreach(Node n in root.neighbors)
+        foreach(Node n in root._neighbors)
         {
             if(!affected.Contains(n))
             {
@@ -76,19 +71,17 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerUpHandler
             //yield return new WaitForEndOfFrame();
         }
 
-        yield return null;
+        yield return new WaitForEndOfFrame();
 
-        foreach(Node n in root.neighbors)
-            foreach(Node o in n.neighbors)
+        foreach(Node n in root._neighbors)
+            foreach(Node o in n._neighbors)
                 if(!affected.Contains(o))
                     n.StartCoroutine(PropigateOut(n, affected, maxProp));
     }
-
     public void OnPointerClick(PointerEventData eventData)
     {
-        //StartCoroutine(PropigateOut(this, null, 50));
+        //StartCoroutine(PropigateOut(this, null, 64));
     }
-
     public void OnPointerUp(PointerEventData eventData)
     {
         //StartCoroutine(PropigateOut(this, null, 100));
