@@ -1,24 +1,19 @@
-﻿using System.Collections;
+﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
-public class Node<T>
+public class Node : MonoBehaviour
 {
-    private T _value;
-    public T value => _value;
-
-    private List<Node<T>> _neighbors = new List<Node<T>>();
+    private List<Node> _neighbors = new List<Node>();
 
 
-
-
-
-    public Node<T>[] GetNeighbors()
+    public Node[] GetNeighbors()
     {
-        Node<T>[] myNeighbors = _neighbors.ToArray();
+        Node[] myNeighbors = _neighbors.ToArray();
         return myNeighbors;
     }
 
-    public int AddNeighbor(Node<T> newNeighbor)
+    public int AddNeighbor(Node newNeighbor)
     {
         if(newNeighbor == null)
             return -1;
@@ -33,10 +28,9 @@ public class Node<T>
     }
 
 
-
     public int ClearNeighbors()
     {
-        foreach(Node<T> n in _neighbors)
+        foreach(Node n in _neighbors)
             n.RemoveNeighbor(this);
         
         _neighbors.Clear();
@@ -44,7 +38,7 @@ public class Node<T>
         return 0;
     }
 
-    public int RemoveNeighbor(Node<T> oldNeighbor)
+    public int RemoveNeighbor(Node oldNeighbor)
     {
         if(_neighbors.Contains(oldNeighbor))
         {

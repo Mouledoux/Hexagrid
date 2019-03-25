@@ -7,11 +7,11 @@ public class SpawnGrid : MonoBehaviour
     public int perlinSeed;
     public List<GameObject> outerWall, lowLand, medLand, highLand, Special;
     public int rows, cols;
-    public Node[,] gridNodes;
+    public TraversableNode[,] gridNodes;
 
     IEnumerator Start()
     {
-        gridNodes = new Node[cols, rows];
+        gridNodes = new TraversableNode[cols, rows];
 
         for(int i = 0; i < cols; i++)
         {
@@ -58,7 +58,7 @@ public class SpawnGrid : MonoBehaviour
                 for(int k = 0; k < gridCell.transform.childCount; k++)
                 {
                     Transform child = gridCell.transform.GetChild(k);
-                    //child.gameObject.SetActive(false);
+                    child.gameObject.SetActive(false);
 
                     Vector3 thisCellGlobalScale = gridCell.transform.lossyScale;
                     thisCellGlobalScale.x = 1f / thisCellGlobalScale.x;
@@ -69,7 +69,9 @@ public class SpawnGrid : MonoBehaviour
                     child.localPosition += Vector3.up * 0.16f;
                 }
 
-                gridNodes[i, j] = (gridCell.AddComponent<Node>());
+                gridNodes[i, j] = (gridCell.AddComponent<TraversableNode>());
+                gridNodes[i, j]._xCoord = i;
+                gridNodes[i, j]._yCoord = j;
                 
                 if(j > 0)
                     gridNodes[i, j].AddNeighbor(gridNodes[i, j-1]);
