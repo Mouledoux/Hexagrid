@@ -23,7 +23,6 @@ public class SpawnGrid : MonoBehaviour
 
                 float perlinHeight = GetPerlinNoiseValue(xCord, yCord, perlinScale, perlinSeed);
                 
-
                 GameObject gridCell = null;
 
                 bool isWall = (i == 0 || j == 0 || i == cols-1 || j == rows-1);
@@ -59,7 +58,7 @@ public class SpawnGrid : MonoBehaviour
                 for(int k = 0; k < gridCell.transform.childCount; k++)
                 {
                     Transform child = gridCell.transform.GetChild(k);
-                    child.gameObject.SetActive(false);
+                    //child.gameObject.SetActive(false);
 
                     Vector3 thisCellGlobalScale = gridCell.transform.lossyScale;
                     thisCellGlobalScale.x = 1f / thisCellGlobalScale.x;
@@ -84,7 +83,6 @@ public class SpawnGrid : MonoBehaviour
                         gridNodes[i, j].AddNeighbor(gridNodes[i-1, nextJ]);
                 }
             }
-            yield return null;
         }
         yield return null;
     }
