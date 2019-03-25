@@ -1,26 +1,24 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.EventSystems;
 
-public class Node : MonoBehaviour
+public class Node<T>
 {
-    private Vector2 _coordinates = Vector2.zero;
-    public Vector2 coordinates => _coordinates;
+    private T _value;
+    public T value => _value;
 
-    private float _value = 0f;
-    public float value => _value;
-
-    private List<Node> _neighbors = new List<Node>();
+    private List<Node<T>> _neighbors = new List<Node<T>>();
 
 
 
-    public Node[] GetNeighbors()
+
+
+    public Node<T>[] GetNeighbors()
     {
-        Node[] myNeighbors = _neighbors.ToArray();
+        Node<T>[] myNeighbors = _neighbors.ToArray();
         return myNeighbors;
     }
-    public int AddNeighbor(Node newNeighbor)
+
+    public int AddNeighbor(Node<T> newNeighbor)
     {
         if(newNeighbor == null)
             return -1;
@@ -35,16 +33,18 @@ public class Node : MonoBehaviour
     }
 
 
+
     public int ClearNeighbors()
     {
-        foreach(Node n in _neighbors)
+        foreach(Node<T> n in _neighbors)
             n.RemoveNeighbor(this);
         
         _neighbors.Clear();
 
         return 0;
     }
-    public int RemoveNeighbor(Node oldNeighbor)
+
+    public int RemoveNeighbor(Node<T> oldNeighbor)
     {
         if(_neighbors.Contains(oldNeighbor))
         {
@@ -53,16 +53,5 @@ public class Node : MonoBehaviour
         }
 
         return 0;
-    }
-
-
-
-    public static bool operator <(Node lhs, Node rhs)
-    {
-        return lhs.value < rhs.value;
-    }
-    public static bool operator >(Node lhs, Node rhs)
-    {
-        return lhs.value > rhs.value;
     }
 }
