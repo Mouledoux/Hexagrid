@@ -3,12 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
-public class Node : MonoBehaviour, IPointerClickHandler, IPointerUpHandler
+public class Node : MonoBehaviour
 {
-    private List<Node> _neighbors = new List<Node>();
-    private float _travelCost = 0f;
-    public float travelCost => _travelCost;
+    private Vector2 _coordinates = Vector2.zero;
+    public Vector2 coordinates => _coordinates;
 
+    private float _value = 0f;
+    public float value => _value;
+
+    private List<Node> _neighbors = new List<Node>();
+
+
+
+    public Node[] GetNeighbors()
+    {
+        Node[] myNeighbors = _neighbors.ToArray();
+        return myNeighbors;
+    }
     public int AddNeighbor(Node newNeighbor)
     {
         if(newNeighbor == null)
@@ -17,15 +28,21 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerUpHandler
         if(!_neighbors.Contains(newNeighbor))
             _neighbors.Add(newNeighbor);
 
-        if(!newNeighbor.GetNeighbors().Contains(this))
+        if(!newNeighbor._neighbors.Contains(this))
             newNeighbor.AddNeighbor(this);
 
         return 0;
     }
-    public Node[] GetNeighbors()
+
+
+    public int ClearNeighbors()
     {
-        Node[] myNeighbors = _neighbors.ToArray();
-        return myNeighbors;
+        foreach(Node n in _neighbors)
+            n.RemoveNeighbor(this);
+        
+        _neighbors.Clear();
+
+        return 0;
     }
     public int RemoveNeighbor(Node oldNeighbor)
     {
@@ -37,63 +54,15 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerUpHandler
 
         return 0;
     }
-    public int ClearNeighbors()
-    {
-        foreach(Node n in _neighbors)
-            n.RemoveNeighbor(this);
-        
-        _neighbors.Clear();
 
-        return 0;
+
+
+    public static bool operator <(Node lhs, Node rhs)
+    {
+        return lhs.value < rhs.value;
     }
-
-
-    public float GetDistanceTo(Node otherNode)
+    public static bool operator >(Node lhs, Node rhs)
     {
-        return Vector3.Distance(transform.position, otherNode.transform.position);
-    }
-
-
-
-
-    public IEnumerator PropigateOut(Node root, List<Node> affected, int maxProp)
-    {
-        if(affected == null)
-        {
-            affected = new List<Node>();
-            print("New List!");
-        }
-
-        else if(affected.Count >= maxProp)
-            yield break;
-
-        foreach(Node n in root._neighbors)
-        {
-            if(!affected.Contains(n))
-            {
-                //n.gameObject.GetComponent<Renderer>().material.color =
-                //    new Color(1, (affected.Count % 2) / 100f, affected.Count / 100f);
-
-                //n.transform.localScale = new Vector3(0.9f, 0.1f, 0.9f);
-                n.transform.localPosition -= Vector3.down;
-                affected.Add(n);
-            }
-            //yield return new WaitForEndOfFrame();
-        }
-
-        yield return new WaitForEndOfFrame();
-
-        foreach(Node n in root._neighbors)
-            foreach(Node o in n._neighbors)
-                if(!affected.Contains(o))
-                    n.StartCoroutine(PropigateOut(n, affected, maxProp));
-    }
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        //StartCoroutine(PropigateOut(this, null, 64));
-    }
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        //StartCoroutine(PropigateOut(this, null, 100));
+        return lhs.value > rhs.value;
     }
 }
