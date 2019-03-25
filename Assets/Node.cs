@@ -22,29 +22,39 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerUpHandler
 
         return 0;
     }
-    public List<Node> GetNeighbors()
+    public Node[] GetNeighbors()
     {
-        List<Node> myNeighbors = _neighbors;
+        Node[] myNeighbors = _neighbors.ToArray();
         return myNeighbors;
     }
-    public void RemoveNeighbor(Node oldNeighbor)
+    public int RemoveNeighbor(Node oldNeighbor)
     {
         if(_neighbors.Contains(oldNeighbor))
+        {
             _neighbors.Remove(oldNeighbor);
+            oldNeighbor.RemoveNeighbor(this);
+        }
+
+        return 0;
     }
-    public void ClearNeighbors()
+    public int ClearNeighbors()
     {
         foreach(Node n in _neighbors)
             n.RemoveNeighbor(this);
         
         _neighbors.Clear();
+
+        return 0;
     }
 
 
-    public float GetDistanceTo(Node goalNode)
+    public float GetDistanceTo(Node otherNode)
     {
-        return Vector3.Distance(transform.position, goalNode.transform.position);
+        return Vector3.Distance(transform.position, otherNode.transform.position);
     }
+
+
+
 
     public IEnumerator PropigateOut(Node root, List<Node> affected, int maxProp)
     {
