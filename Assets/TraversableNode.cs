@@ -31,13 +31,13 @@ public class TraversableNode : Node
     }
 
 
-    private float GetGValue()
+    public float GetGValue()
     {
         if(_parentNode == null)
             return 0f;
         
         else
-            return _travelCost + _parentNode._gValue;
+            return GetNeighboorTravelCost(_parentNode) + _parentNode.GetGValue();
     }
 
 

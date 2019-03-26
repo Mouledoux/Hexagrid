@@ -50,7 +50,7 @@ public sealed class NodePath : MonoBehaviour
                         node._parentNode = currentNode;
 
                         node._hValue = TraversableNode.Distance(node, _endNode) / hWeight;
-                        node._gValue = node.GetNeighboorTravelCost(currentNode) / gWeight;
+                        node._gValue = node.GetGValue() / gWeight;
 
                         AddToSortedList(node, ref _openList);
                         node.GetComponent<Renderer>().material = open;
