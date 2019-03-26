@@ -55,6 +55,14 @@ public sealed class NodePath : MonoBehaviour
 
                 if(node == _endNode)
                 {
+                    TraversableNode n = node;
+                    while(n != null)
+                    {
+                        n.GetComponent<Renderer>().material = current;
+                        n = n._parentNode;
+                        yield return null;
+                    }
+                    
                     yield break;
                 }
                 
