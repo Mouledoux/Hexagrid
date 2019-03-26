@@ -27,6 +27,12 @@ public class Node : MonoBehaviour
         return 0;
     }
 
+    public bool CheckIsNeighbor(Node aNode)
+
+    {
+        return _neighbors.Contains(aNode);
+    }
+
 
     public int ClearNeighbors()
     {

@@ -8,11 +8,16 @@ public class TraversableNode : Node
 
     public int _xCoord, _yCoord;
 
-    public float _movementCost;
+    public float _travelCost;
     public float _hValue;
     public float _gValue;
-    public float _fValue => (_movementCost + _hValue + _gValue);
+    public float _fValue => (_hValue + _gValue);
 
+
+    public float GetNeighboorTravelCost(TraversableNode aNode)
+    {
+        return CheckIsNeighbor(aNode) ? (aNode._travelCost - this._travelCost) : float.MaxValue;
+    }
 
     public static float Distance(TraversableNode aNode, TraversableNode bNode)
     {
