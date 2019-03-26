@@ -10,7 +10,7 @@ public class TraversableNode : Node
 
     public float _travelCost;
     public float _hValue;
-    public float _gValue;
+    public float _gValue => GetGValue();
     public float _fValue => (_hValue + _gValue);
 
 
@@ -30,6 +30,15 @@ public class TraversableNode : Node
         return Mathf.Sqrt(a + b);
     }
 
+
+    private float GetGValue()
+    {
+        if(_parentNode == null)
+            return 0f;
+        
+        else
+            return _travelCost + _parentNode._gValue;
+    }
 
 
     public static bool operator >(TraversableNode lhs, TraversableNode rhs)

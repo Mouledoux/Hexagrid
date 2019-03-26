@@ -47,7 +47,7 @@ public sealed class NodePath : MonoBehaviour
                     node._parentNode = node._parentNode == null ? currentNode : node._parentNode;
 
                     node._hValue = TraversableNode.Distance(node, _endNode);
-                    node._gValue = TraversableNode.Distance(node, _startNode);
+                    // /node._gValue = TraversableNode.Distance(node, _startNode);
 
                     AddToSortedList(node, ref _openList);
                     node.GetComponent<Renderer>().material = open;
@@ -55,7 +55,7 @@ public sealed class NodePath : MonoBehaviour
 
                 if(node == _endNode)
                 {
-                    yield break;//return NodeStackPath(node);
+                    yield break;
                 }
                 
                 yield return null;
