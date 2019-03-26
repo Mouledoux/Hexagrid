@@ -375,7 +375,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26271d88edc884a4288799c4930922c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  perlinSeed: 6969
+  perlinSeed: 42069
   outerWall:
   - {fileID: 1535652536708680, guid: 2ee43f6acf07a194eb588a7dd5bc1c5b, type: 3}
   - {fileID: 1481754022141284, guid: beebce36c61d60f42b22b153abcfd9b0, type: 3}
@@ -449,6 +449,8 @@ MonoBehaviour:
   closed: {fileID: 2100000, guid: 801683f8cbed9b54ca6e8ff4e4ea6f8a, type: 2}
   _startNode: {fileID: 0}
   _endNode: {fileID: 0}
+  gWeight: 0.01
+  hWeight: 0.01
 --- !u!4 &1156238391
 Transform:
   m_ObjectHideFlags: 0

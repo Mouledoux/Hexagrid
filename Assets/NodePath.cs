@@ -5,11 +5,9 @@ using System.Collections.Generic;
 public sealed class NodePath : MonoBehaviour
 {
     public Material current, open, closed;
-
     public TraversableNode _startNode, _endNode;
-
-    private List<TraversableNode> _closedList = new List<TraversableNode>();
-    private List<TraversableNode> _openList = new List<TraversableNode>();
+    [Range(0.01f, 1f)]
+    public float gWeight, hWeight;
 
     public int AddToSortedList(TraversableNode node, ref List<TraversableNode> sortedList)
     {
@@ -34,6 +32,9 @@ public sealed class NodePath : MonoBehaviour
 
     public IEnumerator AStar()
     {
+        List<TraversableNode> _closedList = new List<TraversableNode>();
+        List<TraversableNode> _openList = new List<TraversableNode>();
+
         TraversableNode currentNode;
         currentNode = _startNode;
         _openList.Add(currentNode);
@@ -42,15 +43,23 @@ public sealed class NodePath : MonoBehaviour
         {
             foreach(TraversableNode node in currentNode.GetNeighbors())
             {
-                if(!_closedList.Contains(node) && !_openList.Contains(node))
+                if(!_closedList.Contains(node))
                 {
-                    node._parentNode = node._parentNode == null ? currentNode : node._parentNode;
+                    if(!_openList.Contains(node))
+                    {
+                        node._parentNode = currentNode;
 
-                    node._hValue = TraversableNode.Distance(node, _endNode);
-                    // /node._gValue = TraversableNode.Distance(node, _startNode);
+                        node._hValue = TraversableNode.Distance(node, _endNode) / hWeight;
+                        node._gValue = node.GetNeighboorTravelCost(currentNode) / gWeight;
 
-                    AddToSortedList(node, ref _openList);
-                    node.GetComponent<Renderer>().material = open;
+                        AddToSortedList(node, ref _openList);
+                        node.GetComponent<Renderer>().material = open;
+                    }
+                }
+
+                else
+                {
+                    //node._parentNode = node.GetNeighboorTravelCost(currentNode) < node._gValue ? currentNode : node._parentNode;
                 }
 
                 if(node == _endNode)
@@ -62,11 +71,9 @@ public sealed class NodePath : MonoBehaviour
                         n = n._parentNode;
                         yield return null;
                     }
-                    
+
                     yield break;
                 }
-                
-                yield return null;
             }
 
             _closedList.Add(currentNode);
@@ -77,7 +84,7 @@ public sealed class NodePath : MonoBehaviour
 
             _openList.Remove(currentNode);
 
-            yield return null;
+            //yield return null;
         }
 
         yield return null;
