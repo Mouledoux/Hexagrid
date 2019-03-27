@@ -19,12 +19,15 @@ public class TraversableNode : Node
         return CheckIsNeighbor(aNode) ? (this._travelCost - aNode._travelCost) : float.MaxValue;
     }
 
-    public static int Distance(TraversableNode aNode, TraversableNode bNode)
+    public static float Distance(TraversableNode aNode, TraversableNode bNode)
     {
-        int a = Mathf.Abs(aNode._xCoord - bNode._xCoord);
-        int b = Mathf.Abs(aNode._yCoord - bNode._yCoord);
+        float a = aNode._xCoord - bNode._xCoord;
+        float b = aNode._yCoord - bNode._yCoord;
 
-        return (a + b);
+        a *= a;
+        b *= b;
+
+        return Mathf.Sqrt(a + b);
     }
 
 

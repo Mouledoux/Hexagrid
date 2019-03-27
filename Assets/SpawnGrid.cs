@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class SpawnGrid : MonoBehaviour
 {
     public int perlinSeed;
+    public float perlinScale = 8f;
+    
     public List<GameObject> outerWall, lowLand, medLand, highLand, Special;
     public int rows, cols;
     public TraversableNode[,] gridNodes;
@@ -19,7 +21,6 @@ public class SpawnGrid : MonoBehaviour
             {
                 GameObject gridCell = null;
 
-                float perlinScale = 8f;
                 float xCord = (float)i/(float)cols;
                 float yCord = (float)j/(float)rows;
 
