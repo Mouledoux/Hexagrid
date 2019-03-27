@@ -447,10 +447,12 @@ MonoBehaviour:
   current: {fileID: 2100000, guid: 104c4d921bcc6a14e846198e186fd6af, type: 2}
   open: {fileID: 2100000, guid: 2f35bce65f00a4c40932c07cc812afc9, type: 2}
   closed: {fileID: 2100000, guid: 801683f8cbed9b54ca6e8ff4e4ea6f8a, type: 2}
+  reparent: {fileID: 2100000, guid: d3675cfa5d1163f42aca854b53c27b9c, type: 2}
+  reparented: {fileID: 2100000, guid: 486a9a173f1b85249af81ff16ac93468, type: 2}
   _startNode: {fileID: 0}
   _endNode: {fileID: 0}
-  gWeight: 0.01
-  hWeight: 0.01
+  gWeight: 1
+  hWeight: 1
 --- !u!4 &1156238391
 Transform:
   m_ObjectHideFlags: 0

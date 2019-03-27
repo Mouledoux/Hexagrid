@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public sealed class NodePath : MonoBehaviour
 {
-    public Material current, open, closed;
+    public Material current, open, closed, reparent, reparented;
     public TraversableNode _startNode, _endNode;
     [Range(0.01f, 1f)]
     public float gWeight, hWeight;
@@ -41,6 +41,7 @@ public sealed class NodePath : MonoBehaviour
 
         while(_openList.Count > 0)
         {
+            bool rp = false;
             foreach(TraversableNode node in currentNode.GetNeighbors())
             {
                 if(!_closedList.Contains(node))
@@ -48,7 +49,6 @@ public sealed class NodePath : MonoBehaviour
                     if(!_openList.Contains(node))
                     {
                         node._parentNode = currentNode;
-
                         node._hValue = TraversableNode.Distance(node, _endNode) / hWeight;
                         node._gValue = node.GetGValue() / gWeight;
 
@@ -59,7 +59,12 @@ public sealed class NodePath : MonoBehaviour
 
                 else
                 {
-                    node._parentNode = node.GetNeighboorTravelCost(currentNode) < node._gValue ? currentNode : node._parentNode;
+                    if(node.GetGValue() < currentNode.GetGValue())
+                    {
+                        currentNode._parentNode = node;
+                        node.GetComponent<Renderer>().material = reparented;
+                        rp = true;
+                    }                
                 }
 
                 if(node == _endNode)
@@ -77,14 +82,14 @@ public sealed class NodePath : MonoBehaviour
             }
 
             _closedList.Add(currentNode);
-            currentNode.GetComponent<Renderer>().material = closed;
+            currentNode.GetComponent<Renderer>().material = rp ? reparent : closed;
 
             currentNode = _openList[0];
             currentNode.GetComponent<Renderer>().material = current;
 
             _openList.Remove(currentNode);
 
-            //yield return null;
+            yield return null;
         }
 
         yield return null;
