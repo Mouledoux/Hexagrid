@@ -59,7 +59,7 @@ public sealed class NodePath : MonoBehaviour
 
                 else
                 {
-                    if(node.GetGValue() < currentNode.GetGValue())
+                    if(node._gValue < currentNode._parentNode._gValue)
                     {
                         currentNode._parentNode = node;
                         node.GetComponent<Renderer>().material = reparented;
