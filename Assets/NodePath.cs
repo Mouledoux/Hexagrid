@@ -59,7 +59,7 @@ public sealed class NodePath : MonoBehaviour
 
                 else
                 {
-                    //node._parentNode = node.GetNeighboorTravelCost(currentNode) < node._gValue ? currentNode : node._parentNode;
+                    node._parentNode = node.GetNeighboorTravelCost(currentNode) < node._gValue ? currentNode : node._parentNode;
                 }
 
                 if(node == _endNode)
