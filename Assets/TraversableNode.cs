@@ -40,7 +40,6 @@ public class TraversableNode : Node
             return GetNeighboorTravelCost(_parentNode) + _parentNode.GetGValue();
     }
 
-
     public static bool operator >(TraversableNode lhs, TraversableNode rhs)
     {
         return lhs._fValue > rhs._fValue;
