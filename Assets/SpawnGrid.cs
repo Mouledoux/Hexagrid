@@ -1,6 +1,6 @@
-﻿using System.Collections;
+﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class SpawnGrid : MonoBehaviour
 {
@@ -17,15 +17,19 @@ public class SpawnGrid : MonoBehaviour
         {
             for (int j = 0; j < rows; j++)
             {
+                GameObject gridCell = null;
+
                 float perlinScale = 8f;
                 float xCord = (float)i/(float)cols;
                 float yCord = (float)j/(float)rows;
 
                 float perlinHeight = GetPerlinNoiseValue(xCord, yCord, perlinScale, perlinSeed);
+                float height = (int)(perlinHeight * 8f) + 1;
                 
-                GameObject gridCell = null;
 
                 bool isWall = (i == 0 || j == 0 || i == cols-1 || j == rows-1);
+                Vector3 scale = isWall ? new Vector3(1f, 16f, 1f) : new Vector3(1f, height,  1f);
+
                 float biomeScale = 8f;
                 int perlinFort = (int)GetPerlinNoiseValue(xCord, yCord, 32f, perlinSeed, 10);
 
@@ -60,15 +64,28 @@ public class SpawnGrid : MonoBehaviour
                 gridCell.transform.parent = transform;
                 gridCell.transform.localPosition = new Vector3(i * 0.85f, 0, j + (i%2*.5f));
                 gridCell.transform.Rotate(Vector3.up, 30);
-
-                float height = (int)(perlinHeight * 8f) + 1;
-                Vector3 scale = isWall ? new Vector3(1f, 16f, 1f) : new Vector3(1f, height,  1f);
                 gridCell.transform.localScale = scale;
 
                 gridNodes[i, j] = (gridCell.AddComponent<TraversableNode>());
                 gridNodes[i, j]._xCoord = i;
                 gridNodes[i, j]._yCoord = j;
                 gridNodes[i, j]._travelCost = resistance + height;
+
+                if(j > 0)
+                    gridNodes[i, j].AddNeighbor(gridNodes[i, j-1]);
+
+                if(i > 0)
+                {
+                    gridNodes[i, j].AddNeighbor(gridNodes[i-1, j]);
+
+                    int nextJ = j+(i%2==0?-1:1);
+                    if(nextJ >= 0 && nextJ < rows)
+                        gridNodes[i, j].AddNeighbor(gridNodes[i-1, nextJ]);
+                }
+
+
+
+
 
                 for(int k = 0; k < gridCell.transform.childCount; k++)
                 {
@@ -82,18 +99,6 @@ public class SpawnGrid : MonoBehaviour
 
                     child.localScale = thisCellGlobalScale;
                     child.localPosition += Vector3.up * 0.16f;
-                }
-                
-                if(j > 0)
-                    gridNodes[i, j].AddNeighbor(gridNodes[i, j-1]);
-
-                if(i > 0)
-                {
-                    gridNodes[i, j].AddNeighbor(gridNodes[i-1, j]);
-
-                    int nextJ = j+(i%2==0?-1:1);
-                    if(nextJ >= 0 && nextJ < rows)
-                        gridNodes[i, j].AddNeighbor(gridNodes[i-1, nextJ]);
                 }
             }
         }
