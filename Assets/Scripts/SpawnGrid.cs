@@ -25,11 +25,11 @@ public class SpawnGrid : MonoBehaviour
                 float yCord = (float)j/(float)rows;
 
                 float perlinHeight = GetPerlinNoiseValue(xCord, yCord, perlinScale, perlinSeed);
-                float height = (int)(perlinHeight * 8f) + 1;
+                float height = (int)(perlinHeight * 8f) * 0.2f;
                 
 
                 bool isWall = (i == 0 || j == 0 || i == cols-1 || j == rows-1);
-                Vector3 scale = isWall ? new Vector3(1f, 16f, 1f) : new Vector3(1f, height,  1f);
+                Vector3 scale = isWall ? new Vector3(1f, 16f, 1f) : new Vector3(1f, 1f,  1f);
 
                 float biomeScale = 8f;
                 int perlinFort = (int)GetPerlinNoiseValue(xCord, yCord, 32f, perlinSeed, 10);
@@ -63,7 +63,7 @@ public class SpawnGrid : MonoBehaviour
 
                 gridCell.name = $"[{i}, {j}]";
                 gridCell.transform.parent = transform;
-                gridCell.transform.localPosition = new Vector3(i * 0.85f, 0, j + (i%2*.5f));
+                gridCell.transform.localPosition = new Vector3(i * 0.85f, height, j + (i%2*.5f));
                 gridCell.transform.Rotate(Vector3.up, 30);
                 gridCell.transform.localScale = scale;
 
@@ -88,19 +88,19 @@ public class SpawnGrid : MonoBehaviour
 
 
 
-                for(int k = 0; k < gridCell.transform.childCount; k++)
-                {
-                    Transform child = gridCell.transform.GetChild(k);
-                    //child.gameObject.SetActive(false);
+                // for(int k = 0; k < gridCell.transform.childCount; k++)
+                // {
+                //     Transform child = gridCell.transform.GetChild(k);
+                //     //child.gameObject.SetActive(false);
 
-                    Vector3 thisCellGlobalScale = gridCell.transform.lossyScale;
-                    thisCellGlobalScale.x = 1f / thisCellGlobalScale.x;
-                    thisCellGlobalScale.y = 1f / thisCellGlobalScale.y;
-                    thisCellGlobalScale.z = 1f / thisCellGlobalScale.z;
+                //     Vector3 thisCellGlobalScale = gridCell.transform.lossyScale;
+                //     thisCellGlobalScale.x = 1f / thisCellGlobalScale.x;
+                //     thisCellGlobalScale.y = 1f / thisCellGlobalScale.y;
+                //     thisCellGlobalScale.z = 1f / thisCellGlobalScale.z;
 
-                    child.localScale = thisCellGlobalScale;
-                    child.localPosition += Vector3.up * 0.16f;
-                }
+                //     child.localScale = thisCellGlobalScale;
+                //     child.localPosition += Vector3.up * 0.16f;
+                // }
             }
         }
         yield return null;
