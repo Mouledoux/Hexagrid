@@ -375,7 +375,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26271d88edc884a4288799c4930922c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  perlinSeed: 3742
+  perlinSeed: 1220
   perlinScale: 8
   outerWall:
   - {fileID: 1535652536708680, guid: 2ee43f6acf07a194eb588a7dd5bc1c5b, type: 3}
