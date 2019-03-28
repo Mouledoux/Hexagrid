@@ -5,6 +5,18 @@ using System.Collections.Generic;
 public class Node : MonoBehaviour
 {
     private List<Node> _neighbors = new List<Node>();
+    private Renderer _renderer;
+    private Material _defaultMaterial;
+    private void Start()
+    {
+        _renderer = GetComponent<Renderer>();
+        _defaultMaterial = _renderer.sharedMaterial;
+    }
+
+    public void ResetMaterial()
+    {
+        _renderer.material = _defaultMaterial;
+    }
 
 
     public Node[] GetNeighbors()
