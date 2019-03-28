@@ -37,8 +37,8 @@ public sealed class NodePath : MonoBehaviour
                     if(!openList.Contains(node))
                     {
                         node.parentNode = currentNode;
-                        node.hValue = TraversableNode.Distance(node, _endNode) / hWeight;
-                        node.gValue = 1f + node.GetGValue() / gWeight;
+                        node.hValue = TraversableNode.Distance(node, _endNode);// / hWeight;
+                        node.gValue = 1f + node.GetGValue();// / gWeight;
 
                         AddToSortedList(node, ref openList);
                         node.GetComponent<Renderer>().material = open;
@@ -47,6 +47,8 @@ public sealed class NodePath : MonoBehaviour
 
                 if(node.gValue < currentNode.safeParentNode.gValue)
                 {
+                    if(node.parentNode == currentNode) break;
+
                     currentNode.parentNode = node;
                     node.GetComponent<Renderer>().material = reparented;
                     rp = true;
@@ -60,6 +62,8 @@ public sealed class NodePath : MonoBehaviour
                         closedList.Remove(n);
                         n.GetComponent<Renderer>().material = current;
                         n = n.parentNode;
+
+                        yield return null;
                     }
 
                     while(closedList.Count > 0)
