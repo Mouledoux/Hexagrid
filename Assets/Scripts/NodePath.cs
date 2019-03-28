@@ -12,14 +12,61 @@ public sealed class NodePath : MonoBehaviour
     public float gWeight, hWeight;
 
 
+    public Stack<TraversableNode> path = new Stack<TraversableNode>();
+
     [ContextMenu("Get Path")]
     public void BeginAStar()
     {
         StartCoroutine(AStar());
     }
 
+    private void Update()
+    {
+        RaycastHit hit;
+        
+        if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
+        {
+            TraversableNode tn = hit.collider.GetComponent<TraversableNode>();
+            if(tn == null) return;
+
+            else if(Input.GetMouseButtonDown(1))
+            {
+                if(tn == _startNode) _startNode = null;
+                else
+                {
+                    StopAllCoroutines();
+                    if(_startNode != null) _startNode.ResetMaterial();
+                    
+                    _startNode = tn;
+                    _startNode.GetComponent<Renderer>().material = current;
+                }
+            }
+
+            else if(Input.GetMouseButton(0))
+            {
+                if(tn == _endNode) return;
+                else
+                {
+                    _endNode = tn;
+
+                    if(_startNode != null && _endNode != null)
+                    {
+                        BeginAStar();
+                    }
+                }
+            }
+        }
+    }
+
     public IEnumerator AStar()
     {
+        if(_startNode == _endNode) yield break;
+
+        while(path.Count > 0)
+        {
+            path.Pop().ResetMaterial();
+        }
+
         List<TraversableNode> closedList = new List<TraversableNode>();
         List<TraversableNode> openList = new List<TraversableNode>();
 
@@ -41,7 +88,8 @@ public sealed class NodePath : MonoBehaviour
                         node.gValue = 1f + node.GetGValue();// / gWeight;
 
                         AddToSortedList(node, ref openList);
-                        node.GetComponent<Renderer>().material = open;
+                        if(Visualize)
+                            node.GetComponent<Renderer>().material = open;
                     }
                 }
 
@@ -56,40 +104,47 @@ public sealed class NodePath : MonoBehaviour
 
                 if(node == _endNode)
                 {
-                    TraversableNode n = node;
-                    while(n != null)
+                    currentNode = node;
+                    while(currentNode != null)
                     {
-                        closedList.Remove(n);
-                        n.GetComponent<Renderer>().material = current;
-                        n = n.parentNode;
+                        path.Clear();
+                        path = NodeStackPath(_endNode);
+                        closedList.Remove(currentNode);
+                        currentNode.GetComponent<Renderer>().material = current;
+                        currentNode = currentNode.parentNode;
 
-                        yield return null;
+                        if(Visualize)
+                            yield return null;
                     }
 
                     while(closedList.Count > 0)
                     {
-                        //closedList[0].ResetMaterial();
+                        closedList[0].ResetMaterial();
                         closedList.RemoveAt(0);
                     }
                     
                     while(openList.Count > 0)
                     {
-                        //openList[0].ResetMaterial();
+                        openList[0].ResetMaterial();
                         openList.RemoveAt(0);
                     }
                     
                     
 
-                    print($"Distance: {NodeStackPath(_endNode).Count}, Cost: {_endNode.gValue * gWeight}");
+                    print($"Distance: {path.Count}, Cost: {_endNode.gValue * gWeight}");
                     yield break;
                 }
             }
 
             closedList.Add(currentNode);
-            currentNode.GetComponent<Renderer>().material = rp ? reparent : closed;
+
+            if(Visualize)
+                currentNode.GetComponent<Renderer>().material = rp ? reparent : closed;
 
             currentNode = openList[0];
-            currentNode.GetComponent<Renderer>().material = current;
+
+            if(Visualize)
+                currentNode.GetComponent<Renderer>().material = current;
 
             openList.Remove(currentNode);
 
@@ -98,8 +153,6 @@ public sealed class NodePath : MonoBehaviour
 
         yield return null;
     }
-
-
 
     public Stack<TraversableNode> NodeStackPath(TraversableNode endNode)
     {
@@ -115,8 +168,6 @@ public sealed class NodePath : MonoBehaviour
 
         return returnStack;
     }
-
-
 
     public int AddToSortedList(TraversableNode node, ref List<TraversableNode> sortedList)
     {
