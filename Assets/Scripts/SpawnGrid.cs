@@ -87,25 +87,8 @@ public class SpawnGrid : MonoBehaviour
                             gridNodes[i, j].AddNeighbor(gridNodes[i-1, nextJ]);
                     }
                 }
-
-
-
-
-
-                // for(int k = 0; k < gridCell.transform.childCount; k++)
-                // {
-                //     Transform child = gridCell.transform.GetChild(k);
-                //     //child.gameObject.SetActive(false);
-
-                //     Vector3 thisCellGlobalScale = gridCell.transform.lossyScale;
-                //     thisCellGlobalScale.x = 1f / thisCellGlobalScale.x;
-                //     thisCellGlobalScale.y = 1f / thisCellGlobalScale.y;
-                //     thisCellGlobalScale.z = 1f / thisCellGlobalScale.z;
-
-                //     child.localScale = thisCellGlobalScale;
-                //     child.localPosition += Vector3.up * 0.16f;
-                // }
             }
+            yield return null;
         }
         yield return null;
     }
