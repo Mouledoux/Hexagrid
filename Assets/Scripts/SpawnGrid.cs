@@ -73,7 +73,7 @@ public class SpawnGrid : MonoBehaviour
                     gridNodes[i, j] = (gridCell.AddComponent<TraversableNode>());
                     gridNodes[i, j]._xCoord = i;
                     gridNodes[i, j]._yCoord = j;
-                    gridNodes[i, j]._travelCost = resistance + height;
+                    gridNodes[i, j].travelCost = resistance + height;
                     
                     if(j > 0)
                         gridNodes[i, j].AddNeighbor(gridNodes[i, j-1]);
@@ -91,6 +91,13 @@ public class SpawnGrid : MonoBehaviour
             yield return null;
         }
         yield return null;
+    }
+
+    private void Update()
+    {
+        if(Input.GetKey(KeyCode.LeftControl))
+            if(Input.GetKeyDown(KeyCode.Q))
+                NewMap();
     }
 
     bool ClearBoard()

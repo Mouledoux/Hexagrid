@@ -4,19 +4,42 @@ using UnityEngine;
 
 public class TraversableNode : Node
 {
-    public TraversableNode _parentNode;
+    private TraversableNode _parentNode;
+    public TraversableNode parentNode
+    {
+        get { return _parentNode == null ? this : _parentNode; }
+        set {_parentNode = value; }
+    }
 
     public int _xCoord, _yCoord;
 
-    public float _travelCost;
-    public float _hValue;
-    public float _gValue;
-    public float _fValue => (_hValue + _gValue);
+    private float _travelCost;
+    public float travelCost
+    {
+        get { return _travelCost; }
+        set { _travelCost = value; }
+    }
+
+    private float _hValue;
+    public float hValue
+    {
+        get { return _hValue; }
+        set { _hValue = value; }
+    }
+
+    private float _gValue;
+    public float gValue
+    {
+        get { return _gValue; }
+        set { _gValue = value; }
+    }
+
+    public float fValue => (_hValue + _gValue);
 
 
     public float GetNeighboorTravelCost(TraversableNode aNode)
     {
-        return CheckIsNeighbor(aNode) ? (this._travelCost - aNode._travelCost) : float.MaxValue;
+        return CheckIsNeighbor(aNode) ? (this.travelCost - aNode.travelCost) : float.MaxValue;
     }
 
     public static float Distance(TraversableNode aNode, TraversableNode bNode)
@@ -42,10 +65,10 @@ public class TraversableNode : Node
 
     public static bool operator >(TraversableNode lhs, TraversableNode rhs)
     {
-        return lhs._fValue > rhs._fValue;
+        return lhs.fValue > rhs.fValue;
     }
     public static bool operator <(TraversableNode lhs, TraversableNode rhs)
     {
-        return lhs._fValue < rhs._fValue;
+        return lhs.fValue < rhs.fValue;
     }
 }

@@ -36,23 +36,20 @@ public sealed class NodePath : MonoBehaviour
                 {
                     if(!openList.Contains(node))
                     {
-                        node._parentNode = currentNode;
-                        node._hValue = TraversableNode.Distance(node, _endNode) / hWeight;
-                        node._gValue = (1f + node.GetGValue()) / gWeight;
+                        node.parentNode = currentNode;
+                        node.hValue = TraversableNode.Distance(node, _endNode) / hWeight;
+                        node.gValue = 1f + node.GetGValue() / gWeight;
 
                         AddToSortedList(node, ref openList);
                         node.GetComponent<Renderer>().material = open;
                     }
                 }
 
-                else
+                if(node.gValue < currentNode.parentNode.gValue)
                 {
-                    if(node._gValue < currentNode._parentNode._gValue)
-                    {
-                        currentNode._parentNode = node;
-                        node.GetComponent<Renderer>().material = reparented;
-                        rp = true;
-                    }                
+                    currentNode.parentNode = node;
+                    node.GetComponent<Renderer>().material = reparented;
+                    rp = true;
                 }
 
                 if(node == _endNode)
@@ -62,7 +59,7 @@ public sealed class NodePath : MonoBehaviour
                     {
                         closedList.Remove(n);
                         n.GetComponent<Renderer>().material = current;
-                        n = n._parentNode;
+                        n = n.parentNode;
                     }
 
                     while(closedList.Count > 0)
@@ -79,7 +76,7 @@ public sealed class NodePath : MonoBehaviour
                     
                     
 
-                    print($"Distance: {NodeStackPath(_endNode).Count}, Cost: {_endNode._gValue * gWeight}");
+                    print($"Distance: {NodeStackPath(_endNode).Count}, Cost: {_endNode.gValue * gWeight}");
                     yield break;
                 }
             }
@@ -106,10 +103,10 @@ public sealed class NodePath : MonoBehaviour
 
         TraversableNode currentNode = endNode;
 
-        while(currentNode._parentNode != null)
+        while(currentNode.parentNode != currentNode)
         {
             returnStack.Push(currentNode);
-            currentNode = currentNode._parentNode;
+            currentNode = currentNode.parentNode;
         }
 
         return returnStack;
