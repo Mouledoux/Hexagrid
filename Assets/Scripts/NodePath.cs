@@ -9,20 +9,6 @@ public sealed class NodePath : MonoBehaviour
     [Range(0.01f, 1f)]
     public float gWeight, hWeight;
 
-    public int AddToSortedList(TraversableNode node, ref List<TraversableNode> sortedList)
-    {
-        for(int i = 0; i < sortedList.Count; i++)
-        {
-            if(node < sortedList[i])
-            {
-                sortedList.Insert(i, node);
-                return i;
-            }
-        }
-
-        sortedList.Add(node);
-        return sortedList.Count;
-    }
 
     [ContextMenu("Get Path")]
     public void BeginAStar()
@@ -95,6 +81,8 @@ public sealed class NodePath : MonoBehaviour
         yield return null;
     }
 
+
+
     public Stack<TraversableNode> NodeStackPath(TraversableNode endNode)
     {
         Stack<TraversableNode> returnStack = new Stack<TraversableNode>();
@@ -108,5 +96,22 @@ public sealed class NodePath : MonoBehaviour
         }
 
         return returnStack;
+    }
+
+
+
+    public int AddToSortedList(TraversableNode node, ref List<TraversableNode> sortedList)
+    {
+        for(int i = 0; i < sortedList.Count; i++)
+        {
+            if(node < sortedList[i])
+            {
+                sortedList.Insert(i, node);
+                return i;
+            }
+        }
+
+        sortedList.Add(node);
+        return sortedList.Count;
     }
 }
