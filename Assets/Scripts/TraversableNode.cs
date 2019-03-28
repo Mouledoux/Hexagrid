@@ -45,13 +45,13 @@ public class TraversableNode : Node
 
     public static float Distance(TraversableNode aNode, TraversableNode bNode)
     {
-        float a = aNode._xCoord - bNode._xCoord;
-        float b = aNode._yCoord - bNode._yCoord;
+        float a = Mathf.Abs(aNode._xCoord - bNode._xCoord);
+        float b = Mathf.Abs(aNode._yCoord - bNode._yCoord);
 
-        a *= a;
-        b *= b;
+        // a *= a;
+        // b *= b;
 
-        return Mathf.Sqrt(a + b);
+        return (a + b);
     }
 
 
