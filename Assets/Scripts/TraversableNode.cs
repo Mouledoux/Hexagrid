@@ -37,7 +37,7 @@ public class TraversableNode : Node
             return 0f;
         
         else
-            return GetNeighboorTravelCost(_parentNode) + _parentNode.GetGValue();
+            return GetNeighboorTravelCost(_parentNode) + _parentNode._gValue;
     }
 
     public static bool operator >(TraversableNode lhs, TraversableNode rhs)

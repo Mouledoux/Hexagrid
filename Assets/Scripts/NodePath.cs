@@ -4,8 +4,10 @@ using System.Collections.Generic;
 
 public sealed class NodePath : MonoBehaviour
 {
+    public bool Visualize;
     public Material current, open, closed, reparent, reparented;
     public TraversableNode _startNode, _endNode;
+
     [Range(0.01f, 1f)]
     public float gWeight, hWeight;
 
@@ -18,27 +20,27 @@ public sealed class NodePath : MonoBehaviour
 
     public IEnumerator AStar()
     {
-        List<TraversableNode> _closedList = new List<TraversableNode>();
-        List<TraversableNode> _openList = new List<TraversableNode>();
+        List<TraversableNode> closedList = new List<TraversableNode>();
+        List<TraversableNode> openList = new List<TraversableNode>();
 
         TraversableNode currentNode;
         currentNode = _startNode;
-        _openList.Add(currentNode);
+        openList.Add(currentNode);
 
-        while(_openList.Count > 0)
+        while(openList.Count > 0)
         {
             bool rp = false;
             foreach(TraversableNode node in currentNode.GetNeighbors())
             {
-                if(!_closedList.Contains(node))
+                if(!closedList.Contains(node))
                 {
-                    if(!_openList.Contains(node))
+                    if(!openList.Contains(node))
                     {
                         node._parentNode = currentNode;
                         node._hValue = TraversableNode.Distance(node, _endNode) / hWeight;
-                        node._gValue = node.GetGValue() / gWeight;
+                        node._gValue = (1f + node.GetGValue()) / gWeight;
 
-                        AddToSortedList(node, ref _openList);
+                        AddToSortedList(node, ref openList);
                         node.GetComponent<Renderer>().material = open;
                     }
                 }
@@ -58,24 +60,39 @@ public sealed class NodePath : MonoBehaviour
                     TraversableNode n = node;
                     while(n != null)
                     {
+                        closedList.Remove(n);
                         n.GetComponent<Renderer>().material = current;
                         n = n._parentNode;
-                        yield return null;
                     }
 
+                    while(closedList.Count > 0)
+                    {
+                        //closedList[0].ResetMaterial();
+                        closedList.RemoveAt(0);
+                    }
+                    
+                    while(openList.Count > 0)
+                    {
+                        //openList[0].ResetMaterial();
+                        openList.RemoveAt(0);
+                    }
+                    
+                    
+
+                    print($"Distance: {NodeStackPath(_endNode).Count}, Cost: {_endNode._gValue * gWeight}");
                     yield break;
                 }
             }
 
-            _closedList.Add(currentNode);
+            closedList.Add(currentNode);
             currentNode.GetComponent<Renderer>().material = rp ? reparent : closed;
 
-            currentNode = _openList[0];
+            currentNode = openList[0];
             currentNode.GetComponent<Renderer>().material = current;
 
-            _openList.Remove(currentNode);
+            openList.Remove(currentNode);
 
-            yield return null;
+            if(Visualize) yield return null;
         }
 
         yield return null;
