@@ -66,7 +66,7 @@ public class SpawnGrid : MonoBehaviour
                 {
                     gridCell.name = $"[{i}, {j}]";
                     gridCell.transform.parent = transform;
-                    gridCell.transform.localPosition = new Vector3(i * 0.85f, height, j + (i%2*.5f));
+                    gridCell.transform.localPosition = new Vector3(((-cols/2) + i) * 0.85f, height, ((-rows/2) + j) + (i%2*.5f));
                     gridCell.transform.Rotate(Vector3.up, 30);
                     gridCell.transform.localScale = scale;
 
