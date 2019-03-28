@@ -61,27 +61,31 @@ public class SpawnGrid : MonoBehaviour
                     resistance = 16f;
                 }
 
-                gridCell.name = $"[{i}, {j}]";
-                gridCell.transform.parent = transform;
-                gridCell.transform.localPosition = new Vector3(i * 0.85f, height, j + (i%2*.5f));
-                gridCell.transform.Rotate(Vector3.up, 30);
-                gridCell.transform.localScale = scale;
 
-                gridNodes[i, j] = (gridCell.AddComponent<TraversableNode>());
-                gridNodes[i, j]._xCoord = i;
-                gridNodes[i, j]._yCoord = j;
-                gridNodes[i, j]._travelCost = resistance + height;
-
-                if(j > 0)
-                    gridNodes[i, j].AddNeighbor(gridNodes[i, j-1]);
-
-                if(i > 0)
+                if(gridCell != null)
                 {
-                    gridNodes[i, j].AddNeighbor(gridNodes[i-1, j]);
+                    gridCell.name = $"[{i}, {j}]";
+                    gridCell.transform.parent = transform;
+                    gridCell.transform.localPosition = new Vector3(i * 0.85f, height, j + (i%2*.5f));
+                    gridCell.transform.Rotate(Vector3.up, 30);
+                    gridCell.transform.localScale = scale;
 
-                    int nextJ = j+(i%2==0?-1:1);
-                    if(nextJ >= 0 && nextJ < rows)
-                        gridNodes[i, j].AddNeighbor(gridNodes[i-1, nextJ]);
+                    gridNodes[i, j] = (gridCell.AddComponent<TraversableNode>());
+                    gridNodes[i, j]._xCoord = i;
+                    gridNodes[i, j]._yCoord = j;
+                    gridNodes[i, j]._travelCost = resistance + height;
+                    
+                    if(j > 0)
+                        gridNodes[i, j].AddNeighbor(gridNodes[i, j-1]);
+
+                    if(i > 0)
+                    {
+                        gridNodes[i, j].AddNeighbor(gridNodes[i-1, j]);
+
+                        int nextJ = j+(i%2==0?-1:1);
+                        if(nextJ >= 0 && nextJ < rows)
+                            gridNodes[i, j].AddNeighbor(gridNodes[i-1, nextJ]);
+                    }
                 }
 
 
