@@ -7,9 +7,10 @@ public class TraversableNode : Node
     private TraversableNode _parentNode;
     public TraversableNode parentNode
     {
-        get { return _parentNode == null ? this : _parentNode; }
+        get { return _parentNode; }
         set {_parentNode = value; }
     }
+    public TraversableNode safeParentNode => (parentNode == null ? this : parentNode);
 
     public int _xCoord, _yCoord;
 

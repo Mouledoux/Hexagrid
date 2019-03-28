@@ -45,7 +45,7 @@ public sealed class NodePath : MonoBehaviour
                     }
                 }
 
-                if(node.gValue < currentNode.parentNode.gValue)
+                if(node.gValue < currentNode.safeParentNode.gValue)
                 {
                     currentNode.parentNode = node;
                     node.GetComponent<Renderer>().material = reparented;
@@ -103,7 +103,7 @@ public sealed class NodePath : MonoBehaviour
 
         TraversableNode currentNode = endNode;
 
-        while(currentNode.parentNode != currentNode)
+        while(currentNode.parentNode != null)
         {
             returnStack.Push(currentNode);
             currentNode = currentNode.parentNode;
