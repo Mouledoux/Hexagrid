@@ -38,9 +38,11 @@ public class TraversableNode : Node
     public float fValue => (_hValue + _gValue);
 
 
-    public float GetNeighboorTravelCost(TraversableNode aNode)
+    public float GetNeighboorTravelCost(TraversableNode aNode, bool invert = false)
     {
-        return CheckIsNeighbor(aNode) ? (this.travelCost - aNode.travelCost) : float.MaxValue;
+        return  !invert ? 
+        CheckIsNeighbor(aNode) ? (this.travelCost - aNode.travelCost) : float.MaxValue :
+        aNode.GetNeighboorTravelCost(this, false);
     }
 
     public static float Distance(TraversableNode aNode, TraversableNode bNode)
