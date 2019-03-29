@@ -19,6 +19,12 @@ public sealed class NodePath : MonoBehaviour
     {
         StartCoroutine(AStar());
     }
+    
+    [ContextMenu("Get Path")]
+    public void BeginTwinStar()
+    {
+        StartCoroutine(TwinStar(_startNode, _endNode));
+    }
 
     private void Update()
     {
@@ -179,13 +185,23 @@ public sealed class NodePath : MonoBehaviour
                         currentNode[1] = neighborNode;
                         TraversableNode tNode;
 
-                        while(currentNode[1] != null)
+                        do
                         {
-                            tNode = currentNode[1].parentNode;
+                            tNode = currentNode[1].safeParentNode;
                             currentNode[1].parentNode = currentNode[0];
                             currentNode[0] = currentNode[1];
                             currentNode[1] = tNode;
+                        }   while(currentNode[1] != tNode);
+
+                        if(Visualize)
+                        {
+                            while(tNode != null)
+                            {
+                                tNode.GetComponent<Renderer>().material = current;
+                                tNode = tNode.parentNode;
+                            }
                         }
+
                         yield break;
                     }
 
