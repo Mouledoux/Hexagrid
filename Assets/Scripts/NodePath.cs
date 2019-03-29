@@ -36,13 +36,13 @@ public sealed class NodePath : MonoBehaviour
                 {
                     StopAllCoroutines();
                     if(_startNode != null) _startNode.ResetMaterial();
-                    
+
                     _startNode = tn;
                     _startNode.GetComponent<Renderer>().material = current;
                 }
             }
 
-            else if(Input.GetMouseButton(0))
+            else if(Input.GetMouseButtonDown(0))
             {
                 if(tn == _endNode) return;
                 else
