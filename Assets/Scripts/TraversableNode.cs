@@ -57,13 +57,13 @@ public class TraversableNode : Node
     }
 
 
-    public float GetGValue()
+    public float GetGValue(bool invert = false)
     {
         if(_parentNode == null)
             return 0f;
         
         else
-            return GetNeighboorTravelCost(_parentNode) + _parentNode._gValue;
+            return GetNeighboorTravelCost(_parentNode, invert) + _parentNode._gValue;
     }
 
     public static bool operator >(TraversableNode lhs, TraversableNode rhs)
