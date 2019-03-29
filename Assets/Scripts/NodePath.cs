@@ -20,7 +20,7 @@ public sealed class NodePath : MonoBehaviour
         StartCoroutine(AStar());
     }
     
-    [ContextMenu("Get Path")]
+    [ContextMenu("TwinStar")]
     public void BeginTwinStar()
     {
         StartCoroutine(TwinStar(_startNode, _endNode));
@@ -163,13 +163,10 @@ public sealed class NodePath : MonoBehaviour
 
     public IEnumerator TwinStar(TraversableNode begNode, TraversableNode endNode)
     {
-        List<TraversableNode>[] openLists;
-        List<TraversableNode>[] closedLists;
+        List<TraversableNode>[] openLists = {new List<TraversableNode>(), new List<TraversableNode>()};
+        List<TraversableNode>[] closedLists = {new List<TraversableNode>(), new List<TraversableNode>()};
 
-        openLists = new List<TraversableNode>[] {new List<TraversableNode>(), new List<TraversableNode>()};
-        closedLists = new List<TraversableNode>[] {new List<TraversableNode>(), new List<TraversableNode>()};
-
-        TraversableNode[] currentNode = new TraversableNode[] {begNode, endNode};
+        TraversableNode[] currentNode = {begNode, endNode};
 
         openLists[0].Add(currentNode[0]);
         openLists[1].Add(currentNode[1]);
