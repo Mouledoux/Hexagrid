@@ -445,7 +445,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29c5dba576d5d8a4085b9735c16eed78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Visualize: 0
+  Visualize: 1
   current: {fileID: 2100000, guid: 104c4d921bcc6a14e846198e186fd6af, type: 2}
   open: {fileID: 2100000, guid: 2f35bce65f00a4c40932c07cc812afc9, type: 2}
   closed: {fileID: 2100000, guid: 801683f8cbed9b54ca6e8ff4e4ea6f8a, type: 2}
