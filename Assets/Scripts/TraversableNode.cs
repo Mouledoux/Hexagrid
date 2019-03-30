@@ -66,6 +66,22 @@ public class TraversableNode : Node
             return GetNeighboorTravelCost(_parentNode, invert) + _parentNode._gValue;
     }
 
+    public static void ReverseParents(TraversableNode currentNode)
+    {
+        TraversableNode previousNode = null;
+        TraversableNode nextNode = null;
+
+        do
+        {
+            nextNode = currentNode.parentNode;
+            currentNode.parentNode = previousNode;
+            previousNode = currentNode;
+            currentNode = nextNode;
+
+        } while(currentNode != null);
+    }
+
+
     public static bool operator >(TraversableNode lhs, TraversableNode rhs)
     {
         return lhs.fValue > rhs.fValue;
