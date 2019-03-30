@@ -91,7 +91,7 @@ public sealed class NodePath : MonoBehaviour
                     {
                         node.parentNode = currentNode;
                         node.hValue = TraversableNode.Distance(node, _endNode);// / hWeight;
-                        node.gValue = 1f + node.GetGValue();// / gWeight;
+                        node.gValue = node.GetGValue();// / gWeight;
 
                         AddToSortedList(node, ref openList);
                         if(Visualize)
@@ -163,32 +163,30 @@ public sealed class NodePath : MonoBehaviour
 
     public IEnumerator TwinStar(TraversableNode begNode, TraversableNode endNode)
     {
-        List<TraversableNode>[] openLists = {new List<TraversableNode>(), new List<TraversableNode>()};
-        List<TraversableNode>[] closedLists = {new List<TraversableNode>(), new List<TraversableNode>()};
+        List<TraversableNode>[] openLists = new List<TraversableNode>[] {new List<TraversableNode>(), new List<TraversableNode>()};
+        List<TraversableNode>[] closedLists = new List<TraversableNode>[]  {new List<TraversableNode>(), new List<TraversableNode>()};
 
-        TraversableNode[] currentNode = {begNode, endNode};
+        TraversableNode[] currentNode = new TraversableNode[] {begNode, endNode};
+        begNode.parentNode = endNode.parentNode = null;
 
         openLists[0].Add(currentNode[0]);
         openLists[1].Add(currentNode[1]);
 
+        bool rp = false;
+
         while(openLists[0].Count > 0 && openLists[1].Count > 0)
         {
+
             for(int i = 0, j = (i+1)%2; i < 2; i++)
             {
                 foreach(TraversableNode neighborNode in currentNode[i].GetNeighbors())
                 {
                     if(i == 0 && closedLists[1].Contains(neighborNode))
                     {
-                        currentNode[1] = neighborNode;
-                        TraversableNode tNode;
+                        TraversableNode tNode = _endNode;;
 
-                        do
-                        {
-                            tNode = currentNode[1].safeParentNode;
-                            currentNode[1].parentNode = currentNode[0];
-                            currentNode[0] = currentNode[1];
-                            currentNode[1] = tNode;
-                        }   while(currentNode[1] != tNode);
+                        TraversableNode.ReverseParents(neighborNode);
+                        neighborNode.parentNode = currentNode[0];
 
                         if(Visualize)
                         {
@@ -196,9 +194,9 @@ public sealed class NodePath : MonoBehaviour
                             {
                                 tNode.GetComponent<Renderer>().material = current;
                                 tNode = tNode.parentNode;
+                                yield return null;
                             }
                         }
-
                         yield break;
                     }
 
@@ -209,33 +207,37 @@ public sealed class NodePath : MonoBehaviour
                             if(!openLists[i].Contains(neighborNode))
                             {
                                 neighborNode.parentNode = currentNode[i];
-                                neighborNode.hValue = TraversableNode.Distance(neighborNode, endNode) * j;
-                                neighborNode.gValue = 1f + neighborNode.GetGValue(i==1);
+                                neighborNode.hValue = TraversableNode.Distance(neighborNode, endNode);// * j;
+                                neighborNode.gValue = neighborNode.GetGValue(i==1);
 
-                                AddToSortedList(neighborNode, ref openLists[0]);
+                                AddToSortedList(neighborNode, ref openLists[i]);
 
                                 if(Visualize) neighborNode.GetComponent<Renderer>().material = open;
                             }
                         }
 
-                        bool rp = false;
-                        if(neighborNode.gValue < currentNode[i].safeParentNode.gValue)
+                        if(currentNode[i].parentNode != null)
                         {
-                            if(neighborNode.parentNode != currentNode[i])
+                            if(neighborNode.gValue < currentNode[i].parentNode.gValue)
                             {
-                                rp = true;
-                                currentNode[i].parentNode = neighborNode;
-                                if(Visualize) neighborNode.GetComponent<Renderer>().material = reparented;
+                                if(neighborNode.parentNode != currentNode[i])
+                                {
+                                    rp = true;
+                                    currentNode[i].parentNode = neighborNode;
+                                    if(Visualize) neighborNode.GetComponent<Renderer>().material = reparented;
+                                }
                             }
                         }
-
-                        closedLists[i].Add(currentNode[i]);
-                        if(Visualize) currentNode[i].GetComponent<Renderer>().material = rp ? reparent : closed;
-                        currentNode[i] = openLists[i][0];
-                        if(Visualize) currentNode[i].GetComponent<Renderer>().material = current;
-                        openLists[i].Remove(currentNode[i]);
                     }
+                    
                 }
+
+                closedLists[i].Add(currentNode[i]);
+                if(Visualize) currentNode[i].GetComponent<Renderer>().material = rp ? reparent : closed;
+
+                currentNode[i] = openLists[i][0];
+                if(Visualize) currentNode[i].GetComponent<Renderer>().material = current;
+                openLists[i].Remove(currentNode[i]);
             }
             if(Visualize) yield return null;
         }
