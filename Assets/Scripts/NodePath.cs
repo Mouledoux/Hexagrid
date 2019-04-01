@@ -28,40 +28,40 @@ public sealed class NodePath : MonoBehaviour
 
     private void Update()
     {
-        // RaycastHit hit;
+        RaycastHit hit;
         
-        // if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
-        // {
-        //     TraversableNode tn = hit.collider.GetComponent<TraversableNode>();
-        //     if(tn == null) return;
+        if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
+        {
+            TraversableNode tn = hit.collider.GetComponent<TraversableNode>();
+            if(tn == null) return;
 
-        //     else if(Input.GetMouseButtonDown(1))
-        //     {
-        //         if(tn == _startNode) _startNode = null;
-        //         else
-        //         {
-        //             StopAllCoroutines();
-        //             if(_startNode != null) _startNode.ResetMaterial();
+            else if(Input.GetMouseButtonDown(1))
+            {
+                if(tn == _startNode) _startNode = null;
+                else
+                {
+                    StopAllCoroutines();
+                    if(_startNode != null) _startNode.ResetMaterial();
 
-        //             _startNode = tn;
-        //             _startNode.GetComponent<Renderer>().material = current;
-        //         }
-        //     }
+                    _startNode = tn;
+                    _startNode.GetComponent<Renderer>().material = current;
+                }
+            }
 
-        //     else if(Input.GetMouseButtonDown(0))
-        //     {
-        //         if(tn == _endNode) return;
-        //         else
-        //         {
-        //             _endNode = tn;
+            else if(Input.GetMouseButtonDown(0))
+            {
+                if(tn == _endNode) return;
+                else
+                {
+                    _endNode = tn;
 
-        //             if(_startNode != null && _endNode != null)
-        //             {
-        //                 BeginAStar();
-        //             }
-        //         }
-        //     }
-        // }
+                    if(_startNode != null && _endNode != null)
+                    {
+                        BeginTwinStar();
+                    }
+                }
+            }
+        }
     }
 
     public IEnumerator AStar()
@@ -190,7 +190,7 @@ public sealed class NodePath : MonoBehaviour
                     if(neighborNode.isTraversable == false) { continue; }
 
                     // If the 2 paths have overlapped
-                    if(i == 0 && neighborNode.rootParent == _endNode)
+                    if(i == 0 && neighborNode.CheckForNodeInParentChain(_endNode))
                     {
                         TraversableNode tNode = _endNode;
 
@@ -201,12 +201,15 @@ public sealed class NodePath : MonoBehaviour
                         {
                             foreach(TraversableNode tn in closedList)
                                 tn.ResetMaterial();
+                            foreach(TraversableNode tn in openLists[0])
+                                tn.ResetMaterial();
+                            foreach(TraversableNode tn in openLists[1])
+                                tn.ResetMaterial();
 
                             while(tNode != null)
                             {
                                 tNode.GetComponent<Renderer>().material = current;
                                 tNode = tNode.parentNode;
-                                yield return null;
                             }
                         }
                         print(cycles);
