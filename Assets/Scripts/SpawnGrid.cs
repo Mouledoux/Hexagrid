@@ -74,6 +74,7 @@ public class SpawnGrid : MonoBehaviour
                     gridNodes[i, j]._xCoord = i;
                     gridNodes[i, j]._yCoord = j;
                     gridNodes[i, j].travelCost = resistance + height;
+                    gridNodes[i, j].isTraversable = !isWall;
                     
                     if(j > 0)
                         gridNodes[i, j].AddNeighbor(gridNodes[i, j-1]);

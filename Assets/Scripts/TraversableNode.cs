@@ -11,6 +11,7 @@ public class TraversableNode : Node
         set {_parentNode = value; }
     }
     public TraversableNode safeParentNode => (parentNode == null ? this : parentNode);
+    public TraversableNode rootParent => (parentNode == null ? this : parentNode.rootParent);
 
     public int _xCoord, _yCoord;
 
@@ -19,6 +20,13 @@ public class TraversableNode : Node
     {
         get { return _travelCost; }
         set { _travelCost = value; }
+    }
+
+    private bool _isTraversable;
+    public bool isTraversable
+    {
+        get { return _isTraversable; }
+        set { _isTraversable = value; }
     }
 
     private float _hValue;
@@ -47,13 +55,18 @@ public class TraversableNode : Node
 
     public static float Distance(TraversableNode aNode, TraversableNode bNode)
     {
-        float a = Mathf.Abs(aNode._xCoord - bNode._xCoord);
-        float b = Mathf.Abs(aNode._yCoord - bNode._yCoord);
+        float a = (aNode._xCoord - bNode._xCoord);
+        float b = (aNode._yCoord - bNode._yCoord);
 
-        // a *= a;
-        // b *= b;
+         a *= a;
+         b *= b;
 
-        return (a + b);
+        return Mathf.Sqrt(a + b);
+
+        //float a = Mathf.Abs(aNode._xCoord - bNode._xCoord);
+        //float b = Mathf.Abs(aNode._yCoord - bNode._yCoord);
+
+        //return (a + b);
     }
 
 
@@ -81,6 +94,10 @@ public class TraversableNode : Node
         } while(currentNode != null);
     }
 
+    private static TraversableNode GetRootParent(TraversableNode aNode)
+    {
+        return (aNode.parentNode == null ? aNode : GetRootParent(aNode.parentNode));
+    }
 
     public static bool operator >(TraversableNode lhs, TraversableNode rhs)
     {
