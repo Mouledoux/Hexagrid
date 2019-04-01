@@ -11,7 +11,7 @@ public class TraversableNode : Node
         set {_parentNode = value; }
     }
     public TraversableNode safeParentNode => (parentNode == null ? this : parentNode);
-    public TraversableNode rootParent => (parentNode == null ? this : parentNode.rootParent);
+    //public TraversableNode rootParent => (parentNode == null ? this : parentNode.rootParent);
 
     public int _xCoord, _yCoord;
 
@@ -78,6 +78,43 @@ public class TraversableNode : Node
         else
             return GetNeighboorTravelCost(_parentNode, invert) + _parentNode._gValue;
     }
+
+    public bool CheckForNodeInParentChain(TraversableNode targetNode)
+    {
+        ValidateParentChain(this);
+        TraversableNode tNode = this;
+
+        while(tNode.parentNode != null)
+        {
+            if(tNode.parentNode == targetNode) return true;
+
+            else tNode = tNode.parentNode;
+        }        
+
+        return false;
+    }
+
+
+    public static void ValidateParentChain(TraversableNode aNode)
+    {
+        List<TraversableNode> parents = new List<TraversableNode>();
+
+        while(aNode.parentNode != null)
+        {
+            if(parents.Contains(aNode.parentNode))
+            {
+                aNode.parentNode = null;
+                return;
+            }
+            
+            else
+            {
+                parents.Add(aNode.parentNode);
+                aNode = aNode.parentNode;
+            }
+        }
+    }
+
 
     public static void ReverseParents(TraversableNode currentNode)
     {
