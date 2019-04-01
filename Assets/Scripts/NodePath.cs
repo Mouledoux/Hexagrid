@@ -4,12 +4,12 @@ using System.Collections.Generic;
 
 public sealed class NodePath : MonoBehaviour
 {
-    public bool Visualize;
+    public bool Visualize, twinStar;
     public Material current, open, closed, reparent, reparented;
     public TraversableNode _startNode, _endNode;
 
     [Range(0.01f, 1f)]
-    public float gWeight, hWeight;
+    public float hWeight, gWeight;
 
 
     public Stack<TraversableNode> path = new Stack<TraversableNode>();
@@ -23,7 +23,7 @@ public sealed class NodePath : MonoBehaviour
     [ContextMenu("TwinStar")]
     public void BeginTwinStar()
     {
-        StartCoroutine(TwinStar(_startNode, _endNode));
+        StartCoroutine(TwinStar(_startNode, _endNode, twinStar));
     }
 
     private void Update()
@@ -85,6 +85,9 @@ public sealed class NodePath : MonoBehaviour
             bool rp = false;
             foreach(TraversableNode node in currentNode.GetNeighbors())
             {
+                if(node.isTraversable == false) { continue; }
+                print(node.isTraversable);
+
                 if(!closedList.Contains(node))
                 {
                     if(!openList.Contains(node))
@@ -94,6 +97,7 @@ public sealed class NodePath : MonoBehaviour
                         node.gValue = node.GetGValue();// / gWeight;
 
                         AddToSortedList(node, ref openList);
+
                         if(Visualize)
                             node.GetComponent<Renderer>().material = open;
                     }
@@ -101,11 +105,12 @@ public sealed class NodePath : MonoBehaviour
 
                 if(node.gValue < currentNode.safeParentNode.gValue)
                 {
-                    if(node.parentNode == currentNode) break;
-
-                    currentNode.parentNode = node;
-                    node.GetComponent<Renderer>().material = reparented;
-                    rp = true;
+                    if(node.parentNode != currentNode)
+                    {
+                        currentNode.parentNode = node;
+                        node.GetComponent<Renderer>().material = reparented;
+                        rp = true;
+                    }
                 }
 
                 if(node == _endNode)
@@ -161,10 +166,10 @@ public sealed class NodePath : MonoBehaviour
     }
 
 
-    public IEnumerator TwinStar(TraversableNode begNode, TraversableNode endNode)
+    public IEnumerator TwinStar(TraversableNode begNode, TraversableNode endNode, bool dualSearch = false)
     {
         List<TraversableNode>[] openLists = new List<TraversableNode>[] {new List<TraversableNode>(), new List<TraversableNode>()};
-        List<TraversableNode>[] closedLists = new List<TraversableNode>[]  {new List<TraversableNode>(), new List<TraversableNode>()};
+        List<TraversableNode> closedList = new List<TraversableNode>();
 
         TraversableNode[] currentNode = new TraversableNode[] {begNode, endNode};
         begNode.parentNode = endNode.parentNode = null;
@@ -173,23 +178,30 @@ public sealed class NodePath : MonoBehaviour
         openLists[1].Add(currentNode[1]);
 
         bool rp = false;
+        int cycles = 0;
 
         while(openLists[0].Count > 0 && openLists[1].Count > 0)
         {
-
-            for(int i = 0, j = (i+1)%2; i < 2; i++)
+            for(int i = 0, j = (i+1)%2; i < 2; i += dualSearch ? 1 : 0)
             {
                 foreach(TraversableNode neighborNode in currentNode[i].GetNeighbors())
                 {
-                    if(i == 0 && closedLists[1].Contains(neighborNode))
+                    cycles++;
+                    if(neighborNode.isTraversable == false) { continue; }
+
+                    // If the 2 paths have overlapped
+                    if(i == 0 && neighborNode.rootParent == _endNode)
                     {
-                        TraversableNode tNode = _endNode;;
+                        TraversableNode tNode = _endNode;
 
                         TraversableNode.ReverseParents(neighborNode);
                         neighborNode.parentNode = currentNode[0];
 
                         if(Visualize)
                         {
+                            foreach(TraversableNode tn in closedList)
+                                tn.ResetMaterial();
+
                             while(tNode != null)
                             {
                                 tNode.GetComponent<Renderer>().material = current;
@@ -197,49 +209,50 @@ public sealed class NodePath : MonoBehaviour
                                 yield return null;
                             }
                         }
+                        print(cycles);
                         yield break;
                     }
 
+
                     else
                     {
-                        if(!closedLists[i].Contains(neighborNode))
+                        if(!closedList.Contains(neighborNode))
                         {
                             if(!openLists[i].Contains(neighborNode))
                             {
                                 neighborNode.parentNode = currentNode[i];
-                                neighborNode.hValue = TraversableNode.Distance(neighborNode, endNode);// * j;
-                                neighborNode.gValue = neighborNode.GetGValue(i==1);
+                                neighborNode.hValue = TraversableNode.Distance(neighborNode, endNode) / hWeight;
+                                neighborNode.gValue = 0.1f + neighborNode.GetGValue(i==1) / gWeight;
 
                                 AddToSortedList(neighborNode, ref openLists[i]);
 
                                 if(Visualize) neighborNode.GetComponent<Renderer>().material = open;
                             }
                         }
-
-                        if(currentNode[i].parentNode != null)
+                        
+                        else if(currentNode[i].parentNode != null &&
+                            neighborNode.gValue < currentNode[i].parentNode.gValue &&
+                                neighborNode.parentNode != currentNode[i])
                         {
-                            if(neighborNode.gValue < currentNode[i].parentNode.gValue)
-                            {
-                                if(neighborNode.parentNode != currentNode[i])
-                                {
-                                    rp = true;
-                                    currentNode[i].parentNode = neighborNode;
-                                    if(Visualize) neighborNode.GetComponent<Renderer>().material = reparented;
-                                }
-                            }
+                            rp = true;
+                            currentNode[i].parentNode = neighborNode;
+                            if(Visualize) neighborNode.GetComponent<Renderer>().material = reparented;
                         }
                     }
-                    
                 }
 
-                closedLists[i].Add(currentNode[i]);
+                closedList.Add(currentNode[i]);
                 if(Visualize) currentNode[i].GetComponent<Renderer>().material = rp ? reparent : closed;
+                rp = false;
 
                 currentNode[i] = openLists[i][0];
-                if(Visualize) currentNode[i].GetComponent<Renderer>().material = current;
-                openLists[i].Remove(currentNode[i]);
+                if(Visualize)
+                {
+                    currentNode[i].GetComponent<Renderer>().material = current;
+                    openLists[i].Remove(currentNode[i]);
+                    yield return null;
+                }
             }
-            if(Visualize) yield return null;
         }
         yield return null;
     }
