@@ -81,10 +81,12 @@ public class TraversableNode : Node
 
     public bool CheckForNodeInParentChain(TraversableNode targetNode)
     {
+        if(this == targetNode) return true;
+
         ValidateParentChain(this);
         TraversableNode tNode = this;
 
-        while(tNode.parentNode != null)
+        while(tNode.parentNode != null && tNode.parentNode != this)
         {
             if(tNode.parentNode == targetNode) return true;
 
