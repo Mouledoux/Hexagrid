@@ -22,40 +22,40 @@ public sealed class NodePath : MonoBehaviour
 
     private void Update()
     {
-        // RaycastHit hit;
+        RaycastHit hit;
         
-        // if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
-        // {
-        //     TraversableNode tn = hit.collider.GetComponent<TraversableNode>();
-        //     if(tn == null) return;
+        if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
+        {
+            TraversableNode tn = hit.collider.GetComponent<TraversableNode>();
+            if(tn == null) return;
 
-        //     else if(Input.GetMouseButtonDown(1))
-        //     {
-        //         if(tn == _startNode) _startNode = null;
-        //         else
-        //         {
-        //             StopAllCoroutines();
-        //             if(_startNode != null) _startNode.ResetMaterial();
+            else if(Input.GetMouseButtonDown(1))
+            {
+                if(tn == _startNode) _startNode = null;
+                else
+                {
+                    StopAllCoroutines();
+                    if(_startNode != null) _startNode.ResetMaterial();
 
-        //             _startNode = tn;
-        //             _startNode.GetComponent<Renderer>().material = current;
-        //         }
-        //     }
+                    _startNode = tn;
+                    _startNode.GetComponent<Renderer>().material = current;
+                }
+            }
 
-        //     else if(Input.GetMouseButtonDown(0))
-        //     {
-        //         if(tn == _endNode) return;
-        //         else
-        //         {
-        //             _endNode = tn;
+            else if(Input.GetMouseButtonDown(0))
+            {
+                if(tn == _endNode) return;
+                else
+                {
+                    _endNode = tn;
 
-        //             if(_startNode != null && _endNode != null)
-        //             {
-        //                 BeginTwinStar();
-        //             }
-        //         }
-        //     }
-        // }
+                    if(_startNode != null && _endNode != null)
+                    {
+                        BeginTwinStar();
+                    }
+                }
+            }
+        }
     }
 
     public IEnumerator AStar()
@@ -218,8 +218,8 @@ public sealed class NodePath : MonoBehaviour
                             if(!openLists[i].Contains(neighborNode))
                             {
                                 neighborNode.parentNode = currentNode[i];
-                                neighborNode.hValue = TraversableNode.Distance(neighborNode, endNode) / hWeight;
-                                neighborNode.gValue = 0.1f + neighborNode.GetGValue(i==1) / gWeight;
+                                neighborNode.hValue = TraversableNode.Distance(neighborNode, endNode);
+                                neighborNode.gValue = 0.1f + neighborNode.GetGValue(i==1);
 
                                 AddToSortedList(neighborNode, ref openLists[i]);
 
@@ -289,8 +289,8 @@ public sealed class NodePath : MonoBehaviour
                             if(!openLists[i].Contains(neighborNode))
                             {
                                 neighborNode.parentNode = currentNode[i];
-                                neighborNode.hValue = TraversableNode.Distance(neighborNode, endNode) / hWeight;
-                                neighborNode.gValue = 0.1f + neighborNode.GetGValue(i==1) / gWeight;
+                                neighborNode.hValue = TraversableNode.Distance(neighborNode, endNode);
+                                neighborNode.gValue = 0.1f + neighborNode.GetGValue(i==1);
 
                                 AddToSortedList(neighborNode, ref openLists[i]);
                             }
