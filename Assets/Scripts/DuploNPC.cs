@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class DuploNPC : MonoBehaviour
 {
     public Material mat;
+    public UnityEngine.Events.UnityEvent OnPathComplete;
+
     private Stack<TraversableNode> path;
     private TraversableNode _startNode, _endNode;
 
@@ -62,6 +64,12 @@ public class DuploNPC : MonoBehaviour
             if(Vector3.Distance(transform.position, path.Peek().transform.position) <= 0.05f)
             {
                 path.Pop().GetComponent<Renderer>().material = mat;
+            }
+            
+            if(path.Count == 0)
+            {
+                OnPathComplete.Invoke();
+                path = null;
             }
         }
     }
