@@ -13,6 +13,9 @@ public sealed class NodePath : MonoBehaviour
 
     public Stack<TraversableNode> path = new Stack<TraversableNode>();
 
+
+
+
     
     [ContextMenu("TwinStar")]
     public void BeginTwinStar()
@@ -20,6 +23,8 @@ public sealed class NodePath : MonoBehaviour
         StartCoroutine(TwinStar(_startNode, _endNode, twinStar));
     }
 
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void Update()
     {
         RaycastHit hit;
@@ -58,6 +63,9 @@ public sealed class NodePath : MonoBehaviour
         }
     }
 
+
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public IEnumerator AStar()
     {
         if(_startNode == _endNode) yield break;
@@ -160,6 +168,8 @@ public sealed class NodePath : MonoBehaviour
     }
 
 
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public IEnumerator TwinStar(TraversableNode begNode, TraversableNode endNode, bool dualSearch = false)
     {
         List<TraversableNode>[] openLists = new List<TraversableNode>[] {new List<TraversableNode>(), new List<TraversableNode>()};
@@ -255,6 +265,8 @@ public sealed class NodePath : MonoBehaviour
     }
 
 
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public static Stack<TraversableNode> TwinStarII(TraversableNode begNode, TraversableNode endNode, bool dualSearch = false)
     {
         List<TraversableNode>[] openList = new List<TraversableNode>[] {new List<TraversableNode>(), new List<TraversableNode>()};
@@ -327,6 +339,8 @@ public sealed class NodePath : MonoBehaviour
     }
 
 
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public static Stack<TraversableNode> NodePathStack(TraversableNode endNode)
     {
         Stack<TraversableNode> returnStack = new Stack<TraversableNode>();
@@ -342,6 +356,9 @@ public sealed class NodePath : MonoBehaviour
         return returnStack;
     }
 
+
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public static int AddToSortedList(TraversableNode node, ref List<TraversableNode> sortedList)
     {
         for(int i = 0; i < sortedList.Count; i++)
