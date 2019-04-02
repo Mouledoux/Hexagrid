@@ -9,7 +9,7 @@ public sealed class NodePath : MonoBehaviour
     public TraversableNode _startNode, _endNode;
 
     [Range(0.01f, 1f)]
-    public float hWeight, gWeight;
+    public static float hWeight, gWeight;
 
 
     public Stack<TraversableNode> path = new Stack<TraversableNode>();
@@ -119,7 +119,7 @@ public sealed class NodePath : MonoBehaviour
                     while(currentNode != null)
                     {
                         path.Clear();
-                        path = NodeStackPath(_endNode);
+                        path = NodePathStack(_endNode);
                         closedList.Remove(currentNode);
                         currentNode.GetComponent<Renderer>().material = current;
                         currentNode = currentNode.parentNode;
@@ -261,7 +261,7 @@ public sealed class NodePath : MonoBehaviour
     }
 
 
-    public Stack<TraversableNode> TwinStarII(TraversableNode begNode, TraversableNode endNode, bool dualSearch = false)
+    public static Stack<TraversableNode> TwinStarII(TraversableNode begNode, TraversableNode endNode, bool dualSearch = false)
     {
         List<TraversableNode>[] openLists = new List<TraversableNode>[] {new List<TraversableNode>(), new List<TraversableNode>()};
         List<TraversableNode> closedList = new List<TraversableNode>();
@@ -281,12 +281,11 @@ public sealed class NodePath : MonoBehaviour
                     if(neighborNode.isTraversable == false) { continue; }
 
                     // If the 2 paths have overlapped
-                    if(i == 0 && neighborNode.CheckForNodeInParentChain(_endNode))
+                    if(i == 0 && neighborNode.CheckForNodeInParentChain(endNode))
                     {
                         TraversableNode.ReverseParents(neighborNode);
-                        return NodePathStack(_endNode);
+                        return NodePathStack(endNode);
                     }
-
 
                     else
                     {
@@ -320,7 +319,7 @@ public sealed class NodePath : MonoBehaviour
     }
 
 
-    public Stack<TraversableNode> NodePathStack(TraversableNode endNode)
+    public static Stack<TraversableNode> NodePathStack(TraversableNode endNode)
     {
         Stack<TraversableNode> returnStack = new Stack<TraversableNode>();
 
@@ -335,7 +334,7 @@ public sealed class NodePath : MonoBehaviour
         return returnStack;
     }
 
-    public int AddToSortedList(TraversableNode node, ref List<TraversableNode> sortedList)
+    public static int AddToSortedList(TraversableNode node, ref List<TraversableNode> sortedList)
     {
         for(int i = 0; i < sortedList.Count; i++)
         {
