@@ -44,6 +44,7 @@ public class DuploNPC : MonoBehaviour
                 {
                     _endNode = tn;
                     _endNode.GetComponent<Renderer>().material = mat;
+                    transform.position = _startNode.transform.position;
 
                     if(_startNode != null && _endNode != null)
                     {
@@ -59,8 +60,13 @@ public class DuploNPC : MonoBehaviour
     {
         if(path != null && path.Count > 0)
         {
-            Vector3 dir = (path.Peek().transform.position - transform.position).normalized;
-            transform.Translate(dir * Time.deltaTime);
+            _startNode = path.Peek();
+
+            Vector3 dir = (path.Peek().transform.position - transform.position);
+            transform.GetChild(0).transform.localPosition = Vector3.up + (path.Peek().transform.up * Mathf.Sin(dir.magnitude * 3.14f));
+
+            dir.Normalize();
+            transform.Translate(dir * 2.5f * Time.deltaTime);
 
             if(Vector3.Distance(transform.position, path.Peek().transform.position) <= 0.05f)
             {
