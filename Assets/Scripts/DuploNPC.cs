@@ -25,36 +25,27 @@ public class DuploNPC : MonoBehaviour
             if(tn == null) return;
 
             else if(Input.GetMouseButtonDown(1))
-            {
-                if(tn == _startNode) _startNode = null;
-                else
-                {
-                    if(_startNode != null) _startNode.ResetMaterial();
+            {   
+                if(_startNode != null) _startNode.ResetMaterial();
 
-                    _startNode = tn;
-                    _startNode.GetComponent<Renderer>().material = mat;
-                    transform.position = _startNode.transform.position;
-                }
+                _startNode = tn;
+                _startNode.GetComponent<Renderer>().material = mat;
+                transform.position = _startNode.transform.position;
             }
 
             else if(Input.GetMouseButtonDown(0))
             {
-                if(tn == _endNode) return;
-                else
-                {
-                    _endNode = tn;
-                    _endNode.GetComponent<Renderer>().material = mat;
-                    transform.position = _startNode.transform.position;
+                _endNode = tn;
+                _endNode.GetComponent<Renderer>().material = mat;
+                transform.position = _startNode.transform.position;
 
-                    if(_startNode != null && _endNode != null)
-                    {
-                        path = NodePath.TwinStarII(_startNode, _endNode, true);
-                    }
+                if(_startNode != null && _endNode != null)
+                {
+                    path = NodePath.TwinStarII(_startNode, _endNode, true);
                 }
             }
         }
     }
-
 
     private void WalkPath()
     {
