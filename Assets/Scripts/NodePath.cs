@@ -11,14 +11,8 @@ public sealed class NodePath : MonoBehaviour
     [Range(0.01f, 1f)]
     public static float hWeight, gWeight;
 
-
     public Stack<TraversableNode> path = new Stack<TraversableNode>();
 
-    [ContextMenu("Get Path")]
-    public void BeginAStar()
-    {
-        StartCoroutine(AStar());
-    }
     
     [ContextMenu("TwinStar")]
     public void BeginTwinStar()
@@ -28,40 +22,40 @@ public sealed class NodePath : MonoBehaviour
 
     private void Update()
     {
-        RaycastHit hit;
+        // RaycastHit hit;
         
-        if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
-        {
-            TraversableNode tn = hit.collider.GetComponent<TraversableNode>();
-            if(tn == null) return;
+        // if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
+        // {
+        //     TraversableNode tn = hit.collider.GetComponent<TraversableNode>();
+        //     if(tn == null) return;
 
-            else if(Input.GetMouseButtonDown(1))
-            {
-                if(tn == _startNode) _startNode = null;
-                else
-                {
-                    StopAllCoroutines();
-                    if(_startNode != null) _startNode.ResetMaterial();
+        //     else if(Input.GetMouseButtonDown(1))
+        //     {
+        //         if(tn == _startNode) _startNode = null;
+        //         else
+        //         {
+        //             StopAllCoroutines();
+        //             if(_startNode != null) _startNode.ResetMaterial();
 
-                    _startNode = tn;
-                    _startNode.GetComponent<Renderer>().material = current;
-                }
-            }
+        //             _startNode = tn;
+        //             _startNode.GetComponent<Renderer>().material = current;
+        //         }
+        //     }
 
-            else if(Input.GetMouseButtonDown(0))
-            {
-                if(tn == _endNode) return;
-                else
-                {
-                    _endNode = tn;
+        //     else if(Input.GetMouseButtonDown(0))
+        //     {
+        //         if(tn == _endNode) return;
+        //         else
+        //         {
+        //             _endNode = tn;
 
-                    if(_startNode != null && _endNode != null)
-                    {
-                        BeginTwinStar();
-                    }
-                }
-            }
-        }
+        //             if(_startNode != null && _endNode != null)
+        //             {
+        //                 BeginTwinStar();
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     public IEnumerator AStar()
@@ -284,6 +278,7 @@ public sealed class NodePath : MonoBehaviour
                     if(i == 0 && neighborNode.CheckForNodeInParentChain(endNode))
                     {
                         TraversableNode.ReverseParents(neighborNode);
+                        neighborNode.parentNode = currentNode[0];
                         return NodePathStack(endNode);
                     }
 
