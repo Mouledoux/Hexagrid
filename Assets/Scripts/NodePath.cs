@@ -257,45 +257,56 @@ public sealed class NodePath : MonoBehaviour
 
     public static Stack<TraversableNode> TwinStarII(TraversableNode begNode, TraversableNode endNode, bool dualSearch = false)
     {
-        List<TraversableNode>[] openLists = new List<TraversableNode>[] {new List<TraversableNode>(), new List<TraversableNode>()};
+        List<TraversableNode>[] openList = new List<TraversableNode>[] {new List<TraversableNode>(), new List<TraversableNode>()};
         List<TraversableNode> closedList = new List<TraversableNode>();
 
         TraversableNode[] currentNode = new TraversableNode[] {begNode, endNode};
         begNode.parentNode = endNode.parentNode = null;
 
-        openLists[0].Add(currentNode[0]);
-        openLists[1].Add(currentNode[1]);
+        openList[0].Add(currentNode[0]);
+        openList[1].Add(currentNode[1]);
 
-        while(openLists[0].Count > 0 && openLists[1].Count > 0)
+        // As long as there are nodes to check
+        while(openList[0].Count > 0 && openList[1].Count > 0)
         {
+            // If dualSearch is enabled, the we will check from the start and end node until the 2 meet
             for(int i = 0, j = (i+1)%2; i < 2; i += dualSearch ? 1 : 0)
             {
+                // For each of the neighbor nodes of our current node
                 foreach(TraversableNode neighborNode in currentNode[i].GetNeighbors())
                 {
+                    // If the neighbor cannot be traversed,
+                    // move to the next one
                     if(neighborNode.isTraversable == false) { continue; }
 
-                    // If the 2 paths have overlapped
-                    if(i == 0 && neighborNode.CheckForNodeInParentChain(endNode))
+
+                    // If it CAN be traversed AND it's root parent is the goal node,
+                    // return the path
+                    else if(i == 0 && neighborNode.CheckForNodeInParentChain(endNode))
                     {
                         TraversableNode.ReverseParents(neighborNode);
                         neighborNode.parentNode = currentNode[0];
                         return NodePathStack(endNode);
                     }
 
+
+                    // Else, the node IS traversable, and NOT connected to the goal node
                     else
                     {
-                        if(!closedList.Contains(neighborNode))
+                        // Check if the node has already been traversed, or is on the list to be checked,
+                        // and add it to the list if it needs to be
+                        if(!closedList.Contains(neighborNode) & !openList[i].Contains(neighborNode))
                         {
-                            if(!openLists[i].Contains(neighborNode))
-                            {
-                                neighborNode.parentNode = currentNode[i];
-                                neighborNode.hValue = TraversableNode.Distance(neighborNode, endNode);
-                                neighborNode.gValue = 0.1f + neighborNode.GetGValue(i==1);
+                            neighborNode.parentNode = currentNode[i];
+                            neighborNode.hValue = TraversableNode.Distance(neighborNode, endNode);
+                            neighborNode.gValue = 0.1f + neighborNode.GetGValue(i==1);
 
-                                AddToSortedList(neighborNode, ref openLists[i]);
-                            }
+                            AddToSortedList(neighborNode, ref openList[i]);
                         }
                         
+
+                        // If the neighbor's G value is less than the parent's,
+                        // reparent the current node to the neighbor
                         else if(currentNode[i].parentNode != null &&
                             neighborNode.gValue < currentNode[i].parentNode.gValue &&
                                 neighborNode.parentNode != currentNode[i])
@@ -306,10 +317,12 @@ public sealed class NodePath : MonoBehaviour
                 }
 
                 closedList.Add(currentNode[i]);
-                currentNode[i] = openLists[i][0];
-                openLists[i].Remove(currentNode[i]);
+                currentNode[i] = openList[i][0];
+                openList[i].Remove(currentNode[i]);
             }
         }
+
+        // A path could not be found, so return an empty path stack
         return new Stack<TraversableNode>();
     }
 
