@@ -249,10 +249,10 @@ public sealed class NodePath : MonoBehaviour
                 rp = false;
 
                 currentNode[i] = openLists[i][0];
+                openLists[i].Remove(currentNode[i]);
                 if(Visualize)
                 {
                     currentNode[i].GetComponent<Renderer>().material = current;
-                    openLists[i].Remove(currentNode[i]);
                     yield return null;
                 }
             }
@@ -261,7 +261,66 @@ public sealed class NodePath : MonoBehaviour
     }
 
 
-    public Stack<TraversableNode> NodeStackPath(TraversableNode endNode)
+    public Stack<TraversableNode> TwinStarII(TraversableNode begNode, TraversableNode endNode, bool dualSearch = false)
+    {
+        List<TraversableNode>[] openLists = new List<TraversableNode>[] {new List<TraversableNode>(), new List<TraversableNode>()};
+        List<TraversableNode> closedList = new List<TraversableNode>();
+
+        TraversableNode[] currentNode = new TraversableNode[] {begNode, endNode};
+        begNode.parentNode = endNode.parentNode = null;
+
+        openLists[0].Add(currentNode[0]);
+        openLists[1].Add(currentNode[1]);
+
+        while(openLists[0].Count > 0 && openLists[1].Count > 0)
+        {
+            for(int i = 0, j = (i+1)%2; i < 2; i += dualSearch ? 1 : 0)
+            {
+                foreach(TraversableNode neighborNode in currentNode[i].GetNeighbors())
+                {
+                    if(neighborNode.isTraversable == false) { continue; }
+
+                    // If the 2 paths have overlapped
+                    if(i == 0 && neighborNode.CheckForNodeInParentChain(_endNode))
+                    {
+                        TraversableNode.ReverseParents(neighborNode);
+                        return NodePathStack(_endNode);
+                    }
+
+
+                    else
+                    {
+                        if(!closedList.Contains(neighborNode))
+                        {
+                            if(!openLists[i].Contains(neighborNode))
+                            {
+                                neighborNode.parentNode = currentNode[i];
+                                neighborNode.hValue = TraversableNode.Distance(neighborNode, endNode) / hWeight;
+                                neighborNode.gValue = 0.1f + neighborNode.GetGValue(i==1) / gWeight;
+
+                                AddToSortedList(neighborNode, ref openLists[i]);
+                            }
+                        }
+                        
+                        else if(currentNode[i].parentNode != null &&
+                            neighborNode.gValue < currentNode[i].parentNode.gValue &&
+                                neighborNode.parentNode != currentNode[i])
+                        {
+                            currentNode[i].parentNode = neighborNode;
+                        }
+                    }
+                }
+
+                closedList.Add(currentNode[i]);
+                currentNode[i] = openLists[i][0];
+                openLists[i].Remove(currentNode[i]);
+            }
+        }
+        return new Stack<TraversableNode>();
+    }
+
+
+    public Stack<TraversableNode> NodePathStack(TraversableNode endNode)
     {
         Stack<TraversableNode> returnStack = new Stack<TraversableNode>();
 
