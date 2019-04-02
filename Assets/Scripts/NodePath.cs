@@ -210,9 +210,11 @@ public sealed class NodePath : MonoBehaviour
                             foreach(TraversableNode tn in openLists[1])
                                 tn.ResetMaterial();
 
-                            while(tNode != null)
+
+                            Stack<TraversableNode> tns = NodePathStack(_endNode);
+                            while(tns.Count > 0)
                             {
-                                tNode.GetComponent<Renderer>().material = current;
+                                tns.Pop().GetComponent<Renderer>().material = current;
                                 tNode = tNode.parentNode;
                             }
                         }
@@ -229,7 +231,7 @@ public sealed class NodePath : MonoBehaviour
                             {
                                 neighborNode.parentNode = currentNode[i];
                                 neighborNode.hValue = TraversableNode.Distance(neighborNode, endNode);
-                                neighborNode.gValue = 0.1f + neighborNode.GetGValue(i==1);
+                                neighborNode.gValue = neighborNode.GetGValue(i==1);
 
                                 AddToSortedList(neighborNode, ref openLists[i]);
 
@@ -307,21 +309,23 @@ public sealed class NodePath : MonoBehaviour
                     {
                         // Check if the node has already been traversed, or is on the list to be checked,
                         // and add it to the list if it needs to be
-                        if(!closedList.Contains(neighborNode) & !openList[i].Contains(neighborNode))
+                        if(!closedList.Contains(neighborNode))
                         {
-                            neighborNode.parentNode = currentNode[i];
-                            neighborNode.hValue = TraversableNode.Distance(neighborNode, endNode);
-                            neighborNode.gValue = 0.1f + neighborNode.GetGValue(i==1);
+                            if(!openList[i].Contains(neighborNode))
+                            {
+                                neighborNode.parentNode = currentNode[i];
+                                neighborNode.hValue = TraversableNode.Distance(neighborNode, endNode);
+                                neighborNode.gValue = neighborNode.GetGValue(i==1);
 
-                            AddToSortedList(neighborNode, ref openList[i]);
+                                AddToSortedList(neighborNode, ref openList[i]);
+                            }
                         }
-                        
 
                         // If the neighbor's G value is less than the parent's,
                         // reparent the current node to the neighbor
-                        else if(currentNode[i].parentNode != null &&
-                            neighborNode.gValue < currentNode[i].parentNode.gValue &&
-                                neighborNode.parentNode != currentNode[i])
+                        //else if(currentNode[i].parentNode != null &&
+                        else if(neighborNode.parentNode != currentNode[i] &&
+                            neighborNode.gValue < currentNode[i].parentNode.gValue)
                         {
                             currentNode[i].parentNode = neighborNode;
                         }

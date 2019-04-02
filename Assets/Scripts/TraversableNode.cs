@@ -63,10 +63,10 @@ public class TraversableNode : Node
 
         return Mathf.Sqrt(a + b);
 
-        //float a = Mathf.Abs(aNode._xCoord - bNode._xCoord);
-        //float b = Mathf.Abs(aNode._yCoord - bNode._yCoord);
+        // float a = Mathf.Abs(aNode._xCoord - bNode._xCoord);
+        // float b = Mathf.Abs(aNode._yCoord - bNode._yCoord);
 
-        //return (a + b);
+        // return (a + b);
     }
 
 
