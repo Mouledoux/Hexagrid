@@ -30,6 +30,7 @@ public class DuploNPC : MonoBehaviour
             {   
                 if(_startNode != null) _startNode.ResetMaterial();
 
+                path = null;
                 _startNode = tn;
                 _startNode.GetComponent<Renderer>().material = mat;
                 transform.position = _startNode.transform.position;
