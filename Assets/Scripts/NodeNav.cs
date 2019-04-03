@@ -15,11 +15,13 @@ public static class NodeNav
         openList[0].Add(currentNode[0]);
         openList[1].Add(currentNode[1]);
 
+
+
         // As long as there are nodes to check
         while(openList[0].Count > 0 && openList[1].Count > 0)
         {
             // If dualSearch is enabled, the we will check from the start and end node until the 2 meet
-            for(int i = 0, j = (i+1)%2; i < 2; i += dualSearch ? 1 : 0)
+            for(int i = 0; i < 2; i += dualSearch ? 1 : 0)
             {
                 // For each of the neighbor nodes of our current node
                 foreach(TraversableNode neighborNode in currentNode[i].GetNeighbors())
@@ -79,6 +81,7 @@ public static class NodeNav
 
 
 
+
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public static Stack<TraversableNode> NodePathStack(TraversableNode endNode)
     {
@@ -94,6 +97,7 @@ public static class NodeNav
 
         return returnStack;
     }
+
 
 
 

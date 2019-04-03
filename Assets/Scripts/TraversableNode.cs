@@ -11,7 +11,6 @@ public class TraversableNode : Node
         set {_parentNode = value; }
     }
     public TraversableNode safeParentNode => (parentNode == null ? this : parentNode);
-    //public TraversableNode rootParent => (parentNode == null ? this : parentNode.rootParent);
 
     public int _xCoord, _yCoord;
 
@@ -46,6 +45,10 @@ public class TraversableNode : Node
     public float fValue => (_hValue + _gValue);
 
 
+
+
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public float GetNeighboorTravelCost(TraversableNode aNode, bool invert = false)
     {
         return  !invert ? 
@@ -53,6 +56,9 @@ public class TraversableNode : Node
         aNode.GetNeighboorTravelCost(this, false);
     }
 
+
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public static float Distance(TraversableNode aNode, TraversableNode bNode)
     {
         float a = (aNode._xCoord - bNode._xCoord);
@@ -70,6 +76,8 @@ public class TraversableNode : Node
     }
 
 
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public float GetGValue(bool invert = false)
     {
         if(_parentNode == null)
@@ -79,6 +87,9 @@ public class TraversableNode : Node
             return GetNeighboorTravelCost(_parentNode, invert) + _parentNode._gValue;
     }
 
+
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public bool CheckForNodeInParentChain(TraversableNode targetNode)
     {
         if(this == targetNode) return true;
@@ -97,6 +108,8 @@ public class TraversableNode : Node
     }
 
 
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public static void ValidateParentChain(TraversableNode aNode)
     {
         List<TraversableNode> parents = new List<TraversableNode>();
@@ -118,6 +131,8 @@ public class TraversableNode : Node
     }
 
 
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public static void ReverseParents(TraversableNode currentNode)
     {
         TraversableNode previousNode = null;
@@ -133,11 +148,17 @@ public class TraversableNode : Node
         } while(currentNode != null);
     }
 
+
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private static TraversableNode GetRootParent(TraversableNode aNode)
     {
         return (aNode.parentNode == null ? aNode : GetRootParent(aNode.parentNode));
     }
 
+
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public static bool operator >(TraversableNode lhs, TraversableNode rhs)
     {
         return lhs.fValue > rhs.fValue;
