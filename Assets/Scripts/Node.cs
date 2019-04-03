@@ -25,6 +25,32 @@ public class Node : MonoBehaviour
         return myNeighbors;
     }
 
+    public Node[] GetNeighborhood(int layers = 1)
+    {   
+        int cycles = 0;
+        int index = 0;
+        int neighbors = 0;
+
+        List<Node> neighborhood = new List<Node>();
+        neighborhood.Add(this);
+
+        while(cycles < layers)
+        {
+            cycles++;
+            neighbors = neighborhood.Count;
+            for(int i = index; i < neighbors; i++)
+            {
+                foreach(Node n in neighborhood[i].GetNeighbors())
+                {
+                    neighborhood.Add(n);
+                }
+                index = i;
+            }
+        }
+        return neighborhood.ToArray();
+    }
+
+
     public int AddNeighbor(Node newNeighbor)
     {
         if(newNeighbor == null)

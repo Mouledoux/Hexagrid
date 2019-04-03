@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class NodeNavAgent : MonoBehaviour
 {
+    public int scanRange;
+    public Material pathMaterial, rangeMaterial;
+
+
     private TraversableNode _currentPositionNode;
     public TraversableNode currentPositionNode => (_currentPositionNode);
 
@@ -43,10 +47,19 @@ public class NodeNavAgent : MonoBehaviour
             transform.Translate(dir * 2.5f * Time.deltaTime);
 
             if(Vector3.Distance(transform.position, _nodePathStack.Peek().transform.position) <= 0.05f)
+            {
                 _currentPositionNode = _nodePathStack.Pop();
-            
+                _currentPositionNode.GetComponent<Renderer>().material = pathMaterial;
+            }
+
             if(_nodePathStack.Count == 0)
+            {
+                foreach(Node n in _currentPositionNode.GetNeighborhood(scanRange))
+                {
+                    n.GetComponent<Renderer>().material = rangeMaterial;
+                }
                 _nodePathStack = null;
+            }
         }
     }
 
