@@ -6,6 +6,8 @@ public static class NodeNav
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public static Stack<TraversableNode> TwinStarII(TraversableNode begNode, TraversableNode endNode, bool dualSearch = false)
     {
+        if(begNode == endNode) return null;
+
         List<TraversableNode>[] openList = new List<TraversableNode>[] {new List<TraversableNode>(), new List<TraversableNode>()};
         List<TraversableNode> closedList = new List<TraversableNode>();
 

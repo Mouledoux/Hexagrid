@@ -12,7 +12,7 @@ public class TraversableNode : Node
     }
     public TraversableNode safeParentNode => (parentNode == null ? this : parentNode);
 
-    public int _xCoord, _yCoord;
+    public int xCoord, yCoord;
 
     private float _travelCost;
     public float travelCost
@@ -42,8 +42,7 @@ public class TraversableNode : Node
         set { _gValue = value; }
     }
 
-    public float fValue => (_hValue + _gValue);
-
+    public float fValue => (hValue + gValue);
 
 
 
@@ -61,16 +60,16 @@ public class TraversableNode : Node
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public static float Distance(TraversableNode aNode, TraversableNode bNode)
     {
-        float a = (aNode._xCoord - bNode._xCoord);
-        float b = (aNode._yCoord - bNode._yCoord);
+        float a = (aNode.xCoord - bNode.xCoord);
+        float b = (aNode.yCoord - bNode.yCoord);
 
          a *= a;
          b *= b;
 
         return Mathf.Sqrt(a + b);
 
-        // float a = Mathf.Abs(aNode._xCoord - bNode._xCoord);
-        // float b = Mathf.Abs(aNode._yCoord - bNode._yCoord);
+        // float a = Mathf.Abs(aNode.xCoord - bNode.xCoord);
+        // float b = Mathf.Abs(aNode.yCoord - bNode.yCoord);
 
         // return (a + b);
     }
@@ -80,11 +79,11 @@ public class TraversableNode : Node
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public float GetGValue(bool invert = false)
     {
-        if(_parentNode == null)
+        if(parentNode == null)
             return 0f;
         
         else
-            return GetNeighboorTravelCost(_parentNode, invert) + _parentNode._gValue;
+            return GetNeighboorTravelCost(parentNode, invert) + _parentNode.gValue;
     }
 
 

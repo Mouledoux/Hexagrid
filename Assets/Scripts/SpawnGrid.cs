@@ -71,8 +71,8 @@ public class SpawnGrid : MonoBehaviour
                     gridCell.transform.localScale = scale;
 
                     gridNodes[i, j] = (gridCell.AddComponent<TraversableNode>());
-                    gridNodes[i, j]._xCoord = i;
-                    gridNodes[i, j]._yCoord = j;
+                    gridNodes[i, j].xCoord = i;
+                    gridNodes[i, j].yCoord = j;
                     gridNodes[i, j].travelCost = resistance + height;
                     gridNodes[i, j].isTraversable = !isWall;
                     
