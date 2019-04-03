@@ -44,7 +44,7 @@ public class DuploNPC : MonoBehaviour
 
                 if(_startNode != null && _endNode != null)
                 {
-                    path = NodePath.TwinStarII(_startNode, _endNode, true);
+                    path = NodeNav.TwinStarII(_startNode, _endNode, true);
                 }
             }
         }
