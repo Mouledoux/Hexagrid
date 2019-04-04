@@ -7,7 +7,7 @@ public class NodeNavAgent : MonoBehaviour
     public int scanRange;
     public Material pathMaterial, rangeMaterial;
 
-    private float _speed;
+    private float _speed = 1f;
     public float speed
     {
         get {return _speed; }
@@ -22,9 +22,9 @@ public class NodeNavAgent : MonoBehaviour
 
     private Stack<TraversableNode> _nodePathStack;
 
-    public bool hasPath => (_nodePathStack == null && _nodePathStack.Count > 0);
+    public bool hasPath => (_nodePathStack != null && _nodePathStack.Count > 0);
 
-    private bool _autoRepath;
+    private bool _autoRepath = true;
     public bool autoRepath
     {
         get { return _autoRepath; }
@@ -41,6 +41,9 @@ public class NodeNavAgent : MonoBehaviour
         ClickSetPath();
         TraversePath();
         VeggieJump();
+
+        if(!hasPath)
+            ScanNeighbors(scanRange);
     }
 
 
@@ -70,7 +73,7 @@ public class NodeNavAgent : MonoBehaviour
             Vector3 dir = (_nodePathStack.Peek().transform.position - transform.position);
 
             dir.Normalize();
-            transform.Translate(dir * 2.5f * Time.deltaTime);
+            transform.Translate(dir * speed * Time.deltaTime);
 
             if(Vector3.Distance(transform.position, _nodePathStack.Peek().transform.position) <= 0.05f)
             {
@@ -82,10 +85,6 @@ public class NodeNavAgent : MonoBehaviour
 
             if(_nodePathStack.Count == 0)
             {
-                foreach(Node n in _currentPositionNode.GetNeighborhood(scanRange))
-                {
-                    n.GetComponent<Renderer>().material = rangeMaterial;
-                }
                 _nodePathStack = null;
             }
         }
@@ -133,6 +132,17 @@ public class NodeNavAgent : MonoBehaviour
                     _nodePathStack = NodeNav.TwinStarII(currentPositionNode, tn, true);
                 }
             }
+        }
+    }
+
+
+    private void ScanNeighbors(int range)
+    {
+        if(currentPositionNode == null) return;
+
+        foreach(Node n in _currentPositionNode.GetNeighborhood(range))
+        {
+            n.GetComponent<Renderer>().material = rangeMaterial;
         }
     }
 }
