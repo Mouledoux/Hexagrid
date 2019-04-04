@@ -52,10 +52,11 @@ public class NodeNavAgent : MonoBehaviour
         if(leader)  
         {
             ClickSetPath();
-
-            if(!hasPath && currentPositionNode != null)
+        }
+        else if(goalPositionNode == null)
+        {
+            if(currentPositionNode != null)
             {
-                ScanNeighbors(scanRange);
                 foreach(TraversableNode aNode in currentPositionNode.GetNeighborhood(scanRange))
                 {
                     if(aNode.isOccupied)
@@ -65,14 +66,20 @@ public class NodeNavAgent : MonoBehaviour
                         {
                             foreach (NodeNavAgent agent in otherAgents)
                             {
-                                print(agent.scanRange);
+                                foreach(TraversableNode bNode in agent.currentPositionNode.GetNeighborhood(scanRange))
+                                {
+                                    if(bNode.isTraversable && !bNode.isOccupied)
+                                    {
+                                        goalPositionNode = bNode;
+                                        return;
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
         }
-
 
         TraversePath();
         VeggieJump();
@@ -91,7 +98,6 @@ public class NodeNavAgent : MonoBehaviour
                 if(autoRepath)
                 {
                     _nodePathStack = NodeNav.TwinStarII(currentPositionNode, goalPositionNode, true);
-
                 }
                 
                 else
@@ -109,9 +115,7 @@ public class NodeNavAgent : MonoBehaviour
 
             if(Vector3.Distance(transform.position, _nodePathStack.Peek().transform.position) <= 0.05f)
             {
-                if(currentPositionNode.CheckInformationFor(this))
-                    currentPositionNode.RemoveInformation(this);
-
+                currentPositionNode.RemoveInformation(this);
                 currentPositionNode.isOccupied = false;
 
                 _currentPositionNode = _nodePathStack.Pop();
@@ -124,6 +128,7 @@ public class NodeNavAgent : MonoBehaviour
 
             if(_nodePathStack.Count == 0)
             {
+                goalPositionNode = null;
                 _nodePathStack = null;
             }
         }
@@ -135,7 +140,7 @@ public class NodeNavAgent : MonoBehaviour
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void VeggieJump()
     {
-        if(_nodePathStack != null)
+        if(hasPath)
         {
             TraversableNode nextNode = _nodePathStack.Peek();
             float dist = Vector3.Distance(transform.position, nextNode.transform.position);
