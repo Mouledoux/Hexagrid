@@ -108,12 +108,15 @@ public class Node : MonoBehaviour
     }
 
 
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public int AddInformation(object info)
     {
         _information.Add(info);
         return 0;
     }
 
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public int RemoveInformation(object info)
     {
         if(_information.Contains(info))
@@ -122,11 +125,13 @@ public class Node : MonoBehaviour
         return 0;
     }
 
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public bool CheckInformationFor(object info)
     {
         return _information.Contains(info);
     }
 
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public T[] GetInformation<T>()
     {
         List<T> returnList = new List<T>();
@@ -138,7 +143,6 @@ public class Node : MonoBehaviour
                 returnList.Add((T)info);
             }
         }
-
         return returnList.ToArray();
     }
 }

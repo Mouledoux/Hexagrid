@@ -8,6 +8,7 @@ public class NodeNavAgent : MonoBehaviour
     public int scanRange;
     public Material pathMaterial, rangeMaterial;
 
+    [SerializeField]
     private float _speed = 1f;
     public float speed
     {
@@ -15,16 +16,7 @@ public class NodeNavAgent : MonoBehaviour
         set { _speed = value; }
     }
 
-    private TraversableNode _currentPositionNode;
-    public TraversableNode currentPositionNode => (_currentPositionNode);
-
-    private TraversableNode _goalPositionNode;
-    public TraversableNode goalPositionNode => (_goalPositionNode);
-
-    private Stack<TraversableNode> _nodePathStack;
-
-    public bool hasPath => (_nodePathStack != null && _nodePathStack.Count > 0);
-
+    [SerializeField]
     private bool _autoRepath = true;
     public bool autoRepath
     {
@@ -32,8 +24,26 @@ public class NodeNavAgent : MonoBehaviour
         set { _autoRepath = value; }
     }
 
-    public float remainingDistance => TraversableNode.Distance(currentPositionNode, goalPositionNode);
 
+    private TraversableNode _currentPositionNode;
+    public TraversableNode currentPositionNode => (_currentPositionNode);
+
+    private TraversableNode _goalPositionNode;
+    public TraversableNode goalPositionNode
+    {
+        get { return _goalPositionNode; }
+        set
+        {
+            _goalPositionNode = value;
+            _nodePathStack = NodeNav.TwinStarII(currentPositionNode, _goalPositionNode, true);
+        }
+    }
+
+    private Stack<TraversableNode> _nodePathStack;
+
+    public bool hasPath => (_nodePathStack != null && _nodePathStack.Count > 0);
+
+    public float remainingDistance => TraversableNode.Distance(currentPositionNode, goalPositionNode);
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
