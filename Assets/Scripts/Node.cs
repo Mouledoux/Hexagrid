@@ -27,24 +27,25 @@ public class Node : MonoBehaviour
 
     public Node[] GetNeighborhood(int layers = 1)
     {   
-        int cycles = 0;
         int index = 0;
         int neighbors = 0;
 
         List<Node> neighborhood = new List<Node>();
         neighborhood.Add(this);
 
-        while(cycles < layers)
+        for(int i = 0; i < layers; i++)
         {
-            cycles++;
             neighbors = neighborhood.Count;
-            for(int i = index; i < neighbors; i++)
+            for(int j = index; j < neighbors; j++)
             {
-                foreach(Node n in neighborhood[i].GetNeighbors())
+                foreach(Node n in neighborhood[j].GetNeighbors())
                 {
-                    neighborhood.Add(n);
+                    if(!neighborhood.Contains(n))
+                    {
+                        neighborhood.Add(n);
+                    }
                 }
-                index = i;
+                index = j;
             }
         }
         return neighborhood.ToArray();
