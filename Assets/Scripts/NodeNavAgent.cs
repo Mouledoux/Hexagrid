@@ -39,15 +39,28 @@ public class NodeNavAgent : MonoBehaviour
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void Update()
     {
-        if(leader)  ClickSetPath();
-
-        else if(!hasPath)
+        if(leader)  
         {
-            foreach(TraversableNode aNode in currentPositionNode.GetNeighborhood(scanRange))
-                if(aNode.isOccupied)
-                    foreach(TraversableNode bNode in aNode.GetNeighborhood(scanRange))
-                        if(!bNode.isOccupied)
-                            _goalPositionNode = bNode;
+            ClickSetPath();
+
+            if(!hasPath && currentPositionNode != null)
+            {
+                ScanNeighbors(scanRange);
+                foreach(TraversableNode aNode in currentPositionNode.GetNeighborhood(scanRange))
+                {
+                    if(aNode.isOccupied)
+                    {
+                        NodeNavAgent[] otherAgents = aNode.GetInformation<NodeNavAgent>();
+                        if(otherAgents.Length > 0)
+                        {
+                            foreach (NodeNavAgent agent in otherAgents)
+                            {
+                                print(agent.scanRange);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
 
@@ -86,9 +99,16 @@ public class NodeNavAgent : MonoBehaviour
 
             if(Vector3.Distance(transform.position, _nodePathStack.Peek().transform.position) <= 0.05f)
             {
+                if(currentPositionNode.CheckInformationFor(this))
+                    currentPositionNode.RemoveInformation(this);
+
                 currentPositionNode.isOccupied = false;
+
                 _currentPositionNode = _nodePathStack.Pop();
+
+                currentPositionNode.AddInformation(this);
                 currentPositionNode.isOccupied = true;
+
                 currentPositionNode.GetComponent<Renderer>().material = pathMaterial;
             }
 
@@ -129,8 +149,12 @@ public class NodeNavAgent : MonoBehaviour
             if(tn == null) return;
 
             else if(Input.GetMouseButtonDown(1))
-            {   _nodePathStack = null;
+            {   
+                _nodePathStack = null;
                 _currentPositionNode = tn;
+                currentPositionNode.isOccupied = true;
+                currentPositionNode.AddInformation(this);
+
                 transform.position = currentPositionNode.transform.position;
             }
 

@@ -8,6 +8,7 @@ public class Node : MonoBehaviour
     private Renderer _renderer;
     private Material _defaultMaterial;
 
+    private List<object> _information = new List<object>();
 
     
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
@@ -56,6 +57,7 @@ public class Node : MonoBehaviour
                 index = j;
             }
         }
+        neighborhood.Remove(this);
         return neighborhood.ToArray();
     }
 
@@ -103,5 +105,40 @@ public class Node : MonoBehaviour
         _neighbors.Clear();
 
         return 0;
+    }
+
+
+    public int AddInformation(object info)
+    {
+        _information.Add(info);
+        return 0;
+    }
+
+    public int RemoveInformation(object info)
+    {
+        if(_information.Contains(info))
+            _information.Remove(info);
+
+        return 0;
+    }
+
+    public bool CheckInformationFor(object info)
+    {
+        return _information.Contains(info);
+    }
+
+    public T[] GetInformation<T>()
+    {
+        List<T> returnList = new List<T>();
+
+        foreach(object info in _information)
+        {
+            if(info.GetType() == typeof(T))
+            {
+                returnList.Add((T)info);
+            }
+        }
+
+        return returnList.ToArray();
     }
 }
