@@ -7,6 +7,12 @@ public class NodeNavAgent : MonoBehaviour
     public int scanRange;
     public Material pathMaterial, rangeMaterial;
 
+    private float _speed;
+    public float speed
+    {
+        get {return _speed; }
+        set { _speed = value; }
+    }
 
     private TraversableNode _currentPositionNode;
     public TraversableNode currentPositionNode => (_currentPositionNode);
@@ -28,7 +34,6 @@ public class NodeNavAgent : MonoBehaviour
     public float remainingDistance => TraversableNode.Distance(currentPositionNode, goalPositionNode);
 
 
-
     private void Update()
     {
         ClickSetPath();
@@ -39,8 +44,23 @@ public class NodeNavAgent : MonoBehaviour
 
     private void TraversePath()
     {
-        if(_nodePathStack != null && _nodePathStack.Count > 0)
+        if(hasPath)
         {
+            if(_nodePathStack.Peek().isTraversable == false)
+            {
+                if(autoRepath)
+                {
+                    _nodePathStack = NodeNav.TwinStarII(currentPositionNode, goalPositionNode, true);
+
+                }
+                
+                else
+                {
+                    _nodePathStack = null;
+                    return;
+                }
+            }
+
             Vector3 dir = (_nodePathStack.Peek().transform.position - transform.position);
 
             dir.Normalize();
@@ -48,8 +68,10 @@ public class NodeNavAgent : MonoBehaviour
 
             if(Vector3.Distance(transform.position, _nodePathStack.Peek().transform.position) <= 0.05f)
             {
+                currentPositionNode.isTraversable = true;
                 _currentPositionNode = _nodePathStack.Pop();
-                _currentPositionNode.GetComponent<Renderer>().material = pathMaterial;
+                currentPositionNode.isTraversable = false;
+                currentPositionNode.GetComponent<Renderer>().material = pathMaterial;
             }
 
             if(_nodePathStack.Count == 0)
@@ -94,7 +116,7 @@ public class NodeNavAgent : MonoBehaviour
 
             else if(Input.GetMouseButtonDown(0))
             {
-                if(_currentPositionNode != null)
+                if(currentPositionNode != null)
                 {
                     _nodePathStack = NodeNav.TwinStarII(currentPositionNode, tn, true);
                 }

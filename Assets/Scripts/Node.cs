@@ -7,6 +7,9 @@ public class Node : MonoBehaviour
     private List<Node> _neighbors = new List<Node>();
     private Renderer _renderer;
     private Material _defaultMaterial;
+
+
+    
     private void Start()
     {
         _renderer = GetComponent<Renderer>();
@@ -67,20 +70,8 @@ public class Node : MonoBehaviour
     }
 
     public bool CheckIsNeighbor(Node aNode)
-
     {
         return _neighbors.Contains(aNode);
-    }
-
-
-    public int ClearNeighbors()
-    {
-        foreach(Node n in _neighbors)
-            n.RemoveNeighbor(this);
-        
-        _neighbors.Clear();
-
-        return 0;
     }
 
     public int RemoveNeighbor(Node oldNeighbor)
@@ -90,6 +81,16 @@ public class Node : MonoBehaviour
             _neighbors.Remove(oldNeighbor);
             oldNeighbor.RemoveNeighbor(this);
         }
+
+        return 0;
+    }
+
+    public int ClearNeighbors()
+    {
+        foreach(Node n in _neighbors)
+            n.RemoveNeighbor(this);
+        
+        _neighbors.Clear();
 
         return 0;
     }
