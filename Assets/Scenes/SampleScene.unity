@@ -302,7 +302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fcc6a447416e184985f43743bab589a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scanRange: 0
+  scanRange: 4
   pathMaterial: {fileID: 2100000, guid: 486a9a173f1b85249af81ff16ac93468, type: 2}
   rangeMaterial: {fileID: 2100000, guid: 104c4d921bcc6a14e846198e186fd6af, type: 2}
 --- !u!4 &488535300
