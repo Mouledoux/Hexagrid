@@ -65,7 +65,7 @@ public static class NodeNav
                         // If the neighbor's G value is less than the parent's,
                         // reparent the current node to the neighbor
                         //else if(currentNode[i].parentNode != null &&
-                        else if(neighborNode.parentNode != currentNode[i] &&
+                        else if(neighborNode.safeParentNode != currentNode[i] &&
                             neighborNode.gValue < currentNode[i].parentNode.gValue)
                         {
                             currentNode[i].parentNode = neighborNode;

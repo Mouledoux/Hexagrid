@@ -103,8 +103,8 @@ public class NodeNavAgent : MonoBehaviour
                 else
                 {
                     _nodePathStack = null;
-                    return;
                 }
+                return;
             }
 
 
