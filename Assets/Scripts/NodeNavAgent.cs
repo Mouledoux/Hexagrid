@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class NodeNavAgent : MonoBehaviour
 {
+    public bool leader;
     public int scanRange;
     public Material pathMaterial, rangeMaterial;
 
@@ -38,12 +39,20 @@ public class NodeNavAgent : MonoBehaviour
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void Update()
     {
-        ClickSetPath();
+        if(leader)  ClickSetPath();
+
+        else if(!hasPath)
+        {
+            foreach(TraversableNode aNode in currentPositionNode.GetNeighborhood(scanRange))
+                if(aNode.isOccupied)
+                    foreach(TraversableNode bNode in aNode.GetNeighborhood(scanRange))
+                        if(!bNode.isOccupied)
+                            _goalPositionNode = bNode;
+        }
+
+
         TraversePath();
         VeggieJump();
-
-        if(!hasPath)
-            ScanNeighbors(scanRange);
     }
 
 
@@ -54,7 +63,7 @@ public class NodeNavAgent : MonoBehaviour
     {
         if(hasPath)
         {
-            if(_nodePathStack.Peek().isTraversable == false)
+            if(!_nodePathStack.Peek().isTraversable || _nodePathStack.Peek().isOccupied)
             {
                 if(autoRepath)
                 {
@@ -77,9 +86,9 @@ public class NodeNavAgent : MonoBehaviour
 
             if(Vector3.Distance(transform.position, _nodePathStack.Peek().transform.position) <= 0.05f)
             {
-                currentPositionNode.isTraversable = true;
+                currentPositionNode.isOccupied = false;
                 _currentPositionNode = _nodePathStack.Pop();
-                currentPositionNode.isTraversable = false;
+                currentPositionNode.isOccupied = true;
                 currentPositionNode.GetComponent<Renderer>().material = pathMaterial;
             }
 
