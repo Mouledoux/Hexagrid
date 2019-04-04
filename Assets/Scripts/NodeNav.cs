@@ -6,7 +6,9 @@ public static class NodeNav
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public static Stack<TraversableNode> TwinStarII(TraversableNode begNode, TraversableNode endNode, bool dualSearch = false)
     {
-        if(begNode == endNode) return null;
+        
+        if(begNode == endNode || begNode == null || endNode == null ||
+        !endNode.isTraversable || endNode.isOccupied) return null;
 
         List<TraversableNode>[] openList = new List<TraversableNode>[] {new List<TraversableNode>(), new List<TraversableNode>()};
         List<TraversableNode> closedList = new List<TraversableNode>();
@@ -20,7 +22,7 @@ public static class NodeNav
 
 
         // As long as there are nodes to check
-        while(openList[0].Count > 0 && openList[1].Count > 0)
+        while(openList[0].Count > 0 || openList[1].Count > 0)
         {
             // If dualSearch is enabled, the we will check from the start and end node until the 2 meet
             for(int i = 0; i < 2; i += dualSearch ? 1 : 0)
@@ -71,14 +73,14 @@ public static class NodeNav
                     }
                 }
 
-                closedList.Add(currentNode[i]);
+                AddToSortedList(currentNode[i], ref closedList);
                 currentNode[i] = openList[i][0];
                 openList[i].Remove(currentNode[i]);
             }
         }
 
         // A path could not be found, so return an empty path stack
-        return new Stack<TraversableNode>();
+        return NodePathStack(closedList[0]);
     }
 
 
@@ -88,8 +90,9 @@ public static class NodeNav
     public static Stack<TraversableNode> NodePathStack(TraversableNode endNode)
     {
         Stack<TraversableNode> returnStack = new Stack<TraversableNode>();
-
         TraversableNode currentNode = endNode;
+
+        TraversableNode.ValidateParentChain(currentNode);
 
         while(currentNode.parentNode != null)
         {
