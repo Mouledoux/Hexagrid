@@ -12,7 +12,7 @@ public class TraversableNode : Node
     }
     public TraversableNode safeParentNode => (parentNode == null ? this : parentNode);
 
-    public bool occupied;
+    public bool isOccupied;
 
     public int xCoord, yCoord;
 
