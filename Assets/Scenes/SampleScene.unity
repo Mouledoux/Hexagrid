@@ -398,6 +398,8 @@ MonoBehaviour:
   scanRange: 4
   pathMaterial: {fileID: 2100000, guid: 486a9a173f1b85249af81ff16ac93468, type: 2}
   rangeMaterial: {fileID: 2100000, guid: 104c4d921bcc6a14e846198e186fd6af, type: 2}
+  _speed: 2
+  _autoRepath: 1
 --- !u!4 &488535300
 Transform:
   m_ObjectHideFlags: 0
@@ -5448,6 +5450,8 @@ MonoBehaviour:
   scanRange: 4
   pathMaterial: {fileID: 2100000, guid: 486a9a173f1b85249af81ff16ac93468, type: 2}
   rangeMaterial: {fileID: 2100000, guid: 104c4d921bcc6a14e846198e186fd6af, type: 2}
+  _speed: 2
+  _autoRepath: 1
 --- !u!4 &1083780377
 Transform:
   m_ObjectHideFlags: 0
