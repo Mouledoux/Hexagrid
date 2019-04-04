@@ -10,24 +10,29 @@ public class Node : MonoBehaviour
 
 
     
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void Start()
     {
         _renderer = GetComponent<Renderer>();
         _defaultMaterial = _renderer.sharedMaterial;
     }
 
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public void ResetMaterial()
     {
         _renderer.material = _defaultMaterial;
     }
 
 
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public Node[] GetNeighbors()
     {
         Node[] myNeighbors = _neighbors.ToArray();
         return myNeighbors;
     }
 
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public Node[] GetNeighborhood(int layers = 1)
     {   
         int index = 0;
@@ -55,6 +60,8 @@ public class Node : MonoBehaviour
     }
 
 
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public int AddNeighbor(Node newNeighbor)
     {
         if(newNeighbor == null)
@@ -69,11 +76,13 @@ public class Node : MonoBehaviour
         return 0;
     }
 
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public bool CheckIsNeighbor(Node aNode)
     {
         return _neighbors.Contains(aNode);
     }
 
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public int RemoveNeighbor(Node oldNeighbor)
     {
         if(_neighbors.Contains(oldNeighbor))
@@ -85,6 +94,7 @@ public class Node : MonoBehaviour
         return 0;
     }
 
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public int ClearNeighbors()
     {
         foreach(Node n in _neighbors)

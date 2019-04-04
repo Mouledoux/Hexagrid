@@ -34,6 +34,8 @@ public class NodeNavAgent : MonoBehaviour
     public float remainingDistance => TraversableNode.Distance(currentPositionNode, goalPositionNode);
 
 
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void Update()
     {
         ClickSetPath();
@@ -42,6 +44,9 @@ public class NodeNavAgent : MonoBehaviour
     }
 
 
+
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void TraversePath()
     {
         if(hasPath)
@@ -60,6 +65,7 @@ public class NodeNavAgent : MonoBehaviour
                     return;
                 }
             }
+
 
             Vector3 dir = (_nodePathStack.Peek().transform.position - transform.position);
 
@@ -85,6 +91,10 @@ public class NodeNavAgent : MonoBehaviour
         }
     }
 
+
+
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void VeggieJump()
     {
         if(_nodePathStack != null)
@@ -99,6 +109,8 @@ public class NodeNavAgent : MonoBehaviour
 
 
 
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void ClickSetPath()
     {
         RaycastHit hit;
