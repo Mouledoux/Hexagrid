@@ -17,7 +17,7 @@ public class GridHighlight : MonoBehaviour
     void Update()
     {
         Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit, 64);
-        mp = rayHit.point;
+        mp = rayHit.collider.transform.position;
         mat.SetVector("_MousePos", mp);
     }
 }
