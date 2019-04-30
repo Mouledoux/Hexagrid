@@ -58,7 +58,9 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _MaxHeight: 2
     - _Metallic: 0
+    - _MinHeight: 0
     - _OcclusionStrength: 1
     - _ReceiveShadows: 1
     - _SmoothnessTextureChannel: 0
@@ -70,5 +72,6 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 0.97164285, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _MainColor: {r: 1, g: 0, b: 0, a: 1}
     - _MousePos: {r: -2.5500002, g: 0.4, b: 25.5, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
