@@ -25,7 +25,7 @@ public class SpawnGrid : MonoBehaviour
                 float yCord = (float)j/(float)rows;
 
                 float perlinHeight = GetPerlinNoiseValue(xCord, yCord, perlinScale, perlinSeed);
-                float height = (int)(perlinHeight * 8f) * 0.2f;
+                float height = (int)(perlinHeight * perlinScale) * 0.2f;
                 
 
                 bool isWall = (i == 0 || j == 0 || i == cols-1 || j == rows-1);

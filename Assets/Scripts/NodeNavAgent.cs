@@ -46,6 +46,8 @@ public class NodeNavAgent : MonoBehaviour
     public float remainingDistance => TraversableNode.Distance(currentPositionNode, goalPositionNode);
 
 
+    public UnityEngine.Events.UnityEvent onDestinationReached;
+
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void Update()
     {
@@ -130,6 +132,7 @@ public class NodeNavAgent : MonoBehaviour
             {
                 goalPositionNode = null;
                 _nodePathStack = null;
+                onDestinationReached.Invoke();
             }
         }
     }

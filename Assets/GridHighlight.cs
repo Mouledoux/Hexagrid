@@ -4,15 +4,10 @@ using UnityEngine;
 
 public class GridHighlight : MonoBehaviour
 {
-    Material mat;
+    public Material mat;
     Vector3 mp;
     Ray mouseRay => (Camera.main.ScreenPointToRay(Input.mousePosition));
     RaycastHit rayHit;
-    // Start is called before the first frame update
-    void Start()
-    {
-        mat = GetComponentInChildren<Renderer>().sharedMaterial;
-    }
 
     // Update is called once per frame
     void Update()
@@ -21,7 +16,6 @@ public class GridHighlight : MonoBehaviour
         {
             mp = rayHit.collider.transform.position;
             mat.SetVector("_MousePos", mp);
-            transform.position = rayHit.point;
         }
     }
 }
