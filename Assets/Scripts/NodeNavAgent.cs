@@ -83,6 +83,9 @@ public class NodeNavAgent : MonoBehaviour
             }
         }
 
+        if(Input.GetKeyDown(KeyCode.Space))
+            SetRandomDestination(5);
+
         TraversePath();
         VeggieJump();
     }
@@ -187,7 +190,7 @@ public class NodeNavAgent : MonoBehaviour
     }
 
 
-    private void ScanNeighbors(int range)
+    private void ScanNeighbors(int range = 1)
     {
         if(currentPositionNode == null) return;
 
@@ -195,5 +198,15 @@ public class NodeNavAgent : MonoBehaviour
         {
             n.GetComponent<Renderer>().material = rangeMaterial;
         }
+    }
+
+    public void SetRandomDestination(int dist = 1)
+    {
+        if(currentPositionNode == null) return;
+
+        Node[] neighbors = currentPositionNode.GetNeighborhood(dist);
+        TraversableNode destNode = neighbors[Random.Range(0, neighbors.Length)] as TraversableNode;
+        
+        _nodePathStack = NodeNav.TwinStarII(currentPositionNode, destNode, true);
     }
 }
