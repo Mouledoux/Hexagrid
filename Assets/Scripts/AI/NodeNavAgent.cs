@@ -98,7 +98,9 @@ public class NodeNavAgent : MonoBehaviour
     {
         if(hasPath)
         {
-            if(!_nodePathStack.Peek().isTraversable || _nodePathStack.Peek().isOccupied)
+            TraversableNode nextNode = _nodePathStack.Peek();
+
+            if(!nextNode.isTraversable || nextNode.isOccupied)
             {
                 if(autoRepath)
                 {
@@ -113,12 +115,12 @@ public class NodeNavAgent : MonoBehaviour
             }
 
 
-            Vector3 dir = (_nodePathStack.Peek().transform.position - transform.position);
+            Vector3 dir = (nextNode.transform.position - transform.position);
 
             dir.Normalize();
             transform.Translate(dir * speed * Time.deltaTime);
 
-            if(Vector3.Distance(transform.position, _nodePathStack.Peek().transform.position) <= 0.05f)
+            if(Vector3.Distance(transform.position, nextNode.transform.position) <= 0.05f)
             {
                 currentPositionNode.RemoveInformation(this);
                 currentPositionNode.isOccupied = false;
@@ -137,6 +139,10 @@ public class NodeNavAgent : MonoBehaviour
                 _nodePathStack = null;
                 onDestinationReached.Invoke();
             }
+            else
+            {
+                transform.GetChild(0).LookAt(_nodePathStack.Peek().transform.position);
+            }
         }
     }
 
@@ -151,8 +157,9 @@ public class NodeNavAgent : MonoBehaviour
             TraversableNode nextNode = _nodePathStack.Peek();
             float dist = Vector3.Distance(transform.position, nextNode.transform.position);
 
-            transform.GetChild(0).transform.localPosition =
-            Vector3.up + (nextNode.transform.up * (Mathf.Sin(dist * 3.14f)));
+            Vector3 nextPos = nextNode.transform.up * (Mathf.Sin(dist * 3.14f));
+
+            transform.GetChild(0).transform.localPosition = Vector3.up * 0.2f + nextPos;
         }
     }
 
