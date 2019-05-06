@@ -24,7 +24,7 @@ public class SpawnGrid : MonoBehaviour
                 float xCord = (float)i/(float)cols;
                 float yCord = (float)j/(float)rows;
 
-                float perlinHeight = GetPerlinNoiseValue(xCord, yCord, perlinScale, perlinSeed);
+                float perlinHeight = GetPerlinNoiseValue(xCord, yCord, perlinSeed, perlinScale);
                 float height = (int)(perlinHeight * perlinScale) * 0.2f;
                 
 
@@ -34,9 +34,9 @@ public class SpawnGrid : MonoBehaviour
 
                 float biomeScale = 8f;
                 System.Func<int, int> getBiomeNoise = (int valueMod) =>
-                    (int)GetPerlinNoiseValue(xCord, yCord, biomeScale, perlinSeed/2, valueMod);
+                    (int)GetPerlinNoiseValue(xCord, yCord, perlinSeed/2, biomeScale, valueMod);
                 
-                int perlinFort = (int)GetPerlinNoiseValue(xCord, yCord, 32f, perlinSeed, 10);
+                int perlinFort = (int)GetPerlinNoiseValue(xCord, yCord, perlinSeed, 32f, 10);
 
                 float resistance = 0f;
                 
@@ -134,7 +134,7 @@ public class SpawnGrid : MonoBehaviour
     }
 
 
-    float GetPerlinNoiseValue(float xCord, float yCord, float scale, long seed = 0, float valueMod = 1f)
+    float GetPerlinNoiseValue(float xCord, float yCord, long seed = 0, float scale = 1f, float valueMod = 1f)
     {   
         xCord += seed;
         yCord += seed;
