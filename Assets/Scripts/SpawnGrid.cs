@@ -38,9 +38,10 @@ public class SpawnGrid : MonoBehaviour
                 
                 int perlinFort = (int)GetPerlinNoiseValue(xCord, yCord, 32f, perlinSeed, 10);
 
-
                 float resistance = 0f;
                 
+
+
                 if(isWall)
                 {
                     gridCell = Instantiate(outerWall[getBiomeNoise(outerWall.Count)]) as GameObject;
@@ -71,7 +72,7 @@ public class SpawnGrid : MonoBehaviour
                 {
                     gridCell.name = $"[{i}, {j}]";
                     gridCell.transform.parent = transform;
-                    gridCell.transform.localPosition = new Vector3(((-cols/2) + i) * 0.85f, height, ((-rows/2) + j) + (i%2*.5f));
+                    gridCell.transform.localPosition = new Vector3(((-cols / 2) + i) * 0.85f, height, ((-rows / 2) + j) + ((i % 2) * 0.5f));
                     gridCell.transform.Rotate(Vector3.up, 30);
                     gridCell.transform.localScale = scale;
 
@@ -82,15 +83,18 @@ public class SpawnGrid : MonoBehaviour
                     gridNodes[i, j].isTraversable = !isWall;
                     
                     if(j > 0)
-                        gridNodes[i, j].AddNeighbor(gridNodes[i, j-1]);
+                        gridNodes[i, j].AddNeighbor(gridNodes[i, j - 1]);
 
                     if(i > 0)
                     {
-                        gridNodes[i, j].AddNeighbor(gridNodes[i-1, j]);
+                        gridNodes[i, j].AddNeighbor(gridNodes[i - 1, j]);
 
-                        int nextJ = j+(i%2==0?-1:1);
+                        int nextJ = j + ( i % 2 == 0 ? -1 : 1);
+
                         if(nextJ >= 0 && nextJ < rows)
-                            gridNodes[i, j].AddNeighbor(gridNodes[i-1, nextJ]);
+                        {
+                            gridNodes[i, j].AddNeighbor(gridNodes[i - 1, nextJ]);
+                        }
                     }
                 }
             }
