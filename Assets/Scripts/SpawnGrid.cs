@@ -31,33 +31,38 @@ public class SpawnGrid : MonoBehaviour
                 bool isWall = (i == 0 || j == 0 || i == cols-1 || j == rows-1);
                 Vector3 scale = isWall ? new Vector3(1f, 16f, 1f) : new Vector3(1f, 1f,  1f);
 
+
                 float biomeScale = 8f;
+                System.Func<int, int> getBiomeNoise = (int valueMod) =>
+                    (int)GetPerlinNoiseValue(xCord, yCord, biomeScale, perlinSeed/2, valueMod);
+                
                 int perlinFort = (int)GetPerlinNoiseValue(xCord, yCord, 32f, perlinSeed, 10);
+
 
                 float resistance = 0f;
                 
                 if(isWall)
                 {
-                    gridCell = Instantiate(outerWall[(int)GetPerlinNoiseValue(xCord, yCord, biomeScale, perlinSeed/2, outerWall.Count)]) as GameObject;
+                    gridCell = Instantiate(outerWall[getBiomeNoise(outerWall.Count)]) as GameObject;
                     resistance = float.MaxValue;
                 }
                 else if(perlinFort == 9)
                 {
-                    gridCell = Instantiate(Special[(int)GetPerlinNoiseValue(xCord, yCord, biomeScale, perlinSeed/2, Special.Count)]) as GameObject;
+                    gridCell = Instantiate(Special[getBiomeNoise(Special.Count)]) as GameObject;
                 }
                 else if(perlinHeight >= 0.8f)
                 {
-                    gridCell = Instantiate(highLand[(int)GetPerlinNoiseValue(xCord, yCord, biomeScale, perlinSeed/2, highLand.Count)]) as GameObject;
+                    gridCell = Instantiate(highLand[getBiomeNoise(highLand.Count)]) as GameObject;
                     resistance = 24f;
                 }
                 else  if(perlinHeight >= 0.4f)
                 {
-                    gridCell = Instantiate(medLand[(int)GetPerlinNoiseValue(xCord, yCord, biomeScale, perlinSeed/2, medLand.Count)]) as GameObject;
+                    gridCell = Instantiate(medLand[getBiomeNoise(medLand.Count)]) as GameObject;
                     resistance = 8f;
                 }
                 else
                 {
-                    gridCell = Instantiate(lowLand[(int)GetPerlinNoiseValue(xCord, yCord, biomeScale, perlinSeed/2, lowLand.Count)]) as GameObject;
+                    gridCell = Instantiate(lowLand[getBiomeNoise(lowLand.Count)]) as GameObject;
                     resistance = 16f;
                 }
 
