@@ -21,10 +21,10 @@ public class SpawnGrid : MonoBehaviour
             {
                 GameObject gridCell = null;
 
-                float xCord = (float)i/(float)cols;
-                float yCord = (float)j/(float)rows;
+                float xCoord = (float)i/(float)cols;
+                float yCoord = (float)j/(float)rows;
 
-                float perlinHeight = GetPerlinNoiseValue(xCord, yCord, perlinSeed, perlinScale);
+                float perlinHeight = GetPerlinNoiseValue(xCoord, yCoord, perlinSeed, perlinScale);
                 float height = (int)(perlinHeight * perlinScale) * 0.2f;
                 
 
@@ -34,13 +34,12 @@ public class SpawnGrid : MonoBehaviour
 
                 float biomeScale = 8f;
                 System.Func<int, int> getBiomeNoise = (int valueMod) =>
-                    (int)GetPerlinNoiseValue(xCord, yCord, perlinSeed/2, biomeScale, valueMod);
+                    (int)GetPerlinNoiseValue(xCoord, yCoord, perlinSeed/2, biomeScale, valueMod);
                 
-                int perlinFort = (int)GetPerlinNoiseValue(xCord, yCord, perlinSeed, 32f, 10);
+                int perlinFort = (int)GetPerlinNoiseValue(xCoord, yCoord, perlinSeed, 32f, 10);
+
 
                 float resistance = 0f;
-                
-
 
                 if(isWall)
                 {
@@ -70,9 +69,11 @@ public class SpawnGrid : MonoBehaviour
 
                 if(gridCell != null)
                 {
+                    int hexOffset = (i % 2);
+
                     gridCell.name = $"[{i}, {j}]";
                     gridCell.transform.parent = transform;
-                    gridCell.transform.localPosition = new Vector3(((-cols / 2) + i) * 0.85f, height, ((-rows / 2) + j) + ((i % 2) * 0.5f));
+                    gridCell.transform.localPosition = new Vector3(((-cols / 2) + i) * 0.85f, height, ((-rows / 2) + j) + (hexOffset * 0.5f));
                     gridCell.transform.Rotate(Vector3.up, 30);
                     gridCell.transform.localScale = scale;
 
@@ -83,13 +84,15 @@ public class SpawnGrid : MonoBehaviour
                     gridNodes[i, j].isTraversable = !isWall;
                     
                     if(j > 0)
+                    {
                         gridNodes[i, j].AddNeighbor(gridNodes[i, j - 1]);
+                    }
 
                     if(i > 0)
                     {
                         gridNodes[i, j].AddNeighbor(gridNodes[i - 1, j]);
 
-                        int nextJ = j + ( i % 2 == 0 ? -1 : 1);
+                        int nextJ = j + (hexOffset * 2 - 1);
 
                         if(nextJ >= 0 && nextJ < rows)
                         {
@@ -134,14 +137,14 @@ public class SpawnGrid : MonoBehaviour
     }
 
 
-    float GetPerlinNoiseValue(float xCord, float yCord, long seed = 0, float scale = 1f, float valueMod = 1f)
+    float GetPerlinNoiseValue(float xCoord, float yCoord, long seed = 0, float scale = 1f, float valueMod = 1f)
     {   
-        xCord += seed;
-        yCord += seed;
+        xCoord += seed;
+        yCoord += seed;
 
-        xCord *= scale;
-        yCord *= scale;
+        xCoord *= scale;
+        yCoord *= scale;
 
-        return Mathf.Clamp01(Mathf.PerlinNoise(xCord, yCord)) * valueMod;
+        return Mathf.Clamp01(Mathf.PerlinNoise(xCoord, yCoord)) * valueMod;
     }
 }
