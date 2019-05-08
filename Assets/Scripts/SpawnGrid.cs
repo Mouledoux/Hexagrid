@@ -6,9 +6,10 @@ public class SpawnGrid : MonoBehaviour
 {
     public int perlinSeed;
     public float perlinScale = 8f;
-    
-    public List<GameObject> outerWall, lowLand, medLand, highLand, Special;
     public int rows, cols;
+    
+    public bool edgesAreWalls;
+    public List<GameObject> outerWall, lowLand, medLand, highLand, Special;
     public TraversableNode[,] gridNodes;
 
     IEnumerator Start()
@@ -28,7 +29,7 @@ public class SpawnGrid : MonoBehaviour
                 float height = (int)(perlinHeight * perlinScale) * 0.2f;
                 
 
-                bool isWall = (i == 0 || j == 0 || i == cols-1 || j == rows-1);
+                bool isWall = (i == 0 || j == 0 || i == cols-1 || j == rows-1) && edgesAreWalls;
                 Vector3 scale = isWall ? new Vector3(1f, 16f, 1f) : new Vector3(1f, 1f,  1f);
 
 
@@ -73,9 +74,10 @@ public class SpawnGrid : MonoBehaviour
 
                     gridCell.name = $"[{i}, {j}]";
                     gridCell.transform.parent = transform;
-                    gridCell.transform.localPosition = new Vector3(((-cols / 2) + i) * 0.85f, height, ((-rows / 2) + j) + (hexOffset * 0.5f));
+                    //gridCell.transform.localPosition = new Vector3(((-cols / 2) + i) * 0.85f, 0, ((-rows / 2) + j) + (hexOffset * 0.5f));
+                    gridCell.transform.localPosition = new Vector3(((-cols / 2) + i), 0, ((-rows / 2) + j * 1.1f) + (hexOffset * 0.5f));
                     gridCell.transform.Rotate(Vector3.up, 30);
-                    gridCell.transform.localScale = scale;
+                    gridCell.transform.localScale = Vector3.one + Vector3.up * height * 16;
 
                     gridNodes[i, j] = (gridCell.AddComponent<TraversableNode>());
                     gridNodes[i, j].xCoord = i;
