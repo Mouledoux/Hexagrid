@@ -4,16 +4,52 @@ using System.Collections.Generic;
 
 public class SpawnGrid : MonoBehaviour
 {
+    public int rows, cols;
+
     public int perlinSeed;
     public float perlinScale = 8f;
-    public int rows, cols;
+    public float perlinHeightMod = 0.2f;
+
+    public float biomeSeedMod = 0.5f;
+
+
     
     public bool edgesAreWalls;
     public List<GameObject> outerWall, lowLand, medLand, highLand, Special;
     public TraversableNode[,] gridNodes;
 
-    IEnumerator Start()
+    private void Start()
     {
+        GenerateNewMap();
+    }
+
+    private void Update()
+    {
+        if(Input.GetKey(KeyCode.LeftControl))
+            if(Input.GetKeyDown(KeyCode.Q))
+                GenerateNewMap();
+    }
+
+    bool ClearBoard()
+    {
+        if(gridNodes == null || gridNodes[rows-1, cols-1] == null)
+            return false;
+
+        for(int i = 0; i < cols; i++)
+        {
+            for (int j = 0; j < rows; j++)
+            {
+                Destroy(gridNodes[i, j].gameObject);
+            }
+        }
+        return true;
+    }
+
+    [ContextMenu("NewMap")]
+    public void GenerateNewMap()
+    {
+        ClearBoard();
+
         gridNodes = new TraversableNode[cols, rows];
 
         for(int i = 0; i < cols; i++)
@@ -26,7 +62,7 @@ public class SpawnGrid : MonoBehaviour
                 float yCoord = (float)j/(float)rows;
 
                 float perlinHeight = GetPerlinNoiseValue(xCoord, yCoord, perlinSeed, perlinScale);
-                float height = (int)(perlinHeight * perlinScale) * 0.2f;
+                float height = (int)(perlinHeight * perlinScale) * perlinHeightMod;
                 
 
                 bool isWall = (i == 0 || j == 0 || i == cols-1 || j == rows-1) && edgesAreWalls;
@@ -35,7 +71,7 @@ public class SpawnGrid : MonoBehaviour
 
                 float biomeScale = 8f;
                 System.Func<int, int> getBiomeNoise = (int valueMod) =>
-                    (int)GetPerlinNoiseValue(xCoord, yCoord, perlinSeed/2, biomeScale, valueMod);
+                    (int)GetPerlinNoiseValue(xCoord, yCoord, (long)(perlinSeed * biomeSeedMod), biomeScale, valueMod);
                 
                 int perlinFort = (int)GetPerlinNoiseValue(xCoord, yCoord, perlinSeed, 32f, 10);
 
@@ -105,39 +141,7 @@ public class SpawnGrid : MonoBehaviour
                     }
                 }
             }
-            yield return null;
         }
-        yield return null;
-    }
-
-    private void Update()
-    {
-        if(Input.GetKey(KeyCode.LeftControl))
-            if(Input.GetKeyDown(KeyCode.Q))
-                NewMap();
-    }
-
-    bool ClearBoard()
-    {
-        if(gridNodes == null || gridNodes[rows-1, cols-1] == null)
-            return false;
-
-        for(int i = 0; i < cols; i++)
-        {
-            for (int j = 0; j < rows; j++)
-            {
-                Destroy(gridNodes[i, j].gameObject);
-            }
-        }
-
-        return true;
-    }
-
-    [ContextMenu("NewMap")]
-    public void NewMap()
-    {
-        if(ClearBoard())
-            StartCoroutine(Start());
     }
 
 
