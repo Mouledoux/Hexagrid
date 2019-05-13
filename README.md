@@ -6,6 +6,7 @@ As of now, it's just a collection of scripts and assets that make working with a
 * Generating a grid of hexagons
 * Procedural biome generation
 * Pathing with A* and TwinStar©
+* Outline highlight shader
 * Basic fog of war
 
 <br>
