@@ -6,4 +6,4 @@ Things like generating a grid of hexagon, hexes being able to find thier neighbo
 
 <br>
 <h2>Special thank you to:</h2>
-[@DylanGuidry95](https://github.com/DylanGuidry95) for help with the AI
+[DylanGuidry95](https://github.com/DylanGuidry95) for help with the AI
