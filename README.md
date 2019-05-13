@@ -10,6 +10,14 @@ As of now, it's just a collection of scripts and assets that make working with a
 * Outline highlight shader
 * Basic fog of war
 
+## Planned/ in progress features
+* City building
+* More map generation settings
+* Support for endless map generation
+* More AI options
+
+
+<br>
 <br>
 
 ## Acknowledgments
