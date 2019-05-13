@@ -77,7 +77,7 @@ public static class NodeNav
         }
 
         // A path could not be found, so return an empty path stack
-        return NodePathStack(closedList[0]);
+        return NodePathStack(begNode);
     }
 
 
