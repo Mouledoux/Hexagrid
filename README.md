@@ -4,7 +4,7 @@ As of now, it's just a collection of scripts and assets that make working with a
 
 ## Current features in Hexagrid!
 * Generating a grid of hexagons
-* Hexes can find thier neighbors
+* Procedural biome generation
 * Pathing with A* and TwinStar©
 * Basic fog of war
 
