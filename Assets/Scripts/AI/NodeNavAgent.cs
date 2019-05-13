@@ -129,6 +129,11 @@ public class NodeNavAgent : MonoBehaviour
 
                 currentPositionNode.AddInformation(this);
                 currentPositionNode.isOccupied = true;
+                
+                foreach(TraversableNode tn in currentPositionNode.GetNeighborhood(6))
+                {
+                    tn.onOccupy.Invoke();
+                }
 
                 currentPositionNode.GetComponent<Renderer>().material = pathMaterial;
             }

@@ -74,12 +74,14 @@ public class SpawnGrid : MonoBehaviour
 
                     gridCell.name = $"[{i}, {j}]";
                     gridCell.transform.parent = transform;
-                    //gridCell.transform.localPosition = new Vector3(((-cols / 2) + i) * 0.85f, 0, ((-rows / 2) + j) + (hexOffset * 0.5f));
-                    gridCell.transform.localPosition = new Vector3(((-cols / 2) + i), 0, ((-rows / 2) + j * 1.1f) + (hexOffset * 0.5f));
+                    gridCell.transform.localPosition = new Vector3(((-cols / 2) + i) * 0.85f, height, ((-rows / 2) + j) + (hexOffset * 0.5f));
+                    //gridCell.transform.localPosition = new Vector3(((-cols / 2) + i), 0, ((-rows / 2) + j * 1.1f) + (hexOffset * 0.5f));
                     gridCell.transform.Rotate(Vector3.up, 30);
-                    gridCell.transform.localScale = Vector3.one + Vector3.up * height * 16;
+                    gridCell.transform.localScale = Vector3.one;// + Vector3.up * height * 16;
 
-                    gridNodes[i, j] = (gridCell.AddComponent<TraversableNode>());
+                    gridNodes[i, j] = (gridCell.GetComponent<TraversableNode>());
+                    gridNodes[i, j] = gridNodes[i, j] == null ? gridCell.AddComponent<TraversableNode>() : gridNodes[i, j];
+                    
                     gridNodes[i, j].xCoord = i;
                     gridNodes[i, j].yCoord = j;
                     gridNodes[i, j].travelCost = resistance + height;

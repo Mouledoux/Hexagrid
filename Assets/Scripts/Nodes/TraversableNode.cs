@@ -12,7 +12,16 @@ public class TraversableNode : Node
     }
     public TraversableNode safeParentNode => (parentNode == null ? this : parentNode);
 
-    public bool isOccupied;
+    private bool _isOccupied;
+    public bool isOccupied
+    {
+        get { return _isOccupied; }
+        set
+        {
+            _isOccupied = value;
+            if(_isOccupied) onOccupy.Invoke();
+        }
+    }
 
     public int xCoord, yCoord;
 
@@ -47,6 +56,7 @@ public class TraversableNode : Node
     public float fValue => (hValue + gValue);
 
 
+    public UnityEngine.Events.UnityEvent onOccupy;
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
