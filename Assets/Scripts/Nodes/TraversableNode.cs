@@ -26,7 +26,7 @@ public class TraversableNode : Node
     private bool _isTraversable;
     public bool isTraversable
     {
-        get { return _isTraversable; }
+        get { return _isTraversable && !isOccupied; }
         set { _isTraversable = value; }
     }
 
