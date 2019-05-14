@@ -30,7 +30,7 @@ public static class NodeNav
                 {
                     // If the neighbor cannot be traversed,
                     // move to the next one
-                    if(neighborNode.isTraversable == false) { continue; }
+                    if(neighborNode == null || neighborNode.isTraversable == false) { continue; }
 
 
                     // If it CAN be traversed AND it's root parent is the goal node,
@@ -63,7 +63,7 @@ public static class NodeNav
                         // If the neighbor's G value is less than the parent's,
                         // reparent the current node to the neighbor
                         else if(neighborNode.safeParentNode != currentNode[i] &&
-                            neighborNode.gValue < currentNode[i].parentNode.gValue)
+                            neighborNode.gValue < currentNode[i].safeParentNode.gValue)
                         {
                             currentNode[i].parentNode = neighborNode;
                         }

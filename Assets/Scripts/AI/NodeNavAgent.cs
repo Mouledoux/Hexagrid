@@ -185,6 +185,12 @@ public class NodeNavAgent : MonoBehaviour
 
             else if(Input.GetMouseButtonDown(1))
             {   
+                if(currentPositionNode != null)
+                {
+                    currentPositionNode.isOccupied = false;
+                    currentPositionNode.RemoveInformation(this);
+                }
+
                 _nodePathStack = null;
                 _currentPositionNode = tn;
                 currentPositionNode.isOccupied = true;
@@ -195,7 +201,7 @@ public class NodeNavAgent : MonoBehaviour
 
             else if(Input.GetMouseButtonDown(0))
             {
-                if(currentPositionNode != null)
+                if(currentPositionNode != null && tn != null)
                 {
                     _nodePathStack = NodeNav.TwinStarII(currentPositionNode, tn, true);
                 }
