@@ -28,6 +28,8 @@ public class NodeNavAgent : MonoBehaviour
     private TraversableNode _currentPositionNode;
     public TraversableNode currentPositionNode => (_currentPositionNode);
 
+    public TraversableNode nextNode => _nodePathStack.Peek();
+
     private TraversableNode _goalPositionNode;
     public TraversableNode goalPositionNode
     {
@@ -41,12 +43,14 @@ public class NodeNavAgent : MonoBehaviour
 
     private Stack<TraversableNode> _nodePathStack;
 
-    public bool hasPath => (_nodePathStack != null && _nodePathStack.Count > 0);
 
+    public bool hasPath => (_nodePathStack != null && _nodePathStack.Count > 0);
     public float remainingDistance => TraversableNode.Distance(currentPositionNode, goalPositionNode);
 
 
     public UnityEngine.Events.UnityEvent onDestinationReached;
+
+
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void Update()
@@ -86,20 +90,21 @@ public class NodeNavAgent : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space))
             SetRandomDestination(5);
 
-        TraversePath();
-        VeggieJump();
+        if(CheckForPath())
+        {
+            TraversePath();
+            VeggieJump();
+        }
     }
 
 
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    private void TraversePath()
+    private bool CheckForPath()
     {
         if(hasPath)
         {
-            TraversableNode nextNode = _nodePathStack.Peek();
-
             if(!nextNode.isTraversable || nextNode.isOccupied)
             {
                 if(autoRepath)
@@ -110,46 +115,54 @@ public class NodeNavAgent : MonoBehaviour
                 else
                 {
                     _nodePathStack = null;
+                    return false;
                 }
-                return;
             }
+            return true;
+        }
+        return false;
+    }
 
 
-            Vector3 dir = (nextNode.transform.position - transform.position);
 
-            dir.Normalize();
-            transform.Translate(dir * speed * Time.deltaTime);
 
-            if(Vector3.Distance(transform.position, nextNode.transform.position) <= 0.05f)
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
+    private void TraversePath()
+    {
+        Vector3 dir = (nextNode.transform.position - transform.position);
+
+        dir.Normalize();
+        transform.Translate(dir * speed * Time.deltaTime);
+
+        if(Vector3.Distance(transform.position, nextNode.transform.position) <= 0.05f)
+        {
+            currentPositionNode.RemoveInformation(this);
+            currentPositionNode.isOccupied = false;
+
+            _currentPositionNode = _nodePathStack.Pop();
+
+            currentPositionNode.AddInformation(this);
+            currentPositionNode.isOccupied = true;
+            
+            // Fog of war
+            foreach(TraversableNode tn in currentPositionNode.GetNeighborhood(6))
             {
-                currentPositionNode.RemoveInformation(this);
-                currentPositionNode.isOccupied = false;
-
-                _currentPositionNode = _nodePathStack.Pop();
-
-                currentPositionNode.AddInformation(this);
-                currentPositionNode.isOccupied = true;
-                
-                // Fog of war
-                foreach(TraversableNode tn in currentPositionNode.GetNeighborhood(6))
-                {
-                    tn.onOccupy.Invoke();
-                }
-
-
-                currentPositionNode.GetComponent<Renderer>().material = pathMaterial;
+                tn.onOccupy.Invoke();
             }
 
-            if(_nodePathStack.Count == 0)
-            {
-                goalPositionNode = null;
-                _nodePathStack = null;
-                onDestinationReached.Invoke();
-            }
-            else
-            {
-                transform.GetChild(0).LookAt(_nodePathStack.Peek().transform.position);
-            }
+
+            currentPositionNode.GetComponent<Renderer>().material = pathMaterial;
+        }
+
+        if(_nodePathStack.Count == 0)
+        {
+            goalPositionNode = null;
+            _nodePathStack = null;
+            onDestinationReached.Invoke();
+        }
+        else
+        {
+            transform.GetChild(0).LookAt(_nodePathStack.Peek().transform.position);
         }
     }
 
@@ -210,6 +223,10 @@ public class NodeNavAgent : MonoBehaviour
     }
 
 
+
+
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void ScanNeighbors(int range = 1)
     {
         if(currentPositionNode == null) return;
@@ -220,6 +237,10 @@ public class NodeNavAgent : MonoBehaviour
         }
     }
 
+
+
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public void SetRandomDestination(int dist = 1)
     {
         if(currentPositionNode == null) return;
