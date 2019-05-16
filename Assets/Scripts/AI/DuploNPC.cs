@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// DEPRICATED, use NodeNavAgent instead.
 public class DuploNPC : MonoBehaviour
 {
     public Material mat;
@@ -9,6 +10,11 @@ public class DuploNPC : MonoBehaviour
 
     private Stack<TraversableNode> path;
     private TraversableNode _startNode, _endNode;
+
+    void Start()
+    {
+        Debug.LogError("DuploNPC has been replaced with 'NodeNavAgent', please use it instead");
+    }
 
     void Update()
     {
