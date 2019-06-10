@@ -84,7 +84,7 @@ public static class NodeNav
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public static Stack<TraversableNode> NodePathStack(TraversableNode endNode)
+    private static Stack<TraversableNode> NodePathStack(TraversableNode endNode)
     {
         Stack<TraversableNode> returnStack = new Stack<TraversableNode>();
         TraversableNode currentNode = endNode;
@@ -104,7 +104,7 @@ public static class NodeNav
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public static int AddToSortedList(TraversableNode node, ref List<TraversableNode> sortedList)
+    private static int AddToSortedList(TraversableNode node, ref List<TraversableNode> sortedList)
     {
         for(int i = 0; i < sortedList.Count; i++)
         {
