@@ -103,24 +103,15 @@ public class NodeNavAgent : MonoBehaviour
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private bool CheckForPath()
     {
-        if(hasPath)
+        if(!hasPath || !nextNode.isTraversable)
         {
-            if(!nextNode.isTraversable || nextNode.isOccupied)
-            {
-                if(autoRepath)
-                {
-                    _nodePathStack = NodeNav.TwinStarII(currentPositionNode, goalPositionNode, true);
-                }
-                
-                else
-                {
-                    _nodePathStack = null;
-                    return false;
-                }
-            }
-            return true;
+            if(autoRepath)
+                _nodePathStack = NodeNav.TwinStarII(currentPositionNode, goalPositionNode, true);
+            
+            else return false;
         }
-        return false;
+
+        return _nodePathStack.Count > 0;
     }
 
 
@@ -143,15 +134,6 @@ public class NodeNavAgent : MonoBehaviour
 
             currentPositionNode.AddInformation(this);
             currentPositionNode.isOccupied = true;
-            
-            // Fog of war
-            foreach(TraversableNode tn in currentPositionNode.GetNeighborhood(6))
-            {
-                tn.onOccupy.Invoke();
-            }
-
-
-            currentPositionNode.GetComponent<Renderer>().material = pathMaterial;
         }
 
         if(_nodePathStack.Count == 0)
@@ -159,10 +141,6 @@ public class NodeNavAgent : MonoBehaviour
             goalPositionNode = null;
             _nodePathStack = null;
             onDestinationReached.Invoke();
-        }
-        else
-        {
-            transform.GetChild(0).LookAt(_nodePathStack.Peek().transform.position);
         }
     }
 
@@ -180,6 +158,7 @@ public class NodeNavAgent : MonoBehaviour
             Vector3 nextPos = nextNode.transform.up * (Mathf.Sin(dist * 3.14f));
 
             transform.GetChild(0).transform.localPosition = Vector3.up * 0.2f + nextPos;
+            transform.GetChild(0).LookAt(_nodePathStack.Peek().transform.position);
         }
     }
 
