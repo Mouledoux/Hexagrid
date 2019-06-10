@@ -141,7 +141,7 @@ public class NodeNavAgent : MonoBehaviour
             TraversableNode nextNode = _nodePathStack.Peek();
             float dist = Vector3.Distance(transform.position, nextNode.transform.position);
 
-            Vector3 nextPos = nextNode.transform.up * (Mathf.Sin(dist * 3.14f));
+            Vector3 nextPos = nextNode.transform.up * (Mathf.Sin(dist * Mathf.PI));
 
             transform.GetChild(0).transform.localPosition = Vector3.up * 0.2f + nextPos;
             transform.GetChild(0).LookAt(_nodePathStack.Peek().transform.position);
@@ -206,13 +206,13 @@ public class NodeNavAgent : MonoBehaviour
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public void SetRandomDestination(int dist = 1)
+    public void SetRandomDestination(int min = 2, int range = 1)
     {
         if(currentPositionNode == null) return;
 
-        Node[] neighbors = currentPositionNode.GetNeighborhood(dist);
+        Node[] neighbors = currentPositionNode.GetNeighborhoodRing(min, range);
         TraversableNode destNode = neighbors[Random.Range(0, neighbors.Length)] as TraversableNode;
         
-        _nodePathStack = NodeNav.TwinStarII(currentPositionNode, destNode, true);
+        goalPositionNode = destNode;
     }
 }
