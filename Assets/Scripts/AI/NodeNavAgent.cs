@@ -4,10 +4,19 @@ using UnityEngine;
 
 public class NodeNavAgent : MonoBehaviour
 {
-    public bool leader;
-    public int scanRange;
-    public Material pathMaterial, rangeMaterial;
+    // ----- ----- ----- ----- -----
+    [SerializeField]
+    private bool _useTwinStar;
+    public bool useTwinStar
+    {
+        get { return _useTwinStar; }
+        set
+        {
+            _useTwinStar = value;
+        }
+    }
 
+    // ----- ----- ----- ----- -----
     [SerializeField]
     private float _speed = 1f;
     public float speed
@@ -16,6 +25,7 @@ public class NodeNavAgent : MonoBehaviour
         set { _speed = value; }
     }
 
+    // ----- ----- ----- ----- -----
     [SerializeField]
     private bool _autoRepath = true;
     public bool autoRepath
@@ -24,12 +34,14 @@ public class NodeNavAgent : MonoBehaviour
         set { _autoRepath = value; }
     }
 
-
+    // ----- ----- ----- ----- -----
     private TraversableNode _currentPositionNode;
-    public TraversableNode currentPositionNode => (_currentPositionNode);
+    public TraversableNode currentPositionNode
+    {
+        get{ return _currentPositionNode; }
+    }
 
-    public TraversableNode nextNode => _nodePathStack.Peek();
-
+    // ----- ----- ----- ----- -----
     private TraversableNode _goalPositionNode;
     public TraversableNode goalPositionNode
     {
@@ -37,17 +49,23 @@ public class NodeNavAgent : MonoBehaviour
         set
         {
             _goalPositionNode = value;
-            _nodePathStack = NodeNav.TwinStarII(currentPositionNode, _goalPositionNode, true);
+            _nodePathStack = NodeNav.TwinStarII(currentPositionNode, _goalPositionNode, useTwinStar);
         }
     }
 
+    // ----- ----- ----- ----- -----
     private Stack<TraversableNode> _nodePathStack;
 
+    // ----- ----- ----- ----- -----
+    public TraversableNode nextNode => _nodePathStack.Peek();
 
+    // ----- ----- ----- ----- -----
     public bool hasPath => (_nodePathStack != null && _nodePathStack.Count > 0);
+
+    // ----- ----- ----- ----- -----
     public float remainingDistance => TraversableNode.Distance(currentPositionNode, goalPositionNode);
 
-
+    // ----- ----- ----- ----- -----
     public UnityEngine.Events.UnityEvent onDestinationReached;
 
 
@@ -55,40 +73,10 @@ public class NodeNavAgent : MonoBehaviour
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void Update()
     {
-        if(leader)  
-        {
-            ClickSetPath();
-        }
-        else if(goalPositionNode == null)
-        {
-            if(currentPositionNode != null)
-            {
-                foreach(TraversableNode aNode in currentPositionNode.GetNeighborhood(scanRange))
-                {
-                    if(aNode.isOccupied)
-                    {
-                        NodeNavAgent[] otherAgents = aNode.GetInformation<NodeNavAgent>();
-                        if(otherAgents.Length > 0)
-                        {
-                            foreach (NodeNavAgent agent in otherAgents)
-                            {
-                                foreach(TraversableNode bNode in agent.currentPositionNode.GetNeighborhood(scanRange))
-                                {
-                                    if(bNode.isTraversable && !bNode.isOccupied)
-                                    {
-                                        goalPositionNode = bNode;
-                                        return;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        // ClickSetPath();
 
-        if(Input.GetKeyDown(KeyCode.Space))
-            SetRandomDestination(5);
+        // if(Input.GetKeyDown(KeyCode.Space))
+        //     SetRandomDestination(5);
 
         if(CheckForPath())
         {
@@ -98,15 +86,13 @@ public class NodeNavAgent : MonoBehaviour
     }
 
 
-
-
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private bool CheckForPath()
     {
         if(!hasPath || !nextNode.isTraversable)
         {
             if(autoRepath)
-                _nodePathStack = NodeNav.TwinStarII(currentPositionNode, goalPositionNode, true);
+                goalPositionNode = _goalPositionNode;
             
             else return false;
         }
@@ -208,12 +194,12 @@ public class NodeNavAgent : MonoBehaviour
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void ScanNeighbors(int range = 1)
     {
-        if(currentPositionNode == null) return;
+        // if(currentPositionNode == null) return;
 
-        foreach(Node n in _currentPositionNode.GetNeighborhood(range))
-        {
-            n.GetComponent<Renderer>().material = rangeMaterial;
-        }
+        // foreach(Node n in _currentPositionNode.GetNeighborhood(range))
+        // {
+        //     n.GetComponent<Renderer>().material = rangeMaterial;
+        // }
     }
 
 
