@@ -20,6 +20,9 @@ public class SpawnGrid : MonoBehaviour
 
     private void Start()
     {
+        rows = Mathf.Abs(rows);
+        cols = Mathf.Abs(cols);
+
         GenerateNewMap();
     }
 

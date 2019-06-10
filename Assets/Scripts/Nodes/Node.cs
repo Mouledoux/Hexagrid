@@ -61,7 +61,23 @@ public class Node : MonoBehaviour
         return neighborhood.ToArray();
     }
 
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
+    public Node[] GetNeighborhoodRing(int innerRing, int ringSize)
+    {
+        innerRing--;
+        Node[] n1 = GetNeighborhood(innerRing + ringSize);
+        Node[] n2 = GetNeighborhood(innerRing);
 
+        List<Node> neighborhood = new List<Node>();
+
+        foreach (Node n in n1)
+            neighborhood.Add(n);
+
+        foreach (Node n in n2)
+            neighborhood.Remove(n);
+        
+        return neighborhood.ToArray();
+    }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public int AddNeighbor(Node newNeighbor)
