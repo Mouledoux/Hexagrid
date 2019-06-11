@@ -29,7 +29,7 @@ public class Cow : MonoBehaviour
 
     public IEnumerator NewRandomPathRoutine()
     {
-        yield return new WaitForSeconds(waitTime);
+        yield return new WaitForSeconds(Random.Range(0f, waitTime));
         navAgent.SetRandomDestination(2, 2);
     }
 }
