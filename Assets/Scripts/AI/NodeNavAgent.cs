@@ -39,6 +39,7 @@ public class NodeNavAgent : MonoBehaviour
     public TraversableNode currentPositionNode
     {
         get{ return _currentPositionNode; }
+        set { _currentPositionNode = value; }
     }
 
     // ----- ----- ----- ----- -----
@@ -57,8 +58,10 @@ public class NodeNavAgent : MonoBehaviour
     private Stack<TraversableNode> _nodePathStack;
 
     // ----- ----- ----- ----- -----
-    public TraversableNode nextNode => _nodePathStack.Peek();
-
+    public TraversableNode nextNode 
+    {
+        get{ return _nodePathStack == null ? null : _nodePathStack.Peek(); }
+    }
     // ----- ----- ----- ----- -----
     public bool hasPath => (_nodePathStack != null && _nodePathStack.Count > 0);
 
@@ -89,7 +92,7 @@ public class NodeNavAgent : MonoBehaviour
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private bool CheckForPath()
     {
-        if(!hasPath || !nextNode.isTraversable)
+        if(!hasPath || nextNode == null || !nextNode.isTraversable)
         {
             if(autoRepath)
                 goalPositionNode = _goalPositionNode;
@@ -97,7 +100,7 @@ public class NodeNavAgent : MonoBehaviour
             else return false;
         }
 
-        return _nodePathStack.Count > 0;
+        return (_nodePathStack != null && _nodePathStack.Count > 0);
     }
 
 
@@ -206,11 +209,11 @@ public class NodeNavAgent : MonoBehaviour
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public void SetRandomDestination(int min = 2, int range = 1)
+    public void SetRandomDestination(int min, int range)
     {
         if(currentPositionNode == null) return;
 
-        Node[] neighbors = currentPositionNode.GetNeighborhoodRing(min, range);
+        Node[] neighbors = currentPositionNode.GetNeighborhoodLayers(min, range);
         TraversableNode destNode = neighbors[Random.Range(0, neighbors.Length)] as TraversableNode;
         
         goalPositionNode = destNode;
