@@ -21,7 +21,7 @@ public class Node : MonoBehaviour
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public void ResetMaterial()
     {
-        _renderer.material = _defaultMaterial;
+        _renderer.sharedMaterial = _defaultMaterial;
     }
 
 
@@ -62,11 +62,11 @@ public class Node : MonoBehaviour
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public Node[] GetNeighborhoodRing(int innerRing, int ringSize)
+    public Node[] GetNeighborhoodLayers(int innerBand, int bandWidth = 1)
     {
-        innerRing--;
-        Node[] n1 = GetNeighborhood(innerRing + ringSize);
-        Node[] n2 = GetNeighborhood(innerRing);
+        innerBand--;
+        Node[] n1 = GetNeighborhood(innerBand + bandWidth);
+        Node[] n2 = GetNeighborhood(innerBand);
 
         List<Node> neighborhood = new List<Node>();
 
