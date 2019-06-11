@@ -76,11 +76,6 @@ public class NodeNavAgent : MonoBehaviour
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void Update()
     {
-        // ClickSetPath();
-
-        // if(Input.GetKeyDown(KeyCode.Space))
-        //     SetRandomDestination(5);
-
         if(CheckForPath())
         {
             TraversePath();
@@ -97,7 +92,11 @@ public class NodeNavAgent : MonoBehaviour
             if(autoRepath)
                 goalPositionNode = _goalPositionNode;
             
-            else return false;
+            else
+            {
+                goalPositionNode = currentPositionNode;
+                return false;   
+            }
         }
 
         return (_nodePathStack != null && _nodePathStack.Count > 0);
@@ -119,7 +118,7 @@ public class NodeNavAgent : MonoBehaviour
             currentPositionNode.RemoveInformation(this);
             currentPositionNode.isOccupied = false;
 
-            _currentPositionNode = _nodePathStack.Pop();
+            currentPositionNode = _nodePathStack.Pop();
 
             currentPositionNode.AddInformation(this);
             currentPositionNode.isOccupied = true;

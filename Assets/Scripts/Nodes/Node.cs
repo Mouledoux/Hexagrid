@@ -22,6 +22,11 @@ public class Node : MonoBehaviour
     public void ResetMaterial()
     {
         _renderer.sharedMaterial = _defaultMaterial;
+    }    
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
+    public void SetMaterialColor(Color color)
+    {
+        _renderer.material.color = color;
     }
 
 
