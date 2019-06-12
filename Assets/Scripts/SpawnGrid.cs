@@ -76,7 +76,7 @@ public class SpawnGrid : MonoBehaviour
                 System.Func<int, int> getBiomeNoise = (int valueMod) =>
                     (int)GetPerlinNoiseValue(xCoord, yCoord, (long)(perlinSeed * biomeSeedMod), biomeScale, valueMod);
                 
-                int perlinFort = (int)GetPerlinNoiseValue(xCoord, yCoord, perlinSeed, 32f, 10);
+                int perlinFort = (int)GetPerlinNoiseValue(xCoord, yCoord, perlinSeed * 4, 4, 10);
 
 
                 float resistance = 0f;
@@ -89,6 +89,11 @@ public class SpawnGrid : MonoBehaviour
                 else if(perlinFort == 9)
                 {
                     gridCell = Instantiate(Special[getBiomeNoise(Special.Count)]) as GameObject;
+                    resistance = 7f;
+                }
+                else if(perlinFort == 3)
+                {
+                    gridCell = null;
                 }
                 else if(perlinHeight >= 0.8f)
                 {

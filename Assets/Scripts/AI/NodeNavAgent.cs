@@ -63,11 +63,16 @@ public class NodeNavAgent : MonoBehaviour
         get{ return _nodePathStack == null ? null : _nodePathStack.Peek(); }
     }
     // ----- ----- ----- ----- -----
-    public bool hasPath => (_nodePathStack != null && _nodePathStack.Count > 0);
-
+    public bool hasPath
+    {
+        get { return _nodePathStack != null && _nodePathStack.Count > 0; }
+    }
     // ----- ----- ----- ----- -----
-    public float remainingDistance => TraversableNode.Distance(currentPositionNode, goalPositionNode);
-
+    public float remainingDistance
+    {
+        get { return TraversableNode.Distance(currentPositionNode, goalPositionNode); }
+    }
+    
     // ----- ----- ----- ----- -----
     public UnityEngine.Events.UnityEvent onDestinationReached;
 
