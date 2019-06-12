@@ -111,6 +111,7 @@ public class SpawnGrid : MonoBehaviour
                     resistance = 16f;
                 }
 
+                height += perlinFort > 3 ? perlinHeightMod : 0;
 
                 if(gridCell != null)
                 {
