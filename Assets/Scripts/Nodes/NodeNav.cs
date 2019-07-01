@@ -1,8 +1,78 @@
-﻿using System.Collections;
+﻿using System.Threading;
+using System.Collections;
 using System.Collections.Generic;
 
 public static class NodeNav
 {
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
+    public static Stack<TraversableNode> TwinStarT(TraversableNode begNode, TraversableNode endNode)
+    {
+        if(begNode == endNode || begNode == null || endNode == null || !endNode.isTraversable) return null;
+
+        bool foundPath = false;
+
+        Thread backwards = new Thread(() => TwinStarSolo(endNode, begNode, ref foundPath, false, 1f, 2f));
+        backwards.Start();
+
+        return TwinStarSolo(begNode, endNode, ref foundPath);
+    }
+
+    private static Stack<TraversableNode> TwinStarSolo(TraversableNode begNode, TraversableNode endNode, ref bool foundPath, bool canReturn = true, float hMod = 1f, float gMod = 1f)
+    {
+        List<TraversableNode> openList = new List<TraversableNode>();
+        List<TraversableNode> closedList = new List<TraversableNode>();
+
+        openList.Add(begNode);
+
+        begNode.parentNode = null;
+        TraversableNode currentNode;
+
+        while(!foundPath && openList.Count > 0)
+        {
+            currentNode = openList[0];
+
+            foreach (TraversableNode neighborNode in currentNode.GetNeighbors())
+            {
+                if(neighborNode == null || neighborNode.isTraversable == false) { continue; }
+
+                else if(canReturn && neighborNode.CheckForNodeInParentChain(endNode))
+                {
+                    foundPath = true;
+                    TraversableNode.ReverseParents(neighborNode);
+                    neighborNode.parentNode = currentNode;
+                    return NodePathStack(endNode);
+                }
+
+                else
+                {
+                    if(!closedList.Contains(neighborNode))
+                    {
+                        if(!openList.Contains(neighborNode))
+                        {
+                            neighborNode.parentNode = currentNode;
+                            neighborNode.hValue = TraversableNode.Distance(neighborNode, endNode) * hMod;
+                            neighborNode.gValue = neighborNode.GetGValue() * gMod;
+
+                            AddToSortedList(neighborNode, ref openList);
+                        }
+                    }
+
+                    else if(neighborNode.safeParentNode != currentNode &&
+                        neighborNode.gValue < currentNode.safeParentNode.gValue)
+                    {
+                        currentNode.parentNode = neighborNode;
+                    }
+                }
+            }
+
+            closedList.Add(currentNode);
+            openList.Remove(currentNode);
+        }
+
+        return null;
+    }
+
+
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public static Stack<TraversableNode> TwinStarII(TraversableNode begNode, TraversableNode endNode, bool dualSearch = false)
     {
