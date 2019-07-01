@@ -536,7 +536,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3926b49c5a3c91344a5c845ad2875d1e, type: 3}
   m_Name: 
@@ -639,7 +639,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rows: 100
   cols: 100
-  perlinSeed: 1220
+  seed: 
   perlinScale: 8
   perlinHeightMod: 0.2
   biomeSeedMod: 0.5
@@ -5572,9 +5572,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26271d88edc884a4288799c4930922c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 100
-  cols: 100
-  perlinSeed: 1220
+  rows: 10
+  cols: 10
+  seed: 
   perlinScale: 8
   perlinHeightMod: 0.2
   biomeSeedMod: 0.5
@@ -5597,7 +5597,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1268912452}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -50, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -5633,9 +5633,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26271d88edc884a4288799c4930922c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 100
-  cols: 100
-  perlinSeed: 1220
+  rows: 256
+  cols: 256
+  seed: hello world!
   perlinScale: 8
   perlinHeightMod: 0.2
   biomeSeedMod: 0.5
