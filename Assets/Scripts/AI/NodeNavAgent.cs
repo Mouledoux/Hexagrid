@@ -50,7 +50,7 @@ public class NodeNavAgent : MonoBehaviour
         set
         {
             _goalPositionNode = value;
-            _nodePathStack = NodeNav.TwinStarII(currentPositionNode, _goalPositionNode, useTwinStar);
+            _nodePathStack = NodeNav.TwinStarT(currentPositionNode, _goalPositionNode);
         }
     }
 
