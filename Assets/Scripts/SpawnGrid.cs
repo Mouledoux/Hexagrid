@@ -42,7 +42,10 @@ public class SpawnGrid : MonoBehaviour
         {
             for (int j = 0; j < rows; j++)
             {
-                Destroy(gridNodes[i, j].gameObject);
+                if(gridNodes[i, j] != null)
+                {
+                    Destroy(gridNodes[i, j].gameObject);
+                }
             }
         }
         return true;
@@ -65,7 +68,7 @@ public class SpawnGrid : MonoBehaviour
                 float yCoord = (float)j/(float)rows;
 
                 float perlinHeight = GetPerlinNoiseValue(xCoord, yCoord, perlinSeed, perlinScale);
-                float height = (int)(perlinHeight * perlinScale) * perlinHeightMod;
+                float height = (perlinHeight * perlinScale) * perlinHeightMod;
                 
 
                 bool isWall = (i == 0 || j == 0 || i == cols-1 || j == rows-1) && edgesAreWalls;
