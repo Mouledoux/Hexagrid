@@ -49,8 +49,10 @@ public class NodeNavAgent : MonoBehaviour
         get { return _goalPositionNode; }
         set
         {
+            float t = Time.time;
             _goalPositionNode = value;
             _nodePathStack = NodeNav.TwinStarT(currentPositionNode, _goalPositionNode);
+            print(Time.time - t);
         }
     }
 
@@ -177,7 +179,7 @@ public class NodeNavAgent : MonoBehaviour
                 }
 
                 _nodePathStack = null;
-                _currentPositionNode = tn;
+                currentPositionNode = tn;
                 currentPositionNode.isOccupied = true;
                 currentPositionNode.AddInformation(this);
 
@@ -188,7 +190,7 @@ public class NodeNavAgent : MonoBehaviour
             {
                 if(currentPositionNode != null && tn != null)
                 {
-                    _nodePathStack = NodeNav.TwinStarII(currentPositionNode, tn, true);
+                    goalPositionNode = tn;
                 }
             }
         }

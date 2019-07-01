@@ -47,6 +47,7 @@ public class Cow : MonoBehaviour
                 navAgent.goalPositionNode = goal;
 
                 Debug.DrawLine(navAgent.currentPositionNode.transform.position, navAgent.goalPositionNode.transform.position, Color.red, 10f, false);
+                yield break;
             }
         }
 
