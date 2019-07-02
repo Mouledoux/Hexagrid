@@ -6,16 +6,22 @@ public class SpawnGrid : MonoBehaviour
 {
     [SerializeField]
     private int _rows, _cols;
-    public int rows => Mathf.Abs(_rows);
-    public int cols => Mathf.Abs(_cols);
+    public int rows
+    {
+        get { return Mathf.Abs(_rows); }
+        set { _rows = Mathf.Abs(value); }
+    }
+    public int cols
+    {
+        get { return Mathf.Abs(_cols); }
+        set { _cols = Mathf.Abs(value); }
+    }
 
-    public string seed;
-
-    private int perlinSeed => (seed.GetHashCode() >> 16);
+    public string perlinSeed;
     public float perlinScale = 8f;
     public float perlinHeightMod = 0.2f;
 
-    public float biomeSeedMod = 0.5f;
+    public string biomeSeed;
 
     public Texture2D mapTexture;
     
@@ -26,14 +32,16 @@ public class SpawnGrid : MonoBehaviour
     private void Start()
     {
         //GenerateNewMap();
-        NewTextureMap();
+        ///NewTextureMap();
+
+        GenerateTextureGrid
     }
 
     private void Update()
     {
-        if(Input.GetKey(KeyCode.LeftControl))
-            if(Input.GetKeyDown(KeyCode.Q))
-                GenerateNewMap();
+        // if(Input.GetKey(KeyCode.LeftControl))
+        //     if(Input.GetKeyDown(KeyCode.Q))
+        //         GenerateNewMap();
     }
 
     bool ClearBoard()
@@ -46,18 +54,49 @@ public class SpawnGrid : MonoBehaviour
             Destroy(node.gameObject);
         }
 
+        gridNodes = null;
         return true;
     }
 
-    [ContextMenu("New Texture Map")]
-    public void NewTextureMap()
+
+    private Texture2D GeneratePerlinTexture(string seed, float scale = 1f)
+    {
+        Texture2D perlinTexture = new Texture2D(cols, rows);
+        Color[] pixels = new Color[perlinTexture.width * perlinTexture.height];
+
+        for(int i = 0; i < perlinTexture.height; i++)
+        {
+            for(int j = 0; j < perlinTexture.width; j++)
+            {
+                float xCoord = j;
+                float yCoord = i;
+
+                float sampleH =  GetPerlinNoiseValue(xCoord, yCoord, seed.ToUpper(), scale);
+                float sampleS =  GetPerlinNoiseValue(xCoord, yCoord, seed.ToLower(), scale);
+                float sampleV =  GetPerlinNoiseValue(xCoord, yCoord, seed, scale);
+
+                pixels[(i * perlinTexture.width) + j] = Color.HSVToRGB(sampleH, sampleS, sampleV);
+            }
+        }
+
+        perlinTexture.SetPixels(pixels);
+        perlinTexture.Apply();
+
+        return perlinTexture;
+    }
+
+
+    public void GenerateTextureGrid(int xSize, int ySize, Texture2D sampleTexture)
     {
         ClearBoard();
+        cols = xSize;
+        rows = ySize;
         gridNodes = new TraversableNode[cols, rows];
 
-        GameObject gridCell;
-        int txWidth = mapTexture.width;
-        int txHeight = mapTexture.height;
+
+        int txWidth = sampleTexture.width;
+        int txHeight = sampleTexture.height;
+
 
         for(int i = 0; i < cols; i++)
         {
@@ -67,17 +106,19 @@ public class SpawnGrid : MonoBehaviour
                 pixX = (int)(((float)i/cols) * txWidth);
                 pixY = (int)(((float)j/rows) * txHeight);
 
+
                 float h, s, v;
-                Color.RGBToHSV(mapTexture.GetPixel(pixX, pixY), out h, out s, out v);
+                Color.RGBToHSV(sampleTexture.GetPixel(pixX, pixY), out h, out s, out v);
 
 
                 if(v > 0)
                 {
-                    gridCell = Instantiate(outerWall[0]) as GameObject;
-
+                    GameObject gridCell = Instantiate(outerWall[0]) as GameObject;
                     int hexOffset = (i % 2);
+
                     gridCell.name = $"[{i}, {j}]";
                     gridCell.transform.parent = transform;
+
                     gridCell.transform.localPosition = new Vector3(((-cols / 2) + i) * 0.85f, 0, ((-rows / 2) + j) + (hexOffset * 0.5f));
                     gridCell.transform.Rotate(Vector3.up, 30);
                     gridCell.transform.localScale = Vector3.one + Vector3.up * v * 8f;
@@ -90,6 +131,7 @@ public class SpawnGrid : MonoBehaviour
                     gridNodes[i, j].travelCost = 1;
                     gridNodes[i, j].isTraversable = true;
                     
+
                     if(j > 0)
                     {
                         gridNodes[i, j].AddNeighbor(gridNodes[i, j - 1]);
@@ -111,7 +153,26 @@ public class SpawnGrid : MonoBehaviour
         }
     }
 
-    [ContextMenu("NewMap")]
+
+    float GetPerlinNoiseValue(float xCoord, float yCoord, string seed = "", float scale = 1f, float valueMod = 1f)
+    {   
+        int seedHash = seed.GetHashCode() >> 16;
+
+        xCoord += seedHash;
+        yCoord += seedHash;
+
+        xCoord *= scale;
+        yCoord *= scale;
+
+        return Mathf.Clamp01(Mathf.PerlinNoise(xCoord, yCoord)) * valueMod;
+    }
+
+
+
+
+
+    // depreciated methods -- depreciated methods -- depreciated methods -- depreciated methods -- depreciated methods --
+    [System.Obsolete("depreciated: use GenerateTextureGrid instead")]
     public void GenerateNewMap()
     {
         ClearBoard();
@@ -137,9 +198,9 @@ public class SpawnGrid : MonoBehaviour
 
                 float biomeScale = 8f;
                 System.Func<int, int> getBiomeNoise = (int valueMod) =>
-                    (int)GetPerlinNoiseValue(xCoord, yCoord, (long)(perlinSeed * biomeSeedMod), biomeScale, valueMod);
+                    (int)GetPerlinNoiseValue(xCoord, yCoord, (perlinSeed + biomeSeed), biomeScale, valueMod);
                 
-                int perlinFort = (int)GetPerlinNoiseValue(xCoord, yCoord, perlinSeed * 4, 4, 10);
+                int perlinFort = (int)GetPerlinNoiseValue(xCoord, yCoord, perlinSeed.Substring(perlinSeed.Length - 1), 4, 10);
 
 
                 float resistance = 0f;
@@ -212,15 +273,4 @@ public class SpawnGrid : MonoBehaviour
         }
     }
 
-
-    float GetPerlinNoiseValue(float xCoord, float yCoord, long seed = 0, float scale = 1f, float valueMod = 1f)
-    {   
-        xCoord += seed;
-        yCoord += seed;
-
-        xCoord *= scale;
-        yCoord *= scale;
-
-        return Mathf.Clamp01(Mathf.PerlinNoise(xCoord, yCoord)) * valueMod;
-    }
 }

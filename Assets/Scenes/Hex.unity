@@ -639,10 +639,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rows: 0
   _cols: 0
-  seed: 
+  perlinSeed: 
   perlinScale: 8
   perlinHeightMod: 0.2
-  biomeSeedMod: 0.5
+  biomeSeed: 
   mapTexture: {fileID: 0}
   edgesAreWalls: 0
   outerWall:
@@ -5575,10 +5575,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rows: 0
   _cols: 0
-  seed: 
+  perlinSeed: 
   perlinScale: 8
   perlinHeightMod: 0.2
-  biomeSeedMod: 0.5
+  biomeSeed: 
   mapTexture: {fileID: 0}
   edgesAreWalls: 0
   outerWall:
@@ -5616,6 +5616,8 @@ GameObject:
   - component: {fileID: 1329860355}
   - component: {fileID: 1329860354}
   - component: {fileID: 1329860356}
+  - component: {fileID: 1329860358}
+  - component: {fileID: 1329860357}
   m_Layer: 0
   m_Name: Hexagrid (1)
   m_TagString: Untagged
@@ -5637,10 +5639,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rows: 50
   _cols: 100
-  seed: hello world!
+  perlinSeed: 
   perlinScale: 8
   perlinHeightMod: 0
-  biomeSeedMod: 0.5
+  biomeSeed: 
   mapTexture: {fileID: 2800000, guid: b04addeb6e2b96a4fbef7e412dcd73e6, type: 3}
   edgesAreWalls: 0
   outerWall:
@@ -5680,6 +5682,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mat: {fileID: 2100000, guid: af7f65b2bbec2bd48b017dfd06a45b21, type: 2}
+--- !u!23 &1329860357
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329860353}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 2c790a442c1ae4745b4672c2f5676f3e, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &1329860358
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329860353}
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1911471109
 GameObject:
   m_ObjectHideFlags: 0
