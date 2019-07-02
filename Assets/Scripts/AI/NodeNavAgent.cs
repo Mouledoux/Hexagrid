@@ -49,10 +49,8 @@ public class NodeNavAgent : MonoBehaviour
         get { return _goalPositionNode; }
         set
         {
-            float t = Time.time;
             _goalPositionNode = value;
-            _nodePathStack = NodeNav.TwinStarT(currentPositionNode, _goalPositionNode);
-            print(Time.time - t);
+            _nodePathStack = NodeNav.TwinStarT(currentPositionNode, _goalPositionNode, useTwinStar);
         }
     }
 
@@ -115,12 +113,12 @@ public class NodeNavAgent : MonoBehaviour
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void TraversePath()
     {
-        Vector3 dir = (nextNode.transform.position - transform.position);
+        Vector3 dir = ((nextNode.transform.position + Vector3.up * 2) - transform.position);
 
         dir.Normalize();
         transform.Translate(dir * speed * Time.deltaTime);
 
-        if(Vector3.Distance(transform.position, nextNode.transform.position) <= 0.05f)
+        if(Vector3.Distance(transform.position + transform.position, nextNode.transform.position) <= 0.05f)
         {
             currentPositionNode.RemoveInformation(this);
             currentPositionNode.isOccupied = false;

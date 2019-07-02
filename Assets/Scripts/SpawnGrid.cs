@@ -4,7 +4,11 @@ using System.Collections.Generic;
 
 public class SpawnGrid : MonoBehaviour
 {
-    public int rows, cols;
+    [SerializeField]
+    private int _rows, _cols;
+    public int rows => Mathf.Abs(_rows);
+    public int cols => Mathf.Abs(_cols);
+
     public string seed;
 
     private int perlinSeed => (seed.GetHashCode() >> 16);
@@ -21,9 +25,6 @@ public class SpawnGrid : MonoBehaviour
 
     private void Start()
     {
-        rows = Mathf.Abs(rows);
-        cols = Mathf.Abs(cols);
-
         //GenerateNewMap();
         NewTextureMap();
     }
@@ -48,6 +49,7 @@ public class SpawnGrid : MonoBehaviour
         return true;
     }
 
+    [ContextMenu("New Texture Map")]
     public void NewTextureMap()
     {
         ClearBoard();
@@ -61,19 +63,19 @@ public class SpawnGrid : MonoBehaviour
         {
             for (int j = 0; j < rows; j++)
             {
-                int coX, coY;
-                coX = (int)((float)((float)i/(float)cols) * txWidth);
-                coY = (int)((float)((float)j/(float)rows) * txHeight);
+                int pixX, pixY;
+                pixX = (int)(((float)i/cols) * txWidth);
+                pixY = (int)(((float)j/rows) * txHeight);
 
-                int hexOffset = (i % 2);
                 float h, s, v;
-                Color.RGBToHSV(mapTexture.GetPixel(coX, coY), out h, out s, out v);
+                Color.RGBToHSV(mapTexture.GetPixel(pixX, pixY), out h, out s, out v);
 
 
                 if(v > 0)
                 {
                     gridCell = Instantiate(outerWall[0]) as GameObject;
 
+                    int hexOffset = (i % 2);
                     gridCell.name = $"[{i}, {j}]";
                     gridCell.transform.parent = transform;
                     gridCell.transform.localPosition = new Vector3(((-cols / 2) + i) * 0.85f, 0, ((-rows / 2) + j) + (hexOffset * 0.5f));

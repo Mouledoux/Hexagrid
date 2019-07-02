@@ -70,7 +70,7 @@ LightmapSettings:
     m_FinalGatherFiltering: 1
     m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
-    m_MixedBakeMode: 2
+    m_MixedBakeMode: 1
     m_BakeBackend: 1
     m_PVRSampling: 1
     m_PVRDirectSampleCount: 32
@@ -89,7 +89,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -506,13 +506,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: 0.2164396, y: 0, z: 0, w: 0.97629607}
-  m_LocalPosition: {x: 0, y: 25, z: 0}
+  m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
+  m_LocalPosition: {x: 0, y: 40, z: -70}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 25, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 40, y: 0, z: 0}
 --- !u!114 &534669906
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -637,12 +637,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26271d88edc884a4288799c4930922c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 100
-  cols: 100
+  _rows: 0
+  _cols: 0
   seed: 
   perlinScale: 8
   perlinHeightMod: 0.2
   biomeSeedMod: 0.5
+  mapTexture: {fileID: 0}
   edgesAreWalls: 0
   outerWall:
   - {fileID: 1535652536708680, guid: 2ee43f6acf07a194eb588a7dd5bc1c5b, type: 3}
@@ -5572,12 +5573,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26271d88edc884a4288799c4930922c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 10
-  cols: 10
+  _rows: 0
+  _cols: 0
   seed: 
   perlinScale: 8
   perlinHeightMod: 0.2
   biomeSeedMod: 0.5
+  mapTexture: {fileID: 0}
   edgesAreWalls: 0
   outerWall:
   - {fileID: 100000, guid: ec55075d188c17f409c030e2fa6d4ebf, type: 3}
@@ -5633,12 +5635,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26271d88edc884a4288799c4930922c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 256
-  cols: 256
+  _rows: 50
+  _cols: 100
   seed: hello world!
   perlinScale: 8
-  perlinHeightMod: 0.2
+  perlinHeightMod: 0
   biomeSeedMod: 0.5
+  mapTexture: {fileID: 2800000, guid: b04addeb6e2b96a4fbef7e412dcd73e6, type: 3}
   edgesAreWalls: 0
   outerWall:
   - {fileID: 8445584040079579582, guid: 517bcdd30e88ae9449a4d48a36cb5278, type: 3}
