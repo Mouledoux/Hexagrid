@@ -148,7 +148,7 @@ public class NodeNavAgent : MonoBehaviour
             TraversableNode nextNode = _nodePathStack.Peek();
             float dist = Vector3.Distance(transform.position, nextNode.transform.position);
 
-            Vector3 nextPos = nextNode.transform.up * (Mathf.Sin(dist * Mathf.PI) * nextNode.transform.localScale.y);
+            Vector3 nextPos = nextNode.transform.up * (Mathf.Sin(dist * Mathf.PI));
 
             transform.GetChild(0).transform.localPosition = Vector3.up * 0.2f + nextPos;
             transform.GetChild(0).LookAt(_nodePathStack.Peek().transform.position);

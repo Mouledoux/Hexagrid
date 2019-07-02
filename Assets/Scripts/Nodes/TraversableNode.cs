@@ -105,15 +105,19 @@ public class TraversableNode : Node
     {
         if(this == targetNode) return true;
 
-        ValidateParentChain(this);
-        TraversableNode tNode = this;
 
-        while(tNode.parentNode != null && tNode.parentNode != this)
+        if(ValidateParentChain(this))
         {
-            if(tNode.parentNode == targetNode) return true;
+            TraversableNode tNode = this;
 
-            else tNode = tNode.parentNode;
+            while(tNode.parentNode != null && tNode.parentNode != this)
+            {
+                if(tNode.parentNode == targetNode) return true;
+
+                else tNode = tNode.parentNode;
+            }
         }        
+
 
         return false;
     }
@@ -121,9 +125,9 @@ public class TraversableNode : Node
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public static void ValidateParentChain(TraversableNode aNode)
+    public static bool ValidateParentChain(TraversableNode aNode)
     {
-        if(aNode == null) return;
+        if(aNode == null) return false;
 
         List<TraversableNode> parents = new List<TraversableNode>();
 
@@ -132,7 +136,7 @@ public class TraversableNode : Node
             if(parents.Contains(aNode.parentNode))
             {
                 aNode.parentNode = null;
-                return;
+                return true;
             }
             
             else
@@ -141,6 +145,8 @@ public class TraversableNode : Node
                 aNode = aNode.parentNode;
             }
         }
+
+        return false;
     }
 
 

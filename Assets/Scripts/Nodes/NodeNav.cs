@@ -7,8 +7,6 @@ public static class NodeNav
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public static Stack<TraversableNode> TwinStarT(TraversableNode begNode, TraversableNode endNode, bool dualSearch = true)
     {
-        if(begNode == endNode || begNode == null || endNode == null || !endNode.isTraversable) return null;
-
         bool foundPath = false;
 
         if(dualSearch)
@@ -24,6 +22,9 @@ public static class NodeNav
 
     private static Stack<TraversableNode> SoloStar(TraversableNode begNode, TraversableNode endNode, ref bool foundPath, bool canReturn = true, float hMod = 1f, float gMod = 1f)
     {
+        if(begNode == endNode || begNode == null || endNode == null || !endNode.isTraversable) return null;
+
+
         List<TraversableNode> openList = new List<TraversableNode>();
         List<TraversableNode> closedList = new List<TraversableNode>();
 
@@ -168,10 +169,17 @@ public static class NodeNav
 
         TraversableNode.ValidateParentChain(currentNode);
 
-        while(currentNode.parentNode != null)
+        while(currentNode != null && currentNode.parentNode != null)
         {
-            returnStack.Push(currentNode);
-            currentNode = currentNode.parentNode;
+            try
+            {
+                returnStack.Push(currentNode);
+                currentNode = currentNode.parentNode;
+            }
+            catch(System.OutOfMemoryException)
+            {
+                UnityEngine.Debug.Log(returnStack.Count);
+            }
         }
 
         return returnStack;

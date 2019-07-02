@@ -40,7 +40,7 @@ public class SpawnGrid : MonoBehaviour
 
     private void Start()
     {
-        GenerateNewGrid(cols, rows, GeneratePerlinTexture(perlinSeed, perlinScale));
+        //GenerateNewGrid(cols, rows, mapTexture == null ? GeneratePerlinTexture(perlinSeed, perlinScale) : mapTexture);
     }
 
     private void Update()
@@ -49,7 +49,7 @@ public class SpawnGrid : MonoBehaviour
         {
             if(Input.GetKeyDown(KeyCode.Q))
             {
-                GenerateNewGrid(cols, rows, GeneratePerlinTexture(perlinSeed, perlinScale));
+                GenerateNewGrid(cols, rows, mapTexture == null ? GeneratePerlinTexture(perlinSeed, perlinScale) : mapTexture);
             }
         }
     }
