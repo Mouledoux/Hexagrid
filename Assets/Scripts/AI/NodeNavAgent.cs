@@ -99,12 +99,12 @@ public class NodeNavAgent : MonoBehaviour
             
             else
             {
-                goalPositionNode = currentPositionNode;
+                goalPositionNode = null;
                 return false;   
             }
         }
 
-        return (_nodePathStack != null && _nodePathStack.Count > 0);
+        return hasPath;
     }
 
 
@@ -217,9 +217,22 @@ public class NodeNavAgent : MonoBehaviour
     {
         if(currentPositionNode == null) return;
 
-        Node[] neighbors = currentPositionNode.GetNeighborhoodLayers(min, range);
-        TraversableNode destNode = neighbors[Random.Range(0, neighbors.Length)] as TraversableNode;
+        List<Node> neighbors =  new List<Node>();
         
-        goalPositionNode = destNode;
+        foreach(Node n in currentPositionNode.GetNeighborhoodLayers(min, range))
+        {
+            neighbors.Add(n);
+        }
+
+        TraversableNode destNode;
+        do
+        {
+            destNode = neighbors[Random.Range(0, neighbors.Count)] as TraversableNode;
+            neighbors.Remove(destNode);
+
+        } while(!destNode.isTraversable && neighbors.Count > 0);
+
+        
+        goalPositionNode = destNode.isTraversable ? destNode : currentPositionNode;
     }
 }

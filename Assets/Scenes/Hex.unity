@@ -536,7 +536,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3926b49c5a3c91344a5c845ad2875d1e, type: 3}
   m_Name: 
@@ -5606,13 +5606,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridNode: {fileID: 8445584040079579582, guid: 517bcdd30e88ae9449a4d48a36cb5278,
     type: 3}
-  _rows: 50
+  _rows: 100
   _cols: 100
   maxHeight: 10
   edgesAreWalls: 1
   perlinSeed: hi, my name is..
   perlinScale: 0.1
-  mapTexture: {fileID: 2800000, guid: b04addeb6e2b96a4fbef7e412dcd73e6, type: 3}
+  mapTexture: {fileID: 0}
 --- !u!4 &1329860355
 Transform:
   m_ObjectHideFlags: 0

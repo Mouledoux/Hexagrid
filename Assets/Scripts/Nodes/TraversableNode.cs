@@ -62,7 +62,7 @@ public class TraversableNode : Node
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public float GetNeighboorTravelCost(TraversableNode aNode, bool invert = false)
     {
-        return  !invert ? 
+        return !invert ? 
         CheckIsNeighbor(aNode) ? (this.travelCost - aNode.travelCost) : float.MaxValue :
         aNode.GetNeighboorTravelCost(this, false);
     }
@@ -106,7 +106,7 @@ public class TraversableNode : Node
         if(this == targetNode) return true;
 
 
-        if(ValidateParentChain(this))
+        if(this != null && ValidateParentChain(this))
         {
             TraversableNode tNode = this;
 

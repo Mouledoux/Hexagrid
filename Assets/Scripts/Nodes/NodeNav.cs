@@ -48,7 +48,14 @@ public static class NodeNav
                     foundPath = true;
                     TraversableNode.ReverseParents(neighborNode);
                     neighborNode.parentNode = currentNode;
-                    return NodePathStack(endNode);
+                    Stack<TraversableNode> returnStack = NodePathStack(endNode);
+                    
+                    foreach(TraversableNode tn in closedList)
+                    {
+                        tn.parentNode = null;
+                    }
+
+                    return returnStack;
                 }
 
                 else
