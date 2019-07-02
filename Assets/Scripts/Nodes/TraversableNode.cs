@@ -123,6 +123,8 @@ public class TraversableNode : Node
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public static void ValidateParentChain(TraversableNode aNode)
     {
+        if(aNode == null) return;
+
         List<TraversableNode> parents = new List<TraversableNode>();
 
         while(aNode.parentNode != null)

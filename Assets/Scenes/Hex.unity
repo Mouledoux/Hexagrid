@@ -637,37 +637,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26271d88edc884a4288799c4930922c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridNode: {fileID: 0}
   _rows: 0
   _cols: 0
+  maxHeight: 1
+  edgesAreWalls: 0
   perlinSeed: 
   perlinScale: 8
-  perlinHeightMod: 0.2
-  biomeSeed: 
   mapTexture: {fileID: 0}
-  edgesAreWalls: 0
-  outerWall:
-  - {fileID: 1535652536708680, guid: 2ee43f6acf07a194eb588a7dd5bc1c5b, type: 3}
-  - {fileID: 1481754022141284, guid: beebce36c61d60f42b22b153abcfd9b0, type: 3}
-  - {fileID: 1165385814476940, guid: 2e0f1312996d68349933ef1d0445cd09, type: 3}
-  lowLand:
-  - {fileID: 1829116461306768, guid: cd4f2cbde7d033f45a5d96afb77a69e1, type: 3}
-  - {fileID: 1389125948638888, guid: a9684bd94f9c39149a3724d15b5151a6, type: 3}
-  - {fileID: 1887013331352158, guid: 8c907f122f4a8a2468dec14493d763ff, type: 3}
-  medLand:
-  - {fileID: 1708391978254754, guid: e4113aa56a03cf64eba4ae136ef1ac74, type: 3}
-  - {fileID: 1928123463396898, guid: 71be69e7a312bc844ad384574d3624fe, type: 3}
-  - {fileID: 1034398648363416, guid: 724d1dba07b41c34282d4078db00274d, type: 3}
-  - {fileID: 1901911034279994, guid: 61a4f649633a1f94abeb21559df74bd4, type: 3}
-  - {fileID: 1027144338041134, guid: 8d65fe10dbb32e34aa703943ab85d9c0, type: 3}
-  highLand:
-  - {fileID: 1558740971366590, guid: 1c1d07a4036f32e4db71385ea172b294, type: 3}
-  - {fileID: 1323375312248932, guid: 60e77467a81160140b6dd83e291db008, type: 3}
-  - {fileID: 1165385814476940, guid: 2e0f1312996d68349933ef1d0445cd09, type: 3}
-  - {fileID: 1773482152359250, guid: 1e37ca3e943829a479e4ff6d29c23d73, type: 3}
-  - {fileID: 1328986990472984, guid: 4f49c09706dbf4a4e99dc6a51fab25cc, type: 3}
-  Special:
-  - {fileID: 1690466091820418, guid: fadb9dd6254f1d14a9b77307bf133e1b, type: 3}
-  - {fileID: 1048076980211604, guid: acf51e39f8505084796481991b891ff9, type: 3}
 --- !u!4 &962842700
 Transform:
   m_ObjectHideFlags: 0
@@ -5573,24 +5550,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26271d88edc884a4288799c4930922c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridNode: {fileID: 0}
   _rows: 0
   _cols: 0
+  maxHeight: 1
+  edgesAreWalls: 0
   perlinSeed: 
   perlinScale: 8
-  perlinHeightMod: 0.2
-  biomeSeed: 
   mapTexture: {fileID: 0}
-  edgesAreWalls: 0
-  outerWall:
-  - {fileID: 100000, guid: ec55075d188c17f409c030e2fa6d4ebf, type: 3}
-  lowLand:
-  - {fileID: 1027144338041134, guid: 8d65fe10dbb32e34aa703943ab85d9c0, type: 3}
-  medLand:
-  - {fileID: 1027144338041134, guid: 8d65fe10dbb32e34aa703943ab85d9c0, type: 3}
-  highLand:
-  - {fileID: 1027144338041134, guid: 8d65fe10dbb32e34aa703943ab85d9c0, type: 3}
-  Special:
-  - {fileID: 1027144338041134, guid: 8d65fe10dbb32e34aa703943ab85d9c0, type: 3}
 --- !u!4 &1268912455
 Transform:
   m_ObjectHideFlags: 0
@@ -5637,24 +5604,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26271d88edc884a4288799c4930922c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridNode: {fileID: 8445584040079579582, guid: 517bcdd30e88ae9449a4d48a36cb5278,
+    type: 3}
   _rows: 50
   _cols: 100
+  maxHeight: 10
+  edgesAreWalls: 1
   perlinSeed: hi, my name is..
   perlinScale: 0.1
-  perlinHeightMod: 0
-  biomeSeed: 
   mapTexture: {fileID: 2800000, guid: b04addeb6e2b96a4fbef7e412dcd73e6, type: 3}
-  edgesAreWalls: 0
-  outerWall:
-  - {fileID: 8445584040079579582, guid: 517bcdd30e88ae9449a4d48a36cb5278, type: 3}
-  lowLand:
-  - {fileID: 8445584040079579582, guid: 517bcdd30e88ae9449a4d48a36cb5278, type: 3}
-  medLand:
-  - {fileID: 8445584040079579582, guid: 517bcdd30e88ae9449a4d48a36cb5278, type: 3}
-  highLand:
-  - {fileID: 8445584040079579582, guid: 517bcdd30e88ae9449a4d48a36cb5278, type: 3}
-  Special:
-  - {fileID: 8445584040079579582, guid: 517bcdd30e88ae9449a4d48a36cb5278, type: 3}
 --- !u!4 &1329860355
 Transform:
   m_ObjectHideFlags: 0

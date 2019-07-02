@@ -12,10 +12,12 @@ public class GridHighlight : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Physics.Raycast(mouseRay, out rayHit, 64))
+        if(Physics.Raycast(mouseRay, out rayHit))
         {
             mp = rayHit.collider.transform.position;
             mat.SetVector("_MousePos", mp);
+            
+            Debug.DrawLine(mouseRay.origin, rayHit.point);
         }
     }
 }

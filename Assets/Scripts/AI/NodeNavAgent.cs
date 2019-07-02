@@ -113,12 +113,12 @@ public class NodeNavAgent : MonoBehaviour
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void TraversePath()
     {
-        Vector3 dir = ((nextNode.transform.position + Vector3.up * 2) - transform.position);
+        Vector3 dir = (nextNode.transform.position - transform.position);
 
         dir.Normalize();
         transform.Translate(dir * speed * Time.deltaTime);
 
-        if(Vector3.Distance(transform.position + transform.position, nextNode.transform.position) <= 0.05f)
+        if(Vector3.Distance(transform.position, nextNode.transform.position) <= 0.05f)
         {
             currentPositionNode.RemoveInformation(this);
             currentPositionNode.isOccupied = false;
@@ -148,7 +148,7 @@ public class NodeNavAgent : MonoBehaviour
             TraversableNode nextNode = _nodePathStack.Peek();
             float dist = Vector3.Distance(transform.position, nextNode.transform.position);
 
-            Vector3 nextPos = nextNode.transform.up * (Mathf.Sin(dist * Mathf.PI));
+            Vector3 nextPos = nextNode.transform.up * (Mathf.Sin(dist * Mathf.PI) * nextNode.transform.localScale.y);
 
             transform.GetChild(0).transform.localPosition = Vector3.up * 0.2f + nextPos;
             transform.GetChild(0).LookAt(_nodePathStack.Peek().transform.position);
