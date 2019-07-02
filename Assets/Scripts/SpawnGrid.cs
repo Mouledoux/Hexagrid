@@ -171,7 +171,9 @@ public class SpawnGrid : MonoBehaviour
 
 
 
-    // depreciated methods -- depreciated methods -- depreciated methods -- depreciated methods -- depreciated methods --
+    /// DEPRECIATED METHODS // DEPRECIATED METHODS // DEPRECIATED METHODS // DEPRECIATED METHODS // DEPRECIATED METHODS //
+    #region DEPRECIATED METHODS
+
     [System.Obsolete("depreciated: use GenerateTextureGrid instead")]
     public void GenerateNewMap()
     {
@@ -272,5 +274,7 @@ public class SpawnGrid : MonoBehaviour
         //     }
         // }
     }
-
+    
+    
+    #endregion
 }
