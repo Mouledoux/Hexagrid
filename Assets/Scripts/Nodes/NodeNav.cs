@@ -5,19 +5,24 @@ using System.Collections.Generic;
 public static class NodeNav
 {
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public static Stack<TraversableNode> TwinStarT(TraversableNode begNode, TraversableNode endNode)
+    public static Stack<TraversableNode> TwinStarT(TraversableNode begNode, TraversableNode endNode, bool dualSearch = true)
     {
         if(begNode == endNode || begNode == null || endNode == null || !endNode.isTraversable) return null;
 
         bool foundPath = false;
 
-        Thread backwards = new Thread(() => TwinStarSolo(endNode, begNode, ref foundPath, false, 1f, 2f));
-        backwards.Start();
+        if(dualSearch)
+        {
+            Thread backwards = new Thread(() => SoloStar(endNode, begNode, ref foundPath, false, 1f, 2f));
+            backwards.Start();
+        }
 
-        return TwinStarSolo(begNode, endNode, ref foundPath);
+        return SoloStar(begNode, endNode, ref foundPath);
     }
 
-    private static Stack<TraversableNode> TwinStarSolo(TraversableNode begNode, TraversableNode endNode, ref bool foundPath, bool canReturn = true, float hMod = 1f, float gMod = 1f)
+
+
+    private static Stack<TraversableNode> SoloStar(TraversableNode begNode, TraversableNode endNode, ref bool foundPath, bool canReturn = true, float hMod = 1f, float gMod = 1f)
     {
         List<TraversableNode> openList = new List<TraversableNode>();
         List<TraversableNode> closedList = new List<TraversableNode>();
@@ -35,8 +40,10 @@ public static class NodeNav
             {
                 if(neighborNode == null || neighborNode.isTraversable == false) { continue; }
 
-                else if(canReturn && neighborNode.CheckForNodeInParentChain(endNode))
+                else if(neighborNode.CheckForNodeInParentChain(endNode))
                 {
+                    if(!canReturn) return null;
+
                     foundPath = true;
                     TraversableNode.ReverseParents(neighborNode);
                     neighborNode.parentNode = currentNode;
