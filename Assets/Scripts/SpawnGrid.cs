@@ -26,7 +26,7 @@ public class SpawnGrid : MonoBehaviour
     public Texture2D mapTexture;
     
     public bool edgesAreWalls;
-    public List<GameObject> outerWall, lowLand, medLand, highLand, Special;
+    public GameObject gridNode;
     public TraversableNode[,] gridNodes;
 
     private void Start()
@@ -34,14 +34,14 @@ public class SpawnGrid : MonoBehaviour
         //GenerateNewMap();
         ///NewTextureMap();
 
-        GenerateTextureGrid
+        GenerateNewGrid(cols, rows, GeneratePerlinTexture(perlinSeed, perlinScale));
     }
 
     private void Update()
     {
-        // if(Input.GetKey(KeyCode.LeftControl))
-        //     if(Input.GetKeyDown(KeyCode.Q))
-        //         GenerateNewMap();
+        if(Input.GetKey(KeyCode.LeftControl))
+            if(Input.GetKeyDown(KeyCode.Q))
+                GenerateNewGrid(cols, rows, GeneratePerlinTexture(perlinSeed, perlinScale));
     }
 
     bool ClearBoard()
@@ -86,7 +86,7 @@ public class SpawnGrid : MonoBehaviour
     }
 
 
-    public void GenerateTextureGrid(int xSize, int ySize, Texture2D sampleTexture)
+    public void GenerateNewGrid(int xSize, int ySize, Texture2D sampleTexture)
     {
         ClearBoard();
         cols = xSize;
@@ -113,7 +113,7 @@ public class SpawnGrid : MonoBehaviour
 
                 if(v > 0)
                 {
-                    GameObject gridCell = Instantiate(outerWall[0]) as GameObject;
+                    GameObject gridCell = Instantiate(gridNode) as GameObject;
                     int hexOffset = (i % 2);
 
                     gridCell.name = $"[{i}, {j}]";
@@ -175,102 +175,102 @@ public class SpawnGrid : MonoBehaviour
     [System.Obsolete("depreciated: use GenerateTextureGrid instead")]
     public void GenerateNewMap()
     {
-        ClearBoard();
+        // ClearBoard();
 
-        gridNodes = new TraversableNode[cols, rows];
+        // gridNodes = new TraversableNode[cols, rows];
 
-        for(int i = 0; i < cols; i++)
-        {
-            for (int j = 0; j < rows; j++)
-            {
-                GameObject gridCell = null;
+        // for(int i = 0; i < cols; i++)
+        // {
+        //     for (int j = 0; j < rows; j++)
+        //     {
+        //         GameObject gridCell = null;
 
-                float xCoord = (float)i/(float)cols;
-                float yCoord = (float)j/(float)rows;
+        //         float xCoord = (float)i/(float)cols;
+        //         float yCoord = (float)j/(float)rows;
 
-                float perlinHeight = GetPerlinNoiseValue(xCoord, yCoord, perlinSeed, perlinScale);
-                float height = (int)(perlinHeight * perlinScale) * perlinHeightMod;
+        //         float perlinHeight = GetPerlinNoiseValue(xCoord, yCoord, perlinSeed, perlinScale);
+        //         float height = (int)(perlinHeight * perlinScale) * perlinHeightMod;
                 
 
-                bool isWall = edgesAreWalls && (i == 0 || j == 0 || i == cols-1 || j == rows-1);
-                Vector3 scale = isWall ? new Vector3(1f, 16f, 1f) : new Vector3(1f, 1f,  1f);
+        //         bool isWall = edgesAreWalls && (i == 0 || j == 0 || i == cols-1 || j == rows-1);
+        //         Vector3 scale = isWall ? new Vector3(1f, 16f, 1f) : new Vector3(1f, 1f,  1f);
 
 
-                float biomeScale = 8f;
-                System.Func<int, int> getBiomeNoise = (int valueMod) =>
-                    (int)GetPerlinNoiseValue(xCoord, yCoord, (perlinSeed + biomeSeed), biomeScale, valueMod);
+        //         float biomeScale = 8f;
+        //         System.Func<int, int> getBiomeNoise = (int valueMod) =>
+        //             (int)GetPerlinNoiseValue(xCoord, yCoord, (perlinSeed + biomeSeed), biomeScale, valueMod);
                 
-                int perlinFort = (int)GetPerlinNoiseValue(xCoord, yCoord, perlinSeed.Substring(perlinSeed.Length - 1), 4, 10);
+        //         int perlinFort = (int)GetPerlinNoiseValue(xCoord, yCoord, perlinSeed.Substring(perlinSeed.Length - 1), 4, 10);
 
 
-                float resistance = 0f;
+        //         float resistance = 0f;
 
-                if(isWall)
-                {
-                    gridCell = Instantiate(outerWall[getBiomeNoise(outerWall.Count)]) as GameObject;
-                    resistance = float.MaxValue;
-                }
-                else if(perlinFort == 9)
-                {
-                    gridCell = Instantiate(Special[getBiomeNoise(Special.Count)]) as GameObject;
-                    resistance = 7f;
-                }
-                else if(perlinHeight >= 0.8f)
-                {
-                    gridCell = Instantiate(highLand[getBiomeNoise(highLand.Count)]) as GameObject;
-                    resistance = 24f;
-                }
-                else  if(perlinHeight >= 0.4f)
-                {
-                    gridCell = Instantiate(medLand[getBiomeNoise(medLand.Count)]) as GameObject;
-                    resistance = 8f;
-                }
-                else
-                {
-                    gridCell = Instantiate(lowLand[getBiomeNoise(lowLand.Count)]) as GameObject;
-                    resistance = 16f;
-                }
+        //         if(isWall)
+        //         {
+        //             gridCell = Instantiate(outerWall[getBiomeNoise(outerWall.Count)]) as GameObject;
+        //             resistance = float.MaxValue;
+        //         }
+        //         else if(perlinFort == 9)
+        //         {
+        //             gridCell = Instantiate(Special[getBiomeNoise(Special.Count)]) as GameObject;
+        //             resistance = 7f;
+        //         }
+        //         else if(perlinHeight >= 0.8f)
+        //         {
+        //             gridCell = Instantiate(highLand[getBiomeNoise(highLand.Count)]) as GameObject;
+        //             resistance = 24f;
+        //         }
+        //         else  if(perlinHeight >= 0.4f)
+        //         {
+        //             gridCell = Instantiate(medLand[getBiomeNoise(medLand.Count)]) as GameObject;
+        //             resistance = 8f;
+        //         }
+        //         else
+        //         {
+        //             gridCell = Instantiate(lowLand[getBiomeNoise(lowLand.Count)]) as GameObject;
+        //             resistance = 16f;
+        //         }
 
-                //height += perlinFort > 3 ? perlinHeightMod : 0;
+        //         //height += perlinFort > 3 ? perlinHeightMod : 0;
 
-                if(gridCell != null)
-                {
-                    int hexOffset = (i % 2);
+        //         if(gridCell != null)
+        //         {
+        //             int hexOffset = (i % 2);
 
-                    gridCell.name = $"[{i}, {j}]";
-                    gridCell.transform.parent = transform;
-                    //gridCell.transform.localPosition = new Vector3(((-cols / 2) + i) * 0.85f, height, ((-rows / 2) + j) + (hexOffset * 0.5f));
-                    gridCell.transform.localPosition = new Vector3(((-cols / 2) + i) * 0.85f, 0, ((-rows / 2) + j) + (hexOffset * 0.5f));
-                    gridCell.transform.Rotate(Vector3.up, 30);
-                    gridCell.transform.localScale = Vector3.one + Vector3.up * height * 8;
+        //             gridCell.name = $"[{i}, {j}]";
+        //             gridCell.transform.parent = transform;
+        //             //gridCell.transform.localPosition = new Vector3(((-cols / 2) + i) * 0.85f, height, ((-rows / 2) + j) + (hexOffset * 0.5f));
+        //             gridCell.transform.localPosition = new Vector3(((-cols / 2) + i) * 0.85f, 0, ((-rows / 2) + j) + (hexOffset * 0.5f));
+        //             gridCell.transform.Rotate(Vector3.up, 30);
+        //             gridCell.transform.localScale = Vector3.one + Vector3.up * height * 8;
 
-                    gridNodes[i, j] = (gridCell.GetComponent<TraversableNode>());
-                    gridNodes[i, j] = gridNodes[i, j] == null ? gridCell.AddComponent<TraversableNode>() : gridNodes[i, j];
+        //             gridNodes[i, j] = (gridCell.GetComponent<TraversableNode>());
+        //             gridNodes[i, j] = gridNodes[i, j] == null ? gridCell.AddComponent<TraversableNode>() : gridNodes[i, j];
                     
-                    gridNodes[i, j].xCoord = i;
-                    gridNodes[i, j].yCoord = j;
-                    gridNodes[i, j].travelCost = resistance + height;
-                    gridNodes[i, j].isTraversable = !isWall;
+        //             gridNodes[i, j].xCoord = i;
+        //             gridNodes[i, j].yCoord = j;
+        //             gridNodes[i, j].travelCost = resistance + height;
+        //             gridNodes[i, j].isTraversable = !isWall;
                     
-                    if(j > 0)
-                    {
-                        gridNodes[i, j].AddNeighbor(gridNodes[i, j - 1]);
-                    }
+        //             if(j > 0)
+        //             {
+        //                 gridNodes[i, j].AddNeighbor(gridNodes[i, j - 1]);
+        //             }
 
-                    if(i > 0)
-                    {
-                        gridNodes[i, j].AddNeighbor(gridNodes[i - 1, j]);
+        //             if(i > 0)
+        //             {
+        //                 gridNodes[i, j].AddNeighbor(gridNodes[i - 1, j]);
 
-                        int nextJ = j + (hexOffset * 2 - 1);
+        //                 int nextJ = j + (hexOffset * 2 - 1);
 
-                        if(nextJ >= 0 && nextJ < rows)
-                        {
-                            gridNodes[i, j].AddNeighbor(gridNodes[i - 1, nextJ]);
-                        }
-                    }
-                }
-            }
-        }
+        //                 if(nextJ >= 0 && nextJ < rows)
+        //                 {
+        //                     gridNodes[i, j].AddNeighbor(gridNodes[i - 1, nextJ]);
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
     }
 
 }

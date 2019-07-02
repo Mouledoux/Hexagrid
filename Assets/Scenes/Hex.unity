@@ -5639,8 +5639,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rows: 50
   _cols: 100
-  perlinSeed: 
-  perlinScale: 8
+  perlinSeed: hi, my name is..
+  perlinScale: 0.1
   perlinHeightMod: 0
   biomeSeed: 
   mapTexture: {fileID: 2800000, guid: b04addeb6e2b96a4fbef7e412dcd73e6, type: 3}
@@ -5689,7 +5689,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1329860353}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
