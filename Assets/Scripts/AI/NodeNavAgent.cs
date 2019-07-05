@@ -50,7 +50,12 @@ public class NodeNavAgent : MonoBehaviour
         set
         {
             _goalPositionNode = value;
-            _nodePathStack = NodeNav.TwinStarT(currentPositionNode, _goalPositionNode, useTwinStar);
+            //_nodePathStack = NodeNav.TwinStarT(currentPositionNode, _goalPositionNode, useTwinStar);
+
+            System.Threading.Thread backwards = new System.Threading.Thread(() =>
+                _nodePathStack = NodeNav.TwinStarT(currentPositionNode, _goalPositionNode, useTwinStar));
+            
+            backwards.Start();
         }
     }
 

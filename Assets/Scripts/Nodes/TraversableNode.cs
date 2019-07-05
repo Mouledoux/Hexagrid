@@ -131,19 +131,27 @@ public class TraversableNode : Node
 
         List<TraversableNode> parents = new List<TraversableNode>();
 
-        while(aNode.parentNode != null)
+        try
         {
-            if(parents.Contains(aNode.parentNode))
+            while(aNode.parentNode != null)
             {
-                aNode.parentNode = null;
-                return true;
+                if(parents.Contains(aNode.parentNode))
+                {
+                    aNode.parentNode = null;
+                    return true;
+                }
+                
+                else
+                {
+                    parents.Add(aNode.parentNode);
+                    aNode = aNode.parentNode;
+                }
             }
-            
-            else
-            {
-                parents.Add(aNode.parentNode);
-                aNode = aNode.parentNode;
-            }
+        }
+
+        catch(System.NullReferenceException)
+        {
+            Debug.Break();
         }
 
         return false;
