@@ -95,7 +95,7 @@ public class TraversableNode : Node
             return 0f;
         
         else
-            return GetNeighboorTravelCost(parentNode, invert) + _parentNode.gValue;
+            return GetNeighboorTravelCost(parentNode, invert) + parentNode.gValue;
     }
 
 
@@ -130,28 +130,21 @@ public class TraversableNode : Node
         if(aNode == null) return false;
 
         List<TraversableNode> parents = new List<TraversableNode>();
+    
 
-        try
+        while(aNode != null && aNode.parentNode != null)
         {
-            while(aNode.parentNode != null)
+            if(parents.Contains(aNode.parentNode))
             {
-                if(parents.Contains(aNode.parentNode))
-                {
-                    aNode.parentNode = null;
-                    return true;
-                }
-                
-                else
-                {
-                    parents.Add(aNode.parentNode);
-                    aNode = aNode.parentNode;
-                }
+                aNode.parentNode = null;
+                return true;
             }
-        }
-
-        catch(System.NullReferenceException)
-        {
-            Debug.Break();
+            
+            else
+            {
+                parents.Add(aNode.parentNode);
+                aNode = aNode.parentNode;
+            }
         }
 
         return false;
