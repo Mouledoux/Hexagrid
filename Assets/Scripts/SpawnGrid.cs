@@ -51,6 +51,11 @@ public class SpawnGrid : MonoBehaviour
             {
                 GenerateNewGrid(cols, rows, mapTexture == null ? GeneratePerlinTexture(perlinSeed, perlinScale) : mapTexture);
             }
+
+            if (Input.GetKey(KeyCode.W))
+            {
+                GeneratePerlinTexture(perlinSeed, perlinScale);
+            }
         }
     }
 
@@ -94,6 +99,7 @@ public class SpawnGrid : MonoBehaviour
                 pixY = (int)(((float)j/rows) * txHeight);
 
 
+                // biome, temperature, elevation
                 float hueSample, satSample, valSample;
                 Color.RGBToHSV(sampleTexture.GetPixel(pixX, pixY), out hueSample, out satSample, out valSample);
 
@@ -151,6 +157,9 @@ public class SpawnGrid : MonoBehaviour
         Texture2D perlinTexture = new Texture2D(cols, rows);
         Color[] pixels = new Color[perlinTexture.width * perlinTexture.height];
 
+        seed = seed.GetHashCode().ToString();
+        int seedLength = seed.Length;
+
         for(int i = 0; i < perlinTexture.height; i++)
         {
             for(int j = 0; j < perlinTexture.width; j++)
@@ -158,9 +167,9 @@ public class SpawnGrid : MonoBehaviour
                 float xCoord = j;
                 float yCoord = i;
 
-                float sampleH =  GetPerlinNoiseValue(xCoord, yCoord, seed.ToUpper(), scale);
-                float sampleS =  GetPerlinNoiseValue(xCoord, yCoord, seed.ToLower(), scale);
-                float sampleV =  GetPerlinNoiseValue(xCoord, yCoord, seed, scale);
+                float sampleH =  GetPerlinNoiseValue(xCoord, yCoord, seed.Substring(0, seedLength / 2), scale);                 // Biome
+                float sampleS =  GetPerlinNoiseValue(xCoord, yCoord, seed.Substring(seedLength / 4, seedLength / 2), scale);    // Temperature
+                float sampleV =  GetPerlinNoiseValue(xCoord, yCoord, seed.Substring(seedLength / 2, seedLength / 2), scale);    // Elevation
 
                 pixels[(i * perlinTexture.width) + j] = Color.HSVToRGB(sampleH, sampleS, sampleV);
             }
@@ -169,6 +178,10 @@ public class SpawnGrid : MonoBehaviour
         perlinTexture.SetPixels(pixels);
         perlinTexture.Apply();
 
+        Renderer r = GetComponent<Renderer>();
+        if(r != null)
+            r.material.mainTexture = perlinTexture;
+
         return perlinTexture;
     }
 
@@ -176,7 +189,7 @@ public class SpawnGrid : MonoBehaviour
 
     float GetPerlinNoiseValue(float xCoord, float yCoord, string seed = "", float scale = 1f, float valueMod = 1f)
     {   
-        int seedHash = seed.GetHashCode() >> 16;
+        float seedHash = seed.GetHashCode() >> 16;
 
         xCoord += seedHash;
         yCoord += seedHash;
@@ -197,6 +210,7 @@ public class SpawnGrid : MonoBehaviour
     [System.Obsolete("depreciated: use GenerateTextureGrid instead")]
     public void GenerateNewMap()
     {
+        return;
         // ClearBoard();
 
         // gridNodes = new TraversableNode[cols, rows];
