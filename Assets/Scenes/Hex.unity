@@ -5699,7 +5699,7 @@ MonoBehaviour:
   maxHeight: 10
   edgesAreWalls: 1
   perlinSeed: test seed
-  perlinScale: 1
+  perlinScale: 0.1
   mapTexture: {fileID: 0}
 --- !u!4 &1329860355
 Transform:
