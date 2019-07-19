@@ -42,11 +42,13 @@ public class SpawnGrid : MonoBehaviour
 
     private void Update()
     {
+        GeneratePerlinTexture(perlinSeed, perlinScale);
+
         if(Input.GetKey(KeyCode.LeftControl))
         {
             if(Input.GetKeyDown(KeyCode.Q))
             {
-                GenerateNewGrid(cols, rows, mapTexture == null ? GeneratePerlinTexture(perlinSeed, perlinScale) : mapTexture);
+                GenerateNewHexGrid(cols, rows, mapTexture == null ? GeneratePerlinTexture(perlinSeed, perlinScale) : mapTexture);
             }
 
             if (Input.GetKey(KeyCode.W))
@@ -75,23 +77,24 @@ public class SpawnGrid : MonoBehaviour
     }
 
 
-    public void GenerateNewGrid(int xSize, int ySize, Texture2D sampleTexture)
+    public void GenerateNewHexGrid(int xSize, int ySize, Texture2D sampleTexture)
     {
         ClearBoard();
         cols = xSize;
         rows = ySize;
         gridNodes = new TraversableNode[cols, rows];
 
+        System.Func<int, int, bool> isEdge = delegate(int index, int max) {return index == 0 || index == max - 1;};
 
         int txWidth = sampleTexture.width;
         int txHeight = sampleTexture.height;
 
+        int pixX, pixY;
 
         for(int i = 0; i < cols; i++)
         {
             for (int j = 0; j < rows; j++)
             {
-                int pixX, pixY;
                 pixX = (int)(((float)i/cols) * txWidth);
                 pixY = (int)(((float)j/rows) * txHeight);
 
@@ -155,22 +158,20 @@ public class SpawnGrid : MonoBehaviour
         Color[] pixels = new Color[perlinTexture.width * perlinTexture.height];
 
         seed = seed.GetHashCode().ToString();
-        int seedLength = seed.Length;
+        int seedLen = seed.Length;
 
         for(int i = 0; i < perlinTexture.height; i++)
         {
             for(int j = 0; j < perlinTexture.width; j++)
             {
-                float xCoord = j;
-                float yCoord = i;
-
-                float sampleH =  GetPerlinNoiseValue(xCoord, yCoord, seed.Substring(0, seedLength / 2), scale);
-                float sampleS =  GetPerlinNoiseValue(xCoord, yCoord, seed.Substring(seedLength / 4, seedLength / 2), scale);
-                float sampleV =  GetPerlinNoiseValue(xCoord, yCoord, seed.Substring(seedLength / 2, seedLength / 2), scale);
+                float sampleH = GetPerlinNoiseValue(j, i, seed.Substring(0,             seedLen / 2), scale, 1f);
+                float sampleS = GetPerlinNoiseValue(j, i, seed.Substring(seedLen / 4,   seedLen / 2), scale, 1f);
+                float sampleV = GetPerlinNoiseValue(j, i, seed.Substring(seedLen / 2,   seedLen / 2), scale, 1f);
 
                 pixels[(i * perlinTexture.width) + j] = Color.HSVToRGB(sampleH, sampleS, sampleV);
             }
         }
+
 
         perlinTexture.SetPixels(pixels);
         perlinTexture.Apply();
@@ -186,13 +187,16 @@ public class SpawnGrid : MonoBehaviour
 
     float GetPerlinNoiseValue(float xCoord, float yCoord, string seed = "", float scale = 1f, float valueMod = 1f)
     {   
-        float seedHash = seed.GetHashCode() >> (seed.Length << seed.Length);
+        float seedHash = (float)(seed.GetHashCode() % (seed.Length));
 
-        xCoord += seedHash;
-        yCoord += seedHash;
+        xCoord /= cols;
+        yCoord /= rows;
 
         xCoord *= scale;
         yCoord *= scale;
+
+        xCoord += seedHash;
+        yCoord += seedHash;
 
         return Mathf.Clamp01(Mathf.PerlinNoise(xCoord, yCoord)) * valueMod;
     }
