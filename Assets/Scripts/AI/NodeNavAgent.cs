@@ -204,7 +204,7 @@ public class NodeNavAgent : MonoBehaviour
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    private void ScanNeighbors(int range = 1)
+    private void ScanNeighbors(uint range = 1)
     {
         // if(currentPositionNode == null) return;
 
@@ -218,7 +218,7 @@ public class NodeNavAgent : MonoBehaviour
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public void SetRandomDestination(int min, int range)
+    public void SetRandomDestination(uint min, uint range)
     {
         if(currentPositionNode == null) return;
 

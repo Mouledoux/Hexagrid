@@ -23,6 +23,7 @@ public class Node : MonoBehaviour
     {
         _renderer.sharedMaterial = _defaultMaterial;
     }    
+
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public void SetMaterialColor(Color color)
     {
@@ -39,7 +40,7 @@ public class Node : MonoBehaviour
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public Node[] GetNeighborhood(int layers = 1)
+    public Node[] GetNeighborhood(uint layers = 1)
     {   
         int index = 0;
         int neighbors = 0;
@@ -67,7 +68,7 @@ public class Node : MonoBehaviour
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public Node[] GetNeighborhoodLayers(int innerBand, int bandWidth = 1)
+    public Node[] GetNeighborhoodLayers(uint innerBand, uint bandWidth = 1)
     {
         innerBand--;
         Node[] n1 = GetNeighborhood(innerBand + bandWidth);
@@ -83,41 +84,6 @@ public class Node : MonoBehaviour
         
         return neighborhood.ToArray();
     }
-
-    // public Node[] GetNeighborhoodQuadrant(Node quadrantNeighbor, int layers = 2)
-    // {
-    //     if(!_neighbors.Contains(quadrantNeighbor)) return null;
-
-    //     List<Node> quadrant = new List<Node>();
-    //     List<Node> outerNeighbors = new List<Node>();
-
-    //     List<Node> tQuadrant = new List<Node>();
-    //     List<Node> tOuterNeighbors = new List<Node>();
-
-    //     tQuadrant.Add(quadrantNeighbor);
-    //     tOuterNeighbors.Add(this);
-
-    //     for(int i = 0; i < layers; i++)
-    //     {
-    //         foreach (Node n in tQuadrant)
-    //         {
-    //             foreach (Node o in n.GetNeighbors())
-    //             {
-    //                 foreach (Node d in tOuterNeighbors)
-    //                 {
-    //                     if(d._neighbors.Contains(o))
-    //                     {
-    //                         tQuadrant.Remove(o);
-    //                         break;
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     return null;
-
-    // }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public int AddNeighbor(Node newNeighbor)

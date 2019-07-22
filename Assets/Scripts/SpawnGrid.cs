@@ -8,18 +8,18 @@ public class SpawnGrid : MonoBehaviour
 
 
     [Header("Grid Dimensions")]
-    [SerializeField] private int _rows;
-    [SerializeField] private int _cols;
+    [SerializeField] private uint _rows;
+    [SerializeField] private uint _cols;
 
-    public int rows
+    public uint rows
     {
-        get { return Mathf.Abs(_rows); }
-        set { _rows = Mathf.Abs(value); }
+        get { return _rows; }
+        set { _rows = value; }
     }
-    public int cols
+    public uint cols
     {
-        get { return Mathf.Abs(_cols); }
-        set { _cols = Mathf.Abs(value); }
+        get { return _cols; }
+        set { _cols = value; }
     }
     public float maxHeight = 1f;
     public bool edgesAreWalls;
@@ -77,7 +77,7 @@ public class SpawnGrid : MonoBehaviour
     }
 
 
-    public void GenerateNewHexGrid(int xSize, int ySize, Texture2D sampleTexture)
+    public void GenerateNewHexGrid(uint xSize, uint ySize, Texture2D sampleTexture)
     {
         ClearBoard();
         cols = xSize;
@@ -154,7 +154,7 @@ public class SpawnGrid : MonoBehaviour
 
     private Texture2D GeneratePerlinTexture(string seed, float scale = 1f)
     {
-        Texture2D perlinTexture = new Texture2D(cols, rows);
+        Texture2D perlinTexture = new Texture2D((int)cols, (int)rows);
         Color[] pixels = new Color[perlinTexture.width * perlinTexture.height];
 
         seed = seed.GetHashCode().ToString();
