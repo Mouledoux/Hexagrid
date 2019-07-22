@@ -70,8 +70,8 @@ public class Node : MonoBehaviour
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public Node[] GetNeighborhoodLayers(uint innerBand, uint bandWidth = 1)
     {
-        innerBand--;
-        Node[] n1 = GetNeighborhood(innerBand + bandWidth);
+        //innerBand--;
+        Node[] n1 = GetNeighborhood(innerBand + bandWidth - 1);
         Node[] n2 = GetNeighborhood(innerBand);
 
         List<Node> neighborhood = new List<Node>();

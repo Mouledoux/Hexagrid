@@ -84,7 +84,7 @@ public class SpawnGrid : MonoBehaviour
         rows = ySize;
         gridNodes = new TraversableNode[cols, rows];
 
-        System.Func<int, int, bool> isEdge = delegate(int index, int max) {return index == 0 || index == max - 1;};
+        System.Func<int, uint, bool> isEdge = delegate(int index, uint max) {return index == 0 || index == max - 1;};
 
         int txWidth = sampleTexture.width;
         int txHeight = sampleTexture.height;
@@ -98,26 +98,24 @@ public class SpawnGrid : MonoBehaviour
                 pixX = (int)(((float)i/cols) * txWidth);
                 pixY = (int)(((float)j/rows) * txHeight);
 
+                GameObject gridCell = Instantiate(gridNode) as GameObject;
 
                 // biome, temperature, elevation
                 float hueSample, satSample, valSample;
                 Color.RGBToHSV(sampleTexture.GetPixel(pixX, pixY), out hueSample, out satSample, out valSample);
 
 
-                GameObject gridCell = Instantiate(gridNode) as GameObject;
-                int hexOffset = (i % 2);
-
-                bool isWall = edgesAreWalls && (i == 0 || j == 0 || i == cols-1 || j == rows-1);
-                Vector3 scale = isWall ? new Vector3(1f, maxHeight * 2f, 1f) : Vector3.one + (Vector3.up * (valSample * maxHeight));
+                bool isWall = edgesAreWalls && (isEdge(i, cols) || isEdge(j, rows));
+                Vector3 scale = isWall ? new Vector3(1f, (maxHeight * 4f), 1f) : Vector3.one + (Vector3.up * (int)(valSample * maxHeight));
 
 
                 gridCell.name = $"[{i}, {j}]";
                 gridCell.transform.parent = transform;
 
+                int hexOffset = (i % 2);
                 gridCell.transform.localPosition = new Vector3(((-cols / 2) + i) * 0.85f, 0, ((-rows / 2) + j) + (hexOffset * 0.5f));
                 gridCell.transform.Rotate(Vector3.up, 30);
                 gridCell.transform.localScale = scale;
-
 
 
                 gridNodes[i, j] = (gridCell.GetComponent<TraversableNode>());
@@ -145,6 +143,35 @@ public class SpawnGrid : MonoBehaviour
                         gridNodes[i, j].AddNeighbor(gridNodes[i - 1, nextJ]);
                     }
                 }
+
+
+
+                // Temperature clouds            
+                if(!isWall && satSample > 0.3 && satSample < 0.6)
+                {
+                    bool cloud = false;
+
+                    foreach (Node node in gridNodes[i, j].GetNeighborhood(1))
+                    {
+                        if(node.transform.GetChild(0).gameObject.activeInHierarchy)
+                        {
+                            cloud = true;
+                            break;
+                        }
+                    }
+
+                    if(cloud == false)
+                    {
+                        Transform child = gridCell.transform.GetChild(0);
+                        child.gameObject.SetActive(true);
+                        child.parent = null;
+                        child.transform.position -= (Vector3.up * (child.transform.position.y - maxHeight));
+                        child.localScale = new Vector3(0.05f, 0.025f, 0.05f);
+                        child.parent = gridCell.transform;
+                    }
+                }
+
+                
             }
         }
     }
