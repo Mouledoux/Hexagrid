@@ -5698,8 +5698,8 @@ MonoBehaviour:
   _cols: 100
   maxHeight: 10
   edgesAreWalls: 1
-  perlinSeed: test seed
-  perlinScale: 1
+  perlinSeed: Hello World!
+  perlinScale: 8
   mapTexture: {fileID: 0}
 --- !u!4 &1329860355
 Transform:
