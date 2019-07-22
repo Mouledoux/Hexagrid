@@ -9,12 +9,14 @@ As of now, it's just a collection of scripts and assets that make working with a
 * Pathfinding agents can "follow" other agents
 * Outline highlight shader
 * Basic fog of war
+* More map generation settings
+* Custom map generation (yay!)
 
 ## Planned/ in progress features
 * City building
-* More map generation settings
 * Support for endless map generation
 * More AI options
+* Grid cell pooling
 
 
 <br>
