@@ -15,8 +15,8 @@ As of now, it's just a collection of scripts and assets that make working with a
 ## Planned/ in progress features
 * City building
 * Support for endless map generation
+  * Grid cell pooling
 * More AI options
-* Grid cell pooling
 
 
 <br>
