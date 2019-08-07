@@ -13,6 +13,7 @@ As of now, it's just a collection of scripts and assets that make working with a
 * Custom map generation (yay!)
 
 ## Planned/ in progress features
+* Grid rearanging
 * City building
 * Support for endless map generation
   * Grid cell pooling
