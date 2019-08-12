@@ -129,7 +129,32 @@ public class Node : MonoBehaviour
         return 0;
     }
 
+    public int TradeNeighbors(Node neighbor)
+    {
+        if(neighbor == null) return -1;
+        else if(!_neighbors.Contains(neighbor)) return -2;
 
+        // Remove eachother as neighbors, so they aren't neighbors to themselves
+        RemoveNeighbor(neighbor);
+        neighbor.RemoveNeighbor(this);
+
+        // Save this node neighbors to a temp array
+        Node[] myNeighbors = _neighbors.ToArray();
+    
+
+        ClearNeighbors();                               // Clear this node's neighbors
+        foreach(Node n in neighbor.GetNeighbors())      // For each neighbor of my neighbor
+            AddNeighbor(n);                                 // Copy it to this node's neighbors
+        AddNeighbor(neighbor);                          // Add the neighbor back to this node's neighbors
+
+
+        neighbor.ClearNeighbors();                      // Clear the neighbor's neighbors
+        foreach(Node n in myNeighbors)                  // For each node in the temp array
+            neighbor.AddNeighbor(n);                        // Copy it to the neighbor's new neighbors
+        neighbor.AddNeighbor(this);                     // Add this node back to the neighbor's neighbors
+
+        return 0;
+    }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public int AddInformation(object info)

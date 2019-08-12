@@ -35,10 +35,34 @@ public class SpawnGrid : MonoBehaviour
     public TraversableNode[,] gridNodes;
 
 
-    private void Start()
-    {
-        //GenerateNewGrid(cols, rows, mapTexture == null ? GeneratePerlinTexture(perlinSeed, perlinScale) : mapTexture);
-    }
+    // private IEnumerator Start()
+    // {
+    //     while(Application.isPlaying)
+    //     {
+    //         if(gridNodes != null && gridNodes.Length > 0)
+    //         {
+    //             foreach (Node node in gridNodes)
+    //             {
+    //                 if(gridNodes[0,0] == node) continue;
+
+    //                 Vector3 avPos = Vector3.zero;
+
+    //                 foreach (Node n in node.GetNeighbors())
+    //                 {
+    //                     avPos += n.transform.position;
+    //                     avPos -= new Vector3(1, 0, 1) * (1 - Mathf.Clamp01(Vector3.Distance(node.transform.position, n.transform.position)));
+    //                 }
+
+
+    //                 node.transform.position = avPos;
+    //                 yield return null;
+    //             }
+    //         }
+
+    //         yield return null;
+    //     }
+    //     //GenerateNewGrid(cols, rows, mapTexture == null ? GeneratePerlinTexture(perlinSeed, perlinScale) : mapTexture);
+    // }
 
     private void Update()
     {
@@ -57,8 +81,6 @@ public class SpawnGrid : MonoBehaviour
             }
         }
     }
-
-
 
 
 
