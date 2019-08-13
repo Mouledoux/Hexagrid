@@ -129,6 +129,7 @@ public class Node : MonoBehaviour
         return 0;
     }
 
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public int TradeNeighbors(Node neighbor)
     {
         if(neighbor == null) return -1;
@@ -155,6 +156,8 @@ public class Node : MonoBehaviour
 
         return 0;
     }
+
+
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public int AddInformation(object info)

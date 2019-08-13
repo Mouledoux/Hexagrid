@@ -5694,8 +5694,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridNode: {fileID: 8445584040079579582, guid: 517bcdd30e88ae9449a4d48a36cb5278,
     type: 3}
-  _rows: 10
-  _cols: 10
+  _rows: 25
+  _cols: 25
   maxHeight: 10
   edgesAreWalls: 1
   perlinSeed: Hello World!

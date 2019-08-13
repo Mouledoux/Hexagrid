@@ -41,24 +41,15 @@ public class SpawnGrid : MonoBehaviour
     //     {
     //         if(gridNodes != null && gridNodes.Length > 0)
     //         {
-    //             foreach (Node node in gridNodes)
+    //             for(int i = 0; i < cols; i++)
     //             {
-    //                 if(gridNodes[0,0] == node) continue;
-
-    //                 Vector3 avPos = Vector3.zero;
-
-    //                 foreach (Node n in node.GetNeighbors())
+    //                 for (int j = 0; j < rows; j++)
     //                 {
-    //                     avPos += n.transform.position;
-    //                     avPos -= new Vector3(1, 0, 1) * (1 - Mathf.Clamp01(Vector3.Distance(node.transform.position, n.transform.position)));
+    //                     Vector3 pos = new Vector3(i, 0, j);
+    //                     gridNodes[i, j].transform.position = pos * pos.magnitude;
     //                 }
-
-
-    //                 node.transform.position = avPos;
-    //                 yield return null;
     //             }
     //         }
-
     //         yield return null;
     //     }
     //     //GenerateNewGrid(cols, rows, mapTexture == null ? GeneratePerlinTexture(perlinSeed, perlinScale) : mapTexture);
@@ -135,7 +126,7 @@ public class SpawnGrid : MonoBehaviour
                 gridCell.transform.parent = transform;
 
                 int hexOffset = (i % 2);
-                gridCell.transform.localPosition = new Vector3(((-cols / 2) + i) * 0.85f, 0, ((-rows / 2) + j) + (hexOffset * 0.5f));
+                gridCell.transform.localPosition = new Vector3(((-cols / 2) + i) * 0.85f, 0, ((-rows / 2) + j) * 1.0f + (hexOffset * 0.5f));
                 gridCell.transform.Rotate(Vector3.up, 30);
                 gridCell.transform.localScale = scale;
 
