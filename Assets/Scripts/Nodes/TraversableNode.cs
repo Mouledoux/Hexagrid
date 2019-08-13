@@ -72,13 +72,13 @@ public class TraversableNode : Node
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public static float Distance(TraversableNode aNode, TraversableNode bNode)
     {
-        float a = (aNode.xCoord - bNode.xCoord);
-        float b = (aNode.yCoord - bNode.yCoord);
+        float lhs = (aNode.xCoord - bNode.xCoord);
+        float rhs = (aNode.yCoord - bNode.yCoord);
 
-         a *= a;
-         b *= b;
+         lhs *= lhs;
+         rhs *= rhs;
 
-        return Mathf.Sqrt(a + b);
+        return Mathf.Sqrt(lhs + rhs);
 
         // float a = Mathf.Abs(aNode.xCoord - bNode.xCoord);
         // float b = Mathf.Abs(aNode.yCoord - bNode.yCoord);
@@ -105,10 +105,12 @@ public class TraversableNode : Node
     {
         if(this == targetNode) return true;
 
+        TraversableNode tNode = null;
+
 
         if(this != null && ValidateParentChain(this))
         {
-            TraversableNode tNode = this;
+            tNode = this;
 
             while(tNode.parentNode != null && tNode.parentNode != this)
             {
@@ -157,6 +159,7 @@ public class TraversableNode : Node
     {
         TraversableNode previousNode = null;
         TraversableNode nextNode = null;
+
 
         do
         {

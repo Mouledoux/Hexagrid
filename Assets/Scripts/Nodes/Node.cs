@@ -136,12 +136,15 @@ public class Node : MonoBehaviour
         if(a_neighbor == null) return -1;
         else if(!m_neighbors.Contains(a_neighbor)) return -2;
 
+        Node[] myNeighbors;
+
+
         // Remove eachother as neighbors, so they aren't neighbors to themselves
         RemoveNeighbor(a_neighbor);
         a_neighbor.RemoveNeighbor(this);
 
         // Save this node neighbors to a temp array
-        Node[] myNeighbors = m_neighbors.ToArray();
+        myNeighbors = m_neighbors.ToArray();
     
 
         ClearNeighbors();                               // Clear this node's neighbors

@@ -35,6 +35,11 @@ public class SpawnGrid : MonoBehaviour
     public TraversableNode[,] m_gridNodes;
 
 
+
+
+
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     // private IEnumerator Start()
     // {
     //     while(Application.isPlaying)
@@ -55,6 +60,9 @@ public class SpawnGrid : MonoBehaviour
     //     //GenerateNewGrid(cols, m_rows, m_mapTexture == null ? GeneratePerlinTexture(m_perlinSeed, m_perlinScale) : m_mapTexture);
     // }
 
+
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void Update()
     {
         GeneratePerlinTexture(m_perlinSeed, m_perlinScale);
@@ -75,6 +83,7 @@ public class SpawnGrid : MonoBehaviour
 
 
 
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     bool ClearBoard()
     {
         if(m_gridNodes == null)
@@ -90,19 +99,34 @@ public class SpawnGrid : MonoBehaviour
     }
 
 
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public void GenerateNewHexGrid(uint a_xSize, uint a_ySize, Texture2D a_sampleTexture)
     {
-        ClearBoard();
-        m_cols = a_xSize;
-        m_rows = a_ySize;
-        m_gridNodes = new TraversableNode[m_cols, m_rows];
-
-        System.Func<int, uint, bool> isEdge = delegate(int index, uint max) {return index == 0 || index == max - 1;};
-
+        GameObject gridCell;
+        
         int txWidth = a_sampleTexture.width;
         int txHeight = a_sampleTexture.height;
 
         int pixX, pixY;
+        float hueSample, satSample, valSample;
+
+        int hexOffset;
+        Vector3 pos;
+        Vector3 scale;
+
+        bool isWall;
+        System.Func<int, uint, bool> isEdge = delegate(int index, uint max)
+        {
+            return index == 0 || index == max - 1;
+        };
+
+
+
+        ClearBoard();
+        m_cols = a_xSize;
+        m_rows = a_ySize;
+        m_gridNodes = new TraversableNode[m_cols, m_rows];
 
         for(int i = 0; i < m_cols; i++)
         {
@@ -111,18 +135,17 @@ public class SpawnGrid : MonoBehaviour
                 pixX = (int)(((float)i/m_cols) * txWidth);
                 pixY = (int)(((float)j/m_rows) * txHeight);
 
-                GameObject gridCell = Instantiate(m_gridNode) as GameObject;
+                gridCell = Instantiate(m_gridNode) as GameObject;
 
                 // biome, temperature, elevation
-                float hueSample, satSample, valSample;
                 Color.RGBToHSV(a_sampleTexture.GetPixel(pixX, pixY), out hueSample, out satSample, out valSample);
 
 
-                int hexOffset = (i % 2);
-                bool isWall = m_edgesAreWalls && (isEdge(i, m_cols) || isEdge(j, m_rows));
+                hexOffset = (i % 2);
+                isWall = m_edgesAreWalls && (isEdge(i, m_cols) || isEdge(j, m_rows));
 
-                Vector3 pos = new Vector3(((-m_cols / 2) + i) * 0.85f, 0, ((-m_rows / 2) + j) * 1.0f + (hexOffset * 0.5f));
-                Vector3 scale = isWall ? new Vector3(1f, (m_maxHeight * 4f), 1f) : Vector3.one + (Vector3.up * (int)(valSample * m_maxHeight));
+                pos = new Vector3(((-m_cols / 2) + i) * 0.85f, 0, ((-m_rows / 2) + j) * 1.0f + (hexOffset * 0.5f));
+                scale = isWall ? new Vector3(1f, (m_maxHeight * 4f), 1f) : Vector3.one + (Vector3.up * (int)(valSample * m_maxHeight));
 
 
                 gridCell.name = $"[{i}, {j}]";
@@ -149,9 +172,10 @@ public class SpawnGrid : MonoBehaviour
 
                 if(i > 0)
                 {
-                    m_gridNodes[i, j].AddNeighbor(m_gridNodes[i - 1, j]);
-
                     int nextJ = j + (hexOffset * 2 - 1);
+
+
+                    m_gridNodes[i, j].AddNeighbor(m_gridNodes[i - 1, j]);
 
                     if(nextJ >= 0 && nextJ < m_rows)
                     {
@@ -164,25 +188,27 @@ public class SpawnGrid : MonoBehaviour
                 // Temperature clouds            
                 if(!isWall && satSample > 0.3 && satSample < 0.6)
                 {
-                    bool cloud = false;
+                    bool cloudEnabled = false;
+                    Transform childCloud;
+
 
                     foreach (Node node in m_gridNodes[i, j].GetNeighborhood(1))
                     {
                         if(node.transform.GetChild(0).gameObject.activeInHierarchy)
                         {
-                            cloud = true;
+                            cloudEnabled = true;
                             break;
                         }
                     }
 
-                    if(cloud == false)
+                    if(cloudEnabled == false)
                     {
-                        Transform child = gridCell.transform.GetChild(0);
-                        child.gameObject.SetActive(true);
-                        child.parent = null;
-                        child.transform.position -= (Vector3.up * (child.transform.position.y - m_maxHeight));
-                        child.localScale = new Vector3(0.05f, 0.025f, 0.05f);
-                        child.parent = gridCell.transform;
+                        childCloud = gridCell.transform.GetChild(0);
+                        childCloud.gameObject.SetActive(true);
+                        childCloud.parent = null;
+                        childCloud.transform.position -= (Vector3.up * (childCloud.transform.position.y - m_maxHeight));
+                        childCloud.localScale = new Vector3(0.05f, 0.025f, 0.05f);
+                        childCloud.parent = gridCell.transform;
                     }
                 }
 
@@ -193,14 +219,18 @@ public class SpawnGrid : MonoBehaviour
 
 
 
-
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private Texture2D GeneratePerlinTexture(string a_seed, float a_scale = 1f)
     {
+        Renderer renderer = GetComponent<Renderer>();
         Texture2D perlinTexture = new Texture2D((int)m_cols, (int)m_rows);
         Color[] pixels = new Color[perlinTexture.width * perlinTexture.height];
 
+        int seedLen;
+
+
         a_seed = a_seed.GetHashCode().ToString();
-        int seedLen = a_seed.Length;
+        seedLen = a_seed.Length;
 
         for(int i = 0; i < perlinTexture.height; i++)
         {
@@ -218,18 +248,19 @@ public class SpawnGrid : MonoBehaviour
         perlinTexture.SetPixels(pixels);
         perlinTexture.Apply();
 
-        Renderer r = GetComponent<Renderer>();
-        if(r != null)
-            r.material.mainTexture = perlinTexture;
+        if(renderer != null)
+            renderer.material.mainTexture = perlinTexture;
 
         return perlinTexture;
     }
 
 
 
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     float GetPerlinNoiseValue(float a_xCoord, float a_yCoord, string a_seed = "", float a_scale = 1f, float a_valueMod = 1f)
     {   
         float seedHash = (float)(a_seed.GetHashCode() % (a_seed.Length));
+
 
         a_xCoord /= m_cols;
         a_yCoord /= m_rows;
