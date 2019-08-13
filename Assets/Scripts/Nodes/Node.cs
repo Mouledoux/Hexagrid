@@ -4,30 +4,31 @@ using System.Collections.Generic;
 
 public class Node : MonoBehaviour
 {
-    private List<Node> _neighbors = new List<Node>();
-    private Renderer _renderer;
-    private Material _defaultMaterial;
+    private List<Node> m_neighbors = new List<Node>();
+    private Renderer m_renderer;
+    private Material m_defaultMaterial;
 
-    private List<object> _information = new List<object>();
+    private List<object> m_information = new List<object>();
+    public Vector3 m_originalPosition;
 
     
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void Start()
     {
-        _renderer = GetComponent<Renderer>();
-        _defaultMaterial = _renderer.sharedMaterial;
+        m_renderer = GetComponent<Renderer>();
+        m_defaultMaterial = m_renderer.sharedMaterial;
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public void ResetMaterial()
     {
-        _renderer.sharedMaterial = _defaultMaterial;
+        m_renderer.sharedMaterial = m_defaultMaterial;
     }    
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public void SetMaterialColor(Color color)
+    public void SetMaterialColor(Color a_color)
     {
-        _renderer.material.color = color;
+        m_renderer.material.color = a_color;
     }
 
 
@@ -35,12 +36,12 @@ public class Node : MonoBehaviour
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public Node[] GetNeighbors()
     {
-        Node[] myNeighbors = _neighbors.ToArray();
+        Node[] myNeighbors = m_neighbors.ToArray();
         return myNeighbors;
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public Node[] GetNeighborhood(uint layers = 1)
+    public Node[] GetNeighborhood(uint a_layers = 1)
     {   
         int index = 0;
         int neighbors = 0;
@@ -48,7 +49,7 @@ public class Node : MonoBehaviour
         List<Node> neighborhood = new List<Node>();
         neighborhood.Add(this);
 
-        for(int i = 0; i < layers; i++)
+        for(int i = 0; i < a_layers; i++)
         {
             neighbors = neighborhood.Count;
             for(int j = index; j < neighbors; j++)
@@ -68,11 +69,11 @@ public class Node : MonoBehaviour
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public Node[] GetNeighborhoodLayers(uint innerBand, uint bandWidth = 1)
+    public Node[] GetNeighborhoodLayers(uint a_innerBand, uint a_bandWidth = 1)
     {
         //innerBand--;
-        Node[] n1 = GetNeighborhood(innerBand + bandWidth - 1);
-        Node[] n2 = GetNeighborhood(innerBand);
+        Node[] n1 = GetNeighborhood(a_innerBand + a_bandWidth - 1);
+        Node[] n2 = GetNeighborhood(a_innerBand);
 
         List<Node> neighborhood = new List<Node>();
 
@@ -86,33 +87,33 @@ public class Node : MonoBehaviour
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public int AddNeighbor(Node newNeighbor)
+    public int AddNeighbor(Node a_newNeighbor)
     {
-        if(newNeighbor == null)
+        if(a_newNeighbor == null)
             return -1;
 
-        if(!_neighbors.Contains(newNeighbor))
-            _neighbors.Add(newNeighbor);
+        if(!m_neighbors.Contains(a_newNeighbor))
+            m_neighbors.Add(a_newNeighbor);
 
-        if(!newNeighbor._neighbors.Contains(this))
-            newNeighbor.AddNeighbor(this);
+        if(!a_newNeighbor.m_neighbors.Contains(this))
+            a_newNeighbor.AddNeighbor(this);
 
         return 0;
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public bool CheckIsNeighbor(Node aNode)
+    public bool CheckIsNeighbor(Node a_node)
     {
-        return _neighbors.Contains(aNode);
+        return m_neighbors.Contains(a_node);
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public int RemoveNeighbor(Node oldNeighbor)
+    public int RemoveNeighbor(Node a_oldNeighbor)
     {
-        if(_neighbors.Contains(oldNeighbor))
+        if(m_neighbors.Contains(a_oldNeighbor))
         {
-            _neighbors.Remove(oldNeighbor);
-            oldNeighbor.RemoveNeighbor(this);
+            m_neighbors.Remove(a_oldNeighbor);
+            a_oldNeighbor.RemoveNeighbor(this);
         }
 
         return 0;
@@ -121,38 +122,38 @@ public class Node : MonoBehaviour
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public int ClearNeighbors()
     {
-        foreach(Node n in _neighbors)
+        foreach(Node n in m_neighbors)
             n.RemoveNeighbor(this);
         
-        _neighbors.Clear();
+        m_neighbors.Clear();
 
         return 0;
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public int TradeNeighbors(Node neighbor)
+    public int TradeNeighbors(Node a_neighbor)
     {
-        if(neighbor == null) return -1;
-        else if(!_neighbors.Contains(neighbor)) return -2;
+        if(a_neighbor == null) return -1;
+        else if(!m_neighbors.Contains(a_neighbor)) return -2;
 
         // Remove eachother as neighbors, so they aren't neighbors to themselves
-        RemoveNeighbor(neighbor);
-        neighbor.RemoveNeighbor(this);
+        RemoveNeighbor(a_neighbor);
+        a_neighbor.RemoveNeighbor(this);
 
         // Save this node neighbors to a temp array
-        Node[] myNeighbors = _neighbors.ToArray();
+        Node[] myNeighbors = m_neighbors.ToArray();
     
 
         ClearNeighbors();                               // Clear this node's neighbors
-        foreach(Node n in neighbor.GetNeighbors())      // For each neighbor of my neighbor
+        foreach(Node n in a_neighbor.GetNeighbors())      // For each neighbor of my neighbor
             AddNeighbor(n);                                 // Copy it to this node's neighbors
-        AddNeighbor(neighbor);                          // Add the neighbor back to this node's neighbors
+        AddNeighbor(a_neighbor);                          // Add the neighbor back to this node's neighbors
 
 
-        neighbor.ClearNeighbors();                      // Clear the neighbor's neighbors
+        a_neighbor.ClearNeighbors();                      // Clear the neighbor's neighbors
         foreach(Node n in myNeighbors)                  // For each node in the temp array
-            neighbor.AddNeighbor(n);                        // Copy it to the neighbor's new neighbors
-        neighbor.AddNeighbor(this);                     // Add this node back to the neighbor's neighbors
+            a_neighbor.AddNeighbor(n);                        // Copy it to the neighbor's new neighbors
+        a_neighbor.AddNeighbor(this);                     // Add this node back to the neighbor's neighbors
 
         return 0;
     }
@@ -160,25 +161,25 @@ public class Node : MonoBehaviour
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public int AddInformation(object info)
+    public int AddInformation(object a_info)
     {
-        _information.Add(info);
+        m_information.Add(a_info);
         return 0;
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public int RemoveInformation(object info)
+    public int RemoveInformation(object a_info)
     {
-        if(_information.Contains(info))
-            _information.Remove(info);
+        if(m_information.Contains(a_info))
+            m_information.Remove(a_info);
 
         return 0;
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public bool CheckInformationFor(object info)
+    public bool CheckInformationFor(object a_info)
     {
-        return _information.Contains(info);
+        return m_information.Contains(a_info);
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
@@ -186,7 +187,7 @@ public class Node : MonoBehaviour
     {
         List<T> returnList = new List<T>();
 
-        foreach(object info in _information)
+        foreach(object info in m_information)
         {
             if(info.GetType() == typeof(T))
             {
