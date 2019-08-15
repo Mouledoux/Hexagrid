@@ -60,20 +60,20 @@ public class TraversableNode : Node
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public float GetNeighboorTravelCost(TraversableNode aNode, bool invert = false)
+    public float GetNeighboorTravelCost(TraversableNode a_node, bool invert = false)
     {
         return !invert ? 
-        CheckIsNeighbor(aNode) ? (this.travelCost - aNode.travelCost) : float.MaxValue :
-        aNode.GetNeighboorTravelCost(this, false);
+        CheckIsNeighbor(a_node) ? (this.travelCost - a_node.travelCost) : float.MaxValue :
+        a_node.GetNeighboorTravelCost(this, false);
     }
 
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public static float Distance(TraversableNode aNode, TraversableNode bNode)
+    public static float Distance(TraversableNode a_node1, TraversableNode a_node2)
     {
-        float lhs = (aNode.xCoord - bNode.xCoord);
-        float rhs = (aNode.yCoord - bNode.yCoord);
+        float lhs = (a_node1.xCoord - a_node2.xCoord);
+        float rhs = (a_node1.yCoord - a_node2.yCoord);
 
          lhs *= lhs;
          rhs *= rhs;
@@ -101,9 +101,9 @@ public class TraversableNode : Node
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public bool CheckForNodeInParentChain(TraversableNode targetNode)
+    public bool CheckForNodeInParentChain(TraversableNode a_targetNode)
     {
-        if(this == targetNode) return true;
+        if(this == a_targetNode) return true;
 
         TraversableNode tNode = null;
 
@@ -114,7 +114,7 @@ public class TraversableNode : Node
 
             while(tNode.parentNode != null && tNode.parentNode != this)
             {
-                if(tNode.parentNode == targetNode) return true;
+                if(tNode.parentNode == a_targetNode) return true;
 
                 else tNode = tNode.parentNode;
             }
@@ -127,25 +127,25 @@ public class TraversableNode : Node
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public static bool ValidateParentChain(TraversableNode aNode)
+    public static bool ValidateParentChain(TraversableNode a_childNode)
     {
-        if(aNode == null) return false;
+        if(a_childNode == null) return false;
 
         List<TraversableNode> parents = new List<TraversableNode>();
     
 
-        while(aNode != null && aNode.parentNode != null)
+        while(a_childNode != null && a_childNode.parentNode != null)
         {
-            if(parents.Contains(aNode.parentNode))
+            if(parents.Contains(a_childNode.parentNode))
             {
-                aNode.parentNode = null;
+                a_childNode.parentNode = null;
                 return true;
             }
             
             else
             {
-                parents.Add(aNode.parentNode);
-                aNode = aNode.parentNode;
+                parents.Add(a_childNode.parentNode);
+                a_childNode = a_childNode.parentNode;
             }
         }
 
@@ -155,7 +155,7 @@ public class TraversableNode : Node
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public static void ReverseParents(TraversableNode currentNode)
+    public static void ReverseParents(TraversableNode a_currentNode)
     {
         TraversableNode previousNode = null;
         TraversableNode nextNode = null;
@@ -163,20 +163,20 @@ public class TraversableNode : Node
 
         do
         {
-            nextNode = currentNode.parentNode;
-            currentNode.parentNode = previousNode;
-            previousNode = currentNode;
-            currentNode = nextNode;
+            nextNode = a_currentNode.parentNode;
+            a_currentNode.parentNode = previousNode;
+            previousNode = a_currentNode;
+            a_currentNode = nextNode;
 
-        } while(currentNode != null);
+        } while(a_currentNode != null);
     }
 
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    private static TraversableNode GetRootParent(TraversableNode aNode)
+    private static TraversableNode GetRootParent(TraversableNode a_node)
     {
-        return (aNode.parentNode == null ? aNode : GetRootParent(aNode.parentNode));
+        return (a_node.parentNode == null ? a_node : GetRootParent(a_node.parentNode));
     }
 
 
@@ -186,6 +186,7 @@ public class TraversableNode : Node
     {
         return lhs.fValue > rhs.fValue;
     }
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public static bool operator <(TraversableNode lhs, TraversableNode rhs)
     {
         return lhs.fValue < rhs.fValue;
