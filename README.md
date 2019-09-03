@@ -13,7 +13,7 @@ As of now, it's just a collection of scripts and assets that make working with a
 * Custom map generation (yay!)
 
 ## Planned/ in progress features
-* Spell system (OOooo)
+* Spell targeting system
 * Grid rearanging
 * City building
 * Support for endless map generation
