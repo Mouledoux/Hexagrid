@@ -20,7 +20,7 @@ As of now, it's just a collection of scripts and assets that make working with a
   * Grid cell pooling
 * More AI options
 * Turnbased game mode
-* Movement 'range'
+* Movement '*range*'
 
 
 <br>
