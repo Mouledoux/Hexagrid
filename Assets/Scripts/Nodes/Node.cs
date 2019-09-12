@@ -91,6 +91,8 @@ public class Node : MonoBehaviour
     {
         if(a_newNeighbor == null)
             return -1;
+        else if(a_newNeighbor == this)
+            return -2;
 
         if(!m_neighbors.Contains(a_newNeighbor))
             m_neighbors.Add(a_newNeighbor);
