@@ -112,11 +112,8 @@ public class Node : MonoBehaviour
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public int RemoveNeighbor(Node a_oldNeighbor)
     {
-        if(m_neighbors.Contains(a_oldNeighbor))
-        {
-            m_neighbors.Remove(a_oldNeighbor);
-            a_oldNeighbor.RemoveNeighbor(this);
-        }
+        m_neighbors.Remove(a_oldNeighbor);
+        a_oldNeighbor.RemoveNeighbor(this);
 
         return 0;
     }
