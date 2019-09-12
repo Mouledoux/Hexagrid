@@ -141,24 +141,24 @@ public class Node : MonoBehaviour
         Node[] myNeighbors;
 
 
-        // Remove eachother as neighbors, so they aren't neighbors to themselves
-        RemoveNeighbor(a_neighbor);
-        a_neighbor.RemoveNeighbor(this);
+        // // Remove eachother as neighbors, so they aren't neighbors to themselves
+        // RemoveNeighbor(a_neighbor);
+        // a_neighbor.RemoveNeighbor(this);
 
         // Save this node neighbors to a temp array
         myNeighbors = m_neighbors.ToArray();
     
 
         ClearNeighbors();                               // Clear this node's neighbors
-        foreach(Node n in a_neighbor.GetNeighbors())      // For each neighbor of my neighbor
+        foreach(Node n in a_neighbor.GetNeighbors())    // For each neighbor of my neighbor
             AddNeighbor(n);                                 // Copy it to this node's neighbors
-        AddNeighbor(a_neighbor);                          // Add the neighbor back to this node's neighbors
+        AddNeighbor(a_neighbor);                        // Add the neighbor back to this node's neighbors
 
 
-        a_neighbor.ClearNeighbors();                      // Clear the neighbor's neighbors
+        a_neighbor.ClearNeighbors();                    // Clear the neighbor's neighbors
         foreach(Node n in myNeighbors)                  // For each node in the temp array
             a_neighbor.AddNeighbor(n);                        // Copy it to the neighbor's new neighbors
-        a_neighbor.AddNeighbor(this);                     // Add this node back to the neighbor's neighbors
+        a_neighbor.AddNeighbor(this);                   // Add this node back to the neighbor's neighbors
 
         return 0;
     }
