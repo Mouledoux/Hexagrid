@@ -72,6 +72,7 @@ public static class NodeNav
                         }
                     }
 
+                    // We have already been to this node, so see if it's cheaper to the current node from here
                     else if(neighborNode.safeParentNode != currentNode &&
                         neighborNode.gValue < currentNode.safeParentNode.gValue)
                     {
@@ -89,6 +90,7 @@ public static class NodeNav
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
+    [System.ObsoleteAttribute("TwinStar has been seperated into SoloStar, and TwinStarT")]
     public static Stack<TraversableNode> TwinStarII(TraversableNode begNode, TraversableNode endNode, bool dualSearch = false)
     {
         if(begNode == endNode || begNode == null || endNode == null || !endNode.isTraversable) return null;
@@ -210,4 +212,22 @@ public static class NodeNav
         sortedList.Add(node);
         return sortedList.Count;
     }
+}
+
+
+public interface ITraversable<T> where T : ITraversable<T>
+{
+    T origin {get; set;}
+    float travelCost {get; set;}
+    float[] pathingValues {get; set;}
+
+    bool isOccupied {get; set;}
+    bool isTraversable {get; set;}
+
+    T GetRootOrigin();
+    void ReverseOriginChain();
+    void ValidateOriginChain();
+    bool CheckOriginChainFor(T higherOrigin);
+
+    float GetDistanceTo(T destination);
 }
