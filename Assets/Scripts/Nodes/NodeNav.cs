@@ -229,5 +229,7 @@ public interface ITraversable<T> where T : ITraversable<T>
     void ValidateOriginChain();
     bool CheckOriginChainFor(T higherOrigin);
 
+    float GetGValue();
+
     float GetDistanceTo(T destination);
 }

@@ -192,3 +192,125 @@ public class TraversableNode : Node
         return lhs.fValue < rhs.fValue;
     }
 }
+
+public class NewTraversableNode : Node, ITraversable<NewTraversableNode>
+{
+    private NewTraversableNode m_originNode;
+    public NewTraversableNode origin
+    { 
+        get
+        {
+            return m_originNode == null ? this : m_originNode;
+        }
+        set
+        {
+            m_originNode = value;
+            if(value == null) pathingValues[0] = 0f;
+        }
+    }
+
+    private float m_travelCost;
+    public float travelCost
+    {
+        get => m_travelCost;
+        set => m_travelCost = value;
+    }
+    
+    // 0 = G value
+    // 1 = H value
+    // 2 = F value
+    private float[] m_pathingValues = new float[3];
+    public float[] pathingValues
+    {
+        get
+        {
+            m_pathingValues[2] = m_pathingValues[0] + m_pathingValues[1];
+            return m_pathingValues;
+        }
+        set
+        {
+            m_pathingValues = value;
+        }
+    }
+
+    private bool m_isOccupied;
+    public bool isOccupied
+    {
+        get => m_isOccupied;
+        set => m_isOccupied = value;
+    }
+
+    private bool m_isTraversable;
+    public bool isTraversable
+    {
+        get => m_isTraversable;
+        set => m_isTraversable = value;
+    }
+
+    public bool CheckOriginChainFor(NewTraversableNode higherOrigin)
+    {
+        NewTraversableNode nextNode = this;
+
+        ValidateOriginChain();
+
+        while(nextNode != null)
+        {
+            if(nextNode == higherOrigin) return true;
+            else nextNode = nextNode.origin;
+        }
+
+        return false;
+    }
+
+    public float GetDistanceTo(NewTraversableNode destination)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public NewTraversableNode GetRootOrigin()
+    {
+        return origin == null ? this : origin.GetRootOrigin();
+    }
+
+    public void ReverseOriginChain()
+    {
+        NewTraversableNode currentNode = this;
+        NewTraversableNode previousNode = null;
+        NewTraversableNode nextNode = null;
+
+        do
+        {
+            nextNode = currentNode.origin;
+            currentNode.origin = previousNode;
+            previousNode = currentNode;
+            currentNode = nextNode;
+
+        } while(currentNode != null);
+    }
+
+    public void ValidateOriginChain()
+    {
+        NewTraversableNode iterator = this;
+        List<NewTraversableNode> originChain = new List<NewTraversableNode>();
+
+        while(iterator.origin != null)
+        {
+            if(originChain.Contains(iterator.origin))
+            {
+                iterator.origin = null;
+            }
+            else
+            {
+                originChain.Add(iterator);
+                iterator = iterator.origin;
+            }
+        }
+    }
+
+    public float GetGValue()
+    {
+        if(origin == null) return 0;
+
+        else return m_pathingValues[0] + origin.GetGValue();
+    }
+}
