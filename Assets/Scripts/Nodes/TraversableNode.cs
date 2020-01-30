@@ -198,8 +198,6 @@ public class TraversableNode : Node
 
 public class NewTraversableNode : Node, ITraversable
 {
-
-
     private ITraversable m_originNode;
     public ITraversable origin
     { 
@@ -228,15 +226,15 @@ public class NewTraversableNode : Node, ITraversable
         set => m_travelCost = value;
     }
     
-    // 0 = G value
-    // 1 = H value
-    // 2 = F value
+    // 0 = F value
+    // 1 = G value
+    // 2 = H value
     private float[] m_pathingValues = new float[3];
     public float[] pathingValues
     {
         get
         {
-            m_pathingValues[2] = m_pathingValues[0] + m_pathingValues[1];
+            m_pathingValues[0] = m_pathingValues[1] + m_pathingValues[2];
             return m_pathingValues;
         }
         set
@@ -264,6 +262,12 @@ public class NewTraversableNode : Node, ITraversable
     {
         return origin == null ? this : origin.GetRootOrigin();
     }
+
+    public ITraversable[] GetConnectedTraversables()
+    {
+        return GetNeighbors() as ITraversable[];
+    }
+
 
     public bool CheckOriginChainFor(ITraversable higherOrigin)
     {
@@ -331,5 +335,11 @@ public class NewTraversableNode : Node, ITraversable
          rhs *= rhs;
 
         return Mathf.Sqrt(lhs + rhs);
+    }
+
+    public int CompareTo(ITraversable obj)
+    {
+        float dif = pathingValues[0] - obj.pathingValues[0];
+        return dif == 0 ? 0 : dif < 0 ? -1 : 1;
     }
 }
