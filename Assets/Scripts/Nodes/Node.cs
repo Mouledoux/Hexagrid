@@ -1,34 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-public class Node<T>
-{
-    private T m_nodeType;
-    public T nodeType => m_nodeType;
+public class Node
+{    private List<Node> m_neighbors;
+    private List<object> m_information;
 
-    private List<Node<T>> m_neighbors = new List<Node<T>>();
-    private List<object> m_information = new List<object>();
-
-    private Node() {}
-    public Node(T node)
+    public Node()
     {
-        m_nodeType = node;
+        m_neighbors = new List<Node>();
+        m_information = new List<object>();
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public Node<T>[] GetNeighbors()
+    public Node[] GetNeighbors()
     {
-        Node<T>[] myNeighbors = m_neighbors.ToArray();
+        Node[] myNeighbors = m_neighbors.ToArray();
         return myNeighbors;
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public Node<T>[] GetNeighborhood(uint a_layers = 1)
+    public Node[] GetNeighborhood(uint a_layers = 1)
     {   
         int index = 0;
         int neighbors = 0;
 
-        List<Node<T>> neighborhood = new List<Node<T>>();
+        List<Node> neighborhood = new List<Node>();
         neighborhood.Add(this);
 
         for(int i = 0; i < a_layers; i++)
@@ -36,7 +32,7 @@ public class Node<T>
             neighbors = neighborhood.Count;
             for(int j = index; j < neighbors; j++)
             {
-                foreach(Node<T> n in neighborhood[j].GetNeighbors())
+                foreach(Node n in neighborhood[j].GetNeighbors())
                 {
                     if(!neighborhood.Contains(n))
                     {
@@ -51,25 +47,25 @@ public class Node<T>
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public Node<T>[] GetNeighborhoodLayers(uint a_innerBand, uint a_bandWidth = 1)
+    public Node[] GetNeighborhoodLayers(uint a_innerBand, uint a_bandWidth = 1)
     {
         //innerBand--;
-        Node<T>[] n1 = GetNeighborhood(a_innerBand + a_bandWidth - 1);
-        Node<T>[] n2 = GetNeighborhood(a_innerBand);
+        Node[] n1 = GetNeighborhood(a_innerBand + a_bandWidth);
+        Node[] n2 = GetNeighborhood(a_innerBand);
 
-        List<Node<T>> neighborhood = new List<Node<T>>();
+        List<Node> neighborhood = new List<Node>();
 
-        foreach (Node<T> n in n1)
+        foreach (Node n in n1)
             neighborhood.Add(n);
 
-        foreach (Node<T> n in n2)
+        foreach (Node n in n2)
             neighborhood.Remove(n);
         
         return neighborhood.ToArray();
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public int AddNeighbor(Node<T> a_newNeighbor)
+    public int AddNeighbor(Node a_newNeighbor)
     {
         if(a_newNeighbor == null)
             return -1;
@@ -86,13 +82,13 @@ public class Node<T>
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public bool CheckIsNeighbor(Node<T> a_node)
+    public bool CheckIsNeighbor(Node a_node)
     {
         return m_neighbors.Contains(a_node);
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public int RemoveNeighbor(Node<T> a_oldNeighbor)
+    public int RemoveNeighbor(Node a_oldNeighbor)
     {
         m_neighbors.Remove(a_oldNeighbor);
         a_oldNeighbor.RemoveNeighbor(this);
@@ -103,7 +99,7 @@ public class Node<T>
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public int ClearNeighbors()
     {
-        foreach(Node<T> n in m_neighbors)
+        foreach(Node n in m_neighbors)
             n.RemoveNeighbor(this);
         
         m_neighbors.Clear();
@@ -112,12 +108,12 @@ public class Node<T>
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public int TradeNeighbors(Node<T> a_neighbor)
+    public int TradeNeighbors(Node a_neighbor)
     {
         if(a_neighbor == null) return -1;
         else if(!m_neighbors.Contains(a_neighbor)) return -2;
 
-        Node<T>[] myNeighbors;
+        Node[] myNeighbors;
 
 
         // // Remove eachother as neighbors, so they aren't neighbors to themselves
@@ -129,13 +125,13 @@ public class Node<T>
     
 
         ClearNeighbors();                               // Clear this node's neighbors
-        foreach(Node<T> n in a_neighbor.GetNeighbors())    // For each neighbor of my neighbor
+        foreach(Node n in a_neighbor.GetNeighbors())    // For each neighbor of my neighbor
             AddNeighbor(n);                                 // Copy it to this node's neighbors
         AddNeighbor(a_neighbor);                        // Add the neighbor back to this node's neighbors
 
 
         a_neighbor.ClearNeighbors();                    // Clear the neighbor's neighbors
-        foreach(Node<T> n in myNeighbors)                  // For each node in the temp array
+        foreach(Node n in myNeighbors)                  // For each node in the temp array
             a_neighbor.AddNeighbor(n);                        // Copy it to the neighbor's new neighbors
         a_neighbor.AddNeighbor(this);                   // Add this node back to the neighbor's neighbors
 
@@ -167,17 +163,47 @@ public class Node<T>
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public U[] GetInformation<U>()
+    public T[] GetInformation<T>()
     {
-        List<U> returnList = new List<U>();
+        List<T> returnList = new List<T>();
 
         foreach(object info in m_information)
         {
-            if(info.GetType() == typeof(U))
+            if(info.GetType() == typeof(T) || typeof(T).IsAssignableFrom(info.GetType()))
             {
-                returnList.Add((U)info);
+                returnList.Add((T)info);
             }
         }
+        return returnList.ToArray();
+    }
+
+    public T[] GetNeighborsInformation<T>()
+    {
+        return GetMassNodeInformation<T>(GetNeighbors());
+    }
+
+    public T[] GetNeighborhoodInformation<T>()
+    {
+        return GetMassNodeInformation<T>(GetNeighborhood());
+    }
+
+    public T[] GetNeighborhoodLayersInformation<T>(uint a_innerBand, uint a_bandWidth = 1)
+    {
+        return GetMassNodeInformation<T>(GetNeighborhoodLayers(a_innerBand, a_bandWidth));
+    }
+
+    private static T[] GetMassNodeInformation<T>(Node[] nodes)
+    {
+        List<T> returnList = new List<T>();
+
+        foreach(Node node in nodes)
+        {
+            foreach(T info in node.GetInformation<T>())
+            {
+                returnList.Add(info);
+            }
+        }
+
         return returnList.ToArray();
     }
 }

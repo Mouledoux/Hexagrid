@@ -4,19 +4,31 @@ using UnityEngine;
 
 public class NodeNavAgent : MonoBehaviour
 {
-    // ----- ----- ----- ----- -----
+    private object _payload;
+    public object payload
+    {
+        get {return _payload;}
+        
+        set
+        {
+            if(currentPositionNode != null)
+            {
+                currentPositionNode.nodeData.RemoveInformation(_payload);
+                currentPositionNode.nodeData.AddInformation(value);
+            }
+            _payload = value;
+        }
+    }
+
+
+    // ----- ----- ----- ----- ----- 
     [SerializeField]
     private bool _useTwinStar;
     public bool useTwinStar
     {
         get { return _useTwinStar; }
-        set
-        {
-            _useTwinStar = value;
-        }
+        set { _useTwinStar = value; }
     }
-
-
 
     // ----- ----- ----- ----- -----
     [SerializeField]
@@ -27,8 +39,6 @@ public class NodeNavAgent : MonoBehaviour
         set { _speed = value; }
     }
 
-
-
     // ----- ----- ----- ----- -----
     [SerializeField]
     private bool _autoRepath = true;
@@ -37,8 +47,6 @@ public class NodeNavAgent : MonoBehaviour
         get { return _autoRepath; }
         set { _autoRepath = value; }
     }
-
-
 
     // ----- ----- ----- ----- -----
     private TraversableNode _currentPositionNode;
@@ -58,10 +66,10 @@ public class NodeNavAgent : MonoBehaviour
         set
         {
             _goalPositionNode = value;
-            //System.Threading.Thread forward = new System.Threading.Thread(() =>
-                _nodePathStack = NodeNav.TwinStarT<TraversableNode>(currentPositionNode, _goalPositionNode, useTwinStar);
+            System.Threading.Thread forward = new System.Threading.Thread(() =>
+                _nodePathStack = NodeNav.TwinStarT<TraversableNode>(currentPositionNode, _goalPositionNode, useTwinStar));
             
-            //forward.Start();
+            forward.Start();
         }
     }
 
@@ -87,6 +95,15 @@ public class NodeNavAgent : MonoBehaviour
     // ----- ----- ----- ----- -----
     public UnityEngine.Events.UnityEvent onDestinationReached;
 
+
+
+
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
+    public NodeNavAgent(object payload)
+    {
+        _payload = payload;
+    }
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
@@ -228,18 +245,18 @@ public class NodeNavAgent : MonoBehaviour
     {
         if(currentPositionNode == null) return;
 
-        List<Node<TraversableNode>> neighbors =  new List<Node<TraversableNode>>();
+        List<TraversableNode> neighbors =  new List<TraversableNode>();
         
-        foreach(Node<TraversableNode> n in currentPositionNode.nodeData.GetNeighborhoodLayers(min, range))
+        foreach(Node n in currentPositionNode.nodeData.GetNeighborhoodLayers(min, range))
         {
-            neighbors.Add(n);
+            neighbors.Add(n.GetInformation<TraversableNode>()[0]);
         }
 
         TraversableNode destNode;
         do
         {
-            destNode = neighbors[Random.Range(0, neighbors.Count)].nodeType;
-            neighbors.Remove(destNode.nodeData);
+            destNode = neighbors[Random.Range(0, neighbors.Count)];
+            neighbors.Remove(destNode);
 
         } while(!destNode.isTraversable && neighbors.Count > 0);
 

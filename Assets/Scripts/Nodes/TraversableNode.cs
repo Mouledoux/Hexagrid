@@ -6,26 +6,27 @@ public class TraversableNode : MonoBehaviour, ITraversable
 {
     public TraversableNode()
     {
-        m_nodeData = new Node<TraversableNode>(this);
+        m_nodeData = new Node();
+        m_nodeData.AddInformation(this);
     }
 
-    private Node<TraversableNode> m_nodeData;
-    public Node<TraversableNode> nodeData
+    private Node m_nodeData;
+    public Node nodeData
     {
         get => m_nodeData;
         set => m_nodeData = value;
     }
 
-    private ITraversable m_originNode;
+    private ITraversable m_origin;
     public ITraversable origin
     { 
         get
         {
-            return m_originNode == null ? this : m_originNode;
+            return m_origin == null ? this : m_origin;
         }
         set
         {
-            m_originNode = value;
+            m_origin = value;
             if(value == null) pathingValues[0] = 0f;
         }
     }
@@ -78,15 +79,15 @@ public class TraversableNode : MonoBehaviour, ITraversable
 
     public ITraversable GetRootOrigin()
     {
-        return origin == m_originNode ? this : origin.GetRootOrigin();
+        return origin == m_origin ? this : origin.GetRootOrigin();
     }
 
     public ITraversable[] GetConnectedTraversables()
     {
         List<ITraversable> tn = new List<ITraversable>();
-        foreach(Node<TraversableNode> nd in nodeData.GetNeighbors())
+        foreach(Node nd in m_nodeData.GetNeighbors())
         {
-            tn.Add(nd.nodeType);
+            tn.Add(nd.GetInformation<ITraversable>()[0]);
         }
         return tn.ToArray();
     }
@@ -116,7 +117,7 @@ public class TraversableNode : MonoBehaviour, ITraversable
 
         do
         {
-            nextNode = m_originNode;
+            nextNode = m_origin;
             currentNode.origin = previousNode;
             previousNode = currentNode;
             currentNode = nextNode;
@@ -145,7 +146,7 @@ public class TraversableNode : MonoBehaviour, ITraversable
 
     public float GetTravelCostToRootOrigin()
     {
-        if(origin == m_originNode) return 0;
+        if(origin == m_origin) return 0;
 
         else return m_pathingValues[0] + origin.GetTravelCostToRootOrigin();
     }

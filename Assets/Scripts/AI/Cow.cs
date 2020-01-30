@@ -18,6 +18,7 @@ public class Cow : MonoBehaviour
     private void Start()
     {
         navAgent = GetComponent<NodeNavAgent>();
+        navAgent.payload = this;
 
         StartCoroutine(NewRandomPathRoutine());
         navAgent.onDestinationReached.AddListener(delegate()
@@ -27,30 +28,43 @@ public class Cow : MonoBehaviour
     }
 
 
+    [HideInInspector]
+    public Cow followedAgent;
+
     private void Update() 
     {
         if(navAgent.goalPositionNode != null)
-            Debug.DrawRay(navAgent.goalPositionNode.transform.position + (Vector3.up * 0.5f), Vector3.up * 2);   
+        {
+            Debug.DrawRay(navAgent.goalPositionNode.transform.position + (Vector3.up * 0.5f), Vector3.up * 2, Color.green);
+            Debug.DrawLine(navAgent.transform.position, navAgent.goalPositionNode.transform.position, Color.blue);
+            
+            if(followedAgent != null)
+            {
+                if(followedAgent.GetComponent<Cow>().followedAgent == navAgent)
+                    Debug.DrawLine(navAgent.transform.position, followedAgent.transform.position, Color.magenta);
+                else
+                    Debug.DrawLine(navAgent.transform.position, followedAgent.transform.position, Color.red);
+            }
+        }   
     }
 
     public IEnumerator NewRandomPathRoutine()
     {
         yield return new WaitForSeconds(Random.Range(0f, waitTime));
 
-        foreach(Node<TraversableNode> na in navAgent.currentPositionNode.nodeData.GetNeighborhood(3))
+        foreach(Node n in navAgent.currentPositionNode.nodeData.GetNeighborhood(3))
         {
-            NodeNavAgent[] agentsInRange = na.GetInformation<NodeNavAgent>();
-            if(agentsInRange.Length > 0)
+            NodeNavAgent[] agentsInRange = n.GetInformation<NodeNavAgent>();
+            if(agentsInRange.Length > 0 && agentsInRange[0].payload is Cow leader)
             {
-                Node<TraversableNode>[] potentialTargets = agentsInRange[0].currentPositionNode.nodeData.GetNeighborhoodLayers(2, 1);
-                TraversableNode goal = potentialTargets[Random.Range(0, potentialTargets.Length)].nodeType;
+                followedAgent = leader;
+                TraversableNode[] potentialTargets = followedAgent.navAgent.currentPositionNode.nodeData.GetNeighborhoodLayersInformation<TraversableNode>(1, 1);
+                int index = Random.Range(0, potentialTargets.Length - 1);
+                TraversableNode goal = potentialTargets[index];
                 navAgent.goalPositionNode = goal;
-
-                Debug.DrawLine(navAgent.currentPositionNode.transform.position, navAgent.goalPositionNode.transform.position, Color.red, 10f, false);
                 yield break;
             }
         }
-
         navAgent.SetRandomDestination(2, 2);
     }
 }
