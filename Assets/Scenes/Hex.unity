@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.37036613, g: 0.39728218, b: 0.64862776, a: 1}
+  m_IndirectSpecularColor: {r: 0.37036595, g: 0.3972815, b: 0.64862835, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -443,8 +443,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!4 &488535300
 Transform:
   m_ObjectHideFlags: 0
@@ -675,6 +673,8 @@ MonoBehaviour:
   _cols: 0
   maxHeight: 1
   edgesAreWalls: 0
+  xOffset: 0
+  zOffset: 0
   perlinSeed: 
   perlinScale: 8
   mapTexture: {fileID: 0}
@@ -5547,8 +5547,6 @@ MonoBehaviour:
   onDestinationReached:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!4 &1083780377
 Transform:
   m_ObjectHideFlags: 0
@@ -5643,6 +5641,8 @@ MonoBehaviour:
   _cols: 0
   maxHeight: 1
   edgesAreWalls: 0
+  xOffset: 0
+  zOffset: 0
   perlinSeed: 
   perlinScale: 8
   mapTexture: {fileID: 0}
@@ -5694,10 +5694,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridNode: {fileID: 8445584040079579582, guid: 517bcdd30e88ae9449a4d48a36cb5278,
     type: 3}
-  _rows: 25
-  _cols: 25
-  maxHeight: 10
+  _rows: 64
+  _cols: 64
+  maxHeight: 4
   edgesAreWalls: 1
+  xOffset: 0.44
+  zOffset: 0.5
   perlinSeed: Hello World!
   perlinScale: 8
   mapTexture: {fileID: 0}

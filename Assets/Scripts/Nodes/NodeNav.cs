@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public static class NodeNav
 {
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public static Stack<T> TwinStarT<T>(ITraversable begNode, ITraversable endNode, bool dualSearch = true) where T :ITraversable
+    public static Stack<T> TwinStarT<T>(ITraversable begNode, ITraversable endNode, bool dualSearch = true) where T : ITraversable
     {
         bool foundPath = false;
 
@@ -39,9 +39,11 @@ public static class NodeNav
 
             foreach (ITraversable neighborNode in currentNode.GetConnectedTraversables())
             {
+                bool endInChain = neighborNode.CheckOriginChainFor(endNode);
+
                 if(neighborNode == null || neighborNode.isTraversable == false) { continue; }
 
-                else if(neighborNode.CheckOriginChainFor(endNode))
+                else if(endInChain)
                 {
                     if(!canReturn) return null;
 

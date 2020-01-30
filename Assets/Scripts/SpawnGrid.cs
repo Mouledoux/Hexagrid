@@ -24,6 +24,7 @@ public class SpawnGrid : MonoBehaviour
     public float maxHeight = 1f;
     public bool edgesAreWalls;
 
+    public float xOffset, zOffset;
 
     [Header("Perlin Generation")]
     public string perlinSeed;
@@ -91,7 +92,7 @@ public class SpawnGrid : MonoBehaviour
 
         foreach (TraversableNode node in gridNodes)
         {
-            Destroy(node);
+            Destroy(node.gameObject);
         }
 
         gridNodes = null;
@@ -144,7 +145,7 @@ public class SpawnGrid : MonoBehaviour
                 hexOffset = (i % 2);
                 isWall = edgesAreWalls && (IsEdge(i, cols) || IsEdge(j, rows));
 
-                pos = new Vector3(((-cols / 2) + i) * 0.85f, 0, ((-rows / 2) + j) * 1.0f + (hexOffset * 0.5f));
+                pos = new Vector3(((-cols / 2) + i) * xOffset, 0, (((-rows / 2) + j) + (hexOffset * 0.5f)) * zOffset);
                 scale = isWall ? new Vector3(1f, (maxHeight * 4f), 1f) : Vector3.one + (Vector3.up * (int)(valSample * maxHeight));
 
 
@@ -192,28 +193,28 @@ public class SpawnGrid : MonoBehaviour
                 // Temperature clouds -----            
                 if(!isWall && satSample > 0.3 && satSample < 0.6)
                 {
-                    bool cloudEnabled = false;
-                    Transform childCloud;
+                    // bool cloudEnabled = false;
+                    // Transform childCloud;
 
 
-                    foreach (Node<TraversableNode> node in gridNodes[i, j].nodeData.GetNeighborhood(1))
-                    {
-                        if(node.nodeType.transform.GetChild(0).gameObject.activeInHierarchy)
-                        {
-                            cloudEnabled = true;
-                            break;
-                        }
-                    }
+                    // foreach (Node<TraversableNode> node in gridNodes[i, j].nodeData.GetNeighborhood(1))
+                    // {
+                    //     if(node.nodeType.transform.GetChild(0).gameObject.activeInHierarchy)
+                    //     {
+                    //         cloudEnabled = true;
+                    //         break;
+                    //     }
+                    // }
 
-                    if(cloudEnabled == false)
-                    {
-                        childCloud = gridCell.transform.GetChild(0);
-                        childCloud.gameObject.SetActive(true);
-                        childCloud.parent = null;
-                        childCloud.transform.position -= (Vector3.up * (childCloud.transform.position.y - maxHeight));
-                        childCloud.localScale = new Vector3(0.05f, 0.025f, 0.05f);
-                        childCloud.parent = gridCell.transform;
-                    }
+                    // if(cloudEnabled == false)
+                    // {
+                    //     childCloud = gridCell.transform.GetChild(0);
+                    //     childCloud.gameObject.SetActive(true);
+                    //     childCloud.parent = null;
+                    //     childCloud.transform.position -= (Vector3.up * (childCloud.transform.position.y - maxHeight));
+                    //     childCloud.localScale = new Vector3(0.05f, 0.025f, 0.05f);
+                    //     childCloud.parent = gridCell.transform;
+                    // }
                 }
             }
         }

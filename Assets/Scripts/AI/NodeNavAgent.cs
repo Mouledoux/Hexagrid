@@ -58,10 +58,10 @@ public class NodeNavAgent : MonoBehaviour
         set
         {
             _goalPositionNode = value;
-            System.Threading.Thread forward = new System.Threading.Thread(() =>
-                _nodePathStack = NodeNav.TwinStarT<TraversableNode>(currentPositionNode, _goalPositionNode, useTwinStar));
+            //System.Threading.Thread forward = new System.Threading.Thread(() =>
+                _nodePathStack = NodeNav.TwinStarT<TraversableNode>(currentPositionNode, _goalPositionNode, useTwinStar);
             
-            forward.Start();
+            //forward.Start();
         }
     }
 
@@ -224,26 +224,26 @@ public class NodeNavAgent : MonoBehaviour
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    // public void SetRandomDestination(uint min, uint range)
-    // {
-    //     if(currentPositionNode == null) return;
+    public void SetRandomDestination(uint min, uint range)
+    {
+        if(currentPositionNode == null) return;
 
-    //     List<Node> neighbors =  new List<Node>();
+        List<Node<TraversableNode>> neighbors =  new List<Node<TraversableNode>>();
         
-    //     foreach(Node n in currentPositionNode.nodeData.GetNeighborhoodLayers(min, range))
-    //     {
-    //         neighbors.Add(n);
-    //     }
+        foreach(Node<TraversableNode> n in currentPositionNode.nodeData.GetNeighborhoodLayers(min, range))
+        {
+            neighbors.Add(n);
+        }
 
-    //     TraversableNode destNode;
-    //     do
-    //     {
-    //         destNode = neighbors[Random.Range(0, neighbors.Count)];
-    //         neighbors.Remove(destNode);
+        TraversableNode destNode;
+        do
+        {
+            destNode = neighbors[Random.Range(0, neighbors.Count)].nodeType;
+            neighbors.Remove(destNode.nodeData);
 
-    //     } while(!destNode.isTraversable && neighbors.Count > 0);
+        } while(!destNode.isTraversable && neighbors.Count > 0);
 
         
-    //     goalPositionNode = destNode.isTraversable ? destNode : currentPositionNode;
-    // }
+        goalPositionNode = destNode.isTraversable ? destNode : currentPositionNode;
+    }
 }
