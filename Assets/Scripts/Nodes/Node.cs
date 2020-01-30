@@ -1,37 +1,11 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 
-public class Node : MonoBehaviour
+public class Node
 {
     private List<Node> m_neighbors = new List<Node>();
-    private Renderer m_renderer;
-    private Material m_defaultMaterial;
 
     private List<object> m_information = new List<object>();
-    public Vector3 m_originalPosition;
-
-    
-    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    private void Start()
-    {
-        m_renderer = GetComponent<Renderer>();
-        m_defaultMaterial = m_renderer.sharedMaterial;
-    }
-
-    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public void ResetMaterial()
-    {
-        m_renderer.sharedMaterial = m_defaultMaterial;
-    }    
-
-    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public void SetMaterialColor(Color a_color)
-    {
-        m_renderer.material.color = a_color;
-    }
-
-
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public Node[] GetNeighbors()
