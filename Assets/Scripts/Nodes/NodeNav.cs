@@ -215,21 +215,26 @@ public static class NodeNav
 }
 
 
-public interface ITraversable<T> where T : ITraversable<T>
+
+
+
+public interface ITraversable
 {
-    T origin {get; set;}
+    ITraversable origin {get; set;}
+    int[] coordinates {get; set;}
     float travelCost {get; set;}
     float[] pathingValues {get; set;}
 
     bool isOccupied {get; set;}
     bool isTraversable {get; set;}
 
-    T GetRootOrigin();
+
+
+    ITraversable GetRootOrigin();
     void ReverseOriginChain();
     void ValidateOriginChain();
-    bool CheckOriginChainFor(T higherOrigin);
+    bool CheckOriginChainFor(ITraversable higherOrigin);
 
-    float GetGValue();
-
-    float GetDistanceTo(T destination);
+    float GetTravelCostToRootOrigin();
+    float GetDistanceTo(ITraversable destination);
 }

@@ -193,10 +193,15 @@ public class TraversableNode : Node
     }
 }
 
-public class NewTraversableNode : Node, ITraversable<NewTraversableNode>
+
+
+
+public class NewTraversableNode : Node, ITraversable
 {
-    private NewTraversableNode m_originNode;
-    public NewTraversableNode origin
+
+
+    private ITraversable m_originNode;
+    public ITraversable origin
     { 
         get
         {
@@ -207,6 +212,13 @@ public class NewTraversableNode : Node, ITraversable<NewTraversableNode>
             m_originNode = value;
             if(value == null) pathingValues[0] = 0f;
         }
+    }
+
+    private int[] m_coordinates = new int[2];
+    public int[] coordinates
+    {
+        get { return m_coordinates; }
+        set { m_coordinates = value; }
     }
 
     private float m_travelCost;
@@ -247,9 +259,15 @@ public class NewTraversableNode : Node, ITraversable<NewTraversableNode>
         set => m_isTraversable = value;
     }
 
-    public bool CheckOriginChainFor(NewTraversableNode higherOrigin)
+
+    public ITraversable GetRootOrigin()
     {
-        NewTraversableNode nextNode = this;
+        return origin == null ? this : origin.GetRootOrigin();
+    }
+
+    public bool CheckOriginChainFor(ITraversable higherOrigin)
+    {
+        ITraversable nextNode = this;
 
         ValidateOriginChain();
 
@@ -262,21 +280,11 @@ public class NewTraversableNode : Node, ITraversable<NewTraversableNode>
         return false;
     }
 
-    public float GetDistanceTo(NewTraversableNode destination)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public NewTraversableNode GetRootOrigin()
-    {
-        return origin == null ? this : origin.GetRootOrigin();
-    }
-
     public void ReverseOriginChain()
     {
-        NewTraversableNode currentNode = this;
-        NewTraversableNode previousNode = null;
-        NewTraversableNode nextNode = null;
+        ITraversable currentNode = this;
+        ITraversable previousNode = null;
+        ITraversable nextNode = null;
 
         do
         {
@@ -290,8 +298,8 @@ public class NewTraversableNode : Node, ITraversable<NewTraversableNode>
 
     public void ValidateOriginChain()
     {
-        NewTraversableNode iterator = this;
-        List<NewTraversableNode> originChain = new List<NewTraversableNode>();
+        ITraversable iterator = this;
+        List<ITraversable> originChain = new List<ITraversable>();
 
         while(iterator.origin != null)
         {
@@ -307,10 +315,21 @@ public class NewTraversableNode : Node, ITraversable<NewTraversableNode>
         }
     }
 
-    public float GetGValue()
+    public float GetTravelCostToRootOrigin()
     {
         if(origin == null) return 0;
 
-        else return m_pathingValues[0] + origin.GetGValue();
+        else return m_pathingValues[0] + origin.GetTravelCostToRootOrigin();
+    }
+
+    public float GetDistanceTo(ITraversable destination)
+    {
+        float lhs = (coordinates[0] - destination.coordinates[0]);
+        float rhs = (coordinates[1] - destination.coordinates[1]);
+
+         lhs *= lhs;
+         rhs *= rhs;
+
+        return Mathf.Sqrt(lhs + rhs);
     }
 }
