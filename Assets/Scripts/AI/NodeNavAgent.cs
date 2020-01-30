@@ -16,6 +16,8 @@ public class NodeNavAgent : MonoBehaviour
         }
     }
 
+
+
     // ----- ----- ----- ----- -----
     [SerializeField]
     private float _speed = 1f;
@@ -24,6 +26,8 @@ public class NodeNavAgent : MonoBehaviour
         get {return _speed; }
         set { _speed = value; }
     }
+
+
 
     // ----- ----- ----- ----- -----
     [SerializeField]
@@ -34,6 +38,8 @@ public class NodeNavAgent : MonoBehaviour
         set { _autoRepath = value; }
     }
 
+
+
     // ----- ----- ----- ----- -----
     private TraversableNode _currentPositionNode;
     public TraversableNode currentPositionNode
@@ -41,6 +47,8 @@ public class NodeNavAgent : MonoBehaviour
         get{ return _currentPositionNode; }
         set { _currentPositionNode = value; }
     }
+
+
 
     // ----- ----- ----- ----- -----
     private TraversableNode _goalPositionNode;
@@ -50,12 +58,10 @@ public class NodeNavAgent : MonoBehaviour
         set
         {
             _goalPositionNode = value;
-            //_nodePathStack = NodeNav.TwinStarT(currentPositionNode, _goalPositionNode, useTwinStar);
-
-            System.Threading.Thread backwards = new System.Threading.Thread(() =>
-                _nodePathStack = NodeNav.TwinStarT(currentPositionNode, _goalPositionNode, useTwinStar));
+            System.Threading.Thread forward = new System.Threading.Thread(() =>
+                _nodePathStack = NodeNav.TwinStarT<TraversableNode>(currentPositionNode, _goalPositionNode, useTwinStar));
             
-            backwards.Start();
+            forward.Start();
         }
     }
 
@@ -65,7 +71,7 @@ public class NodeNavAgent : MonoBehaviour
     // ----- ----- ----- ----- -----
     public TraversableNode nextNode 
     {
-        get{ return _nodePathStack == null ? null : _nodePathStack.Peek(); }
+        get{ return _nodePathStack == null ? null : _nodePathStack.Peek() as TraversableNode; }
     }
     // ----- ----- ----- ----- -----
     public bool hasPath
@@ -73,9 +79,9 @@ public class NodeNavAgent : MonoBehaviour
         get { return _nodePathStack != null && _nodePathStack.Count > 0; }
     }
     // ----- ----- ----- ----- -----
-    public float remainingDistance
+    public double remainingDistance
     {
-        get { return TraversableNode.Distance(currentPositionNode, goalPositionNode); }
+        get { return currentPositionNode.GetDistanceTo(goalPositionNode); }
     }
     
     // ----- ----- ----- ----- -----
@@ -125,12 +131,12 @@ public class NodeNavAgent : MonoBehaviour
 
         if(Vector3.Distance(transform.position, nextNode.transform.position) <= 0.05f)
         {
-            currentPositionNode.RemoveInformation(this);
+            currentPositionNode.nodeData.RemoveInformation(this);
             currentPositionNode.isOccupied = false;
 
             currentPositionNode = _nodePathStack.Pop();
 
-            currentPositionNode.AddInformation(this);
+            currentPositionNode.nodeData.AddInformation(this);
             currentPositionNode.isOccupied = true;
         }
 
@@ -178,13 +184,13 @@ public class NodeNavAgent : MonoBehaviour
                 if(currentPositionNode != null)
                 {
                     currentPositionNode.isOccupied = false;
-                    currentPositionNode.RemoveInformation(this);
+                    currentPositionNode.nodeData.RemoveInformation(this);
                 }
 
                 _nodePathStack = null;
                 currentPositionNode = tn;
                 currentPositionNode.isOccupied = true;
-                currentPositionNode.AddInformation(this);
+                currentPositionNode.nodeData.AddInformation(this);
 
                 transform.position = currentPositionNode.transform.position;
             }
@@ -218,26 +224,26 @@ public class NodeNavAgent : MonoBehaviour
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public void SetRandomDestination(uint min, uint range)
-    {
-        if(currentPositionNode == null) return;
+    // public void SetRandomDestination(uint min, uint range)
+    // {
+    //     if(currentPositionNode == null) return;
 
-        List<Node> neighbors =  new List<Node>();
+    //     List<Node> neighbors =  new List<Node>();
         
-        foreach(Node n in currentPositionNode.GetNeighborhoodLayers(min, range))
-        {
-            neighbors.Add(n);
-        }
+    //     foreach(Node n in currentPositionNode.nodeData.GetNeighborhoodLayers(min, range))
+    //     {
+    //         neighbors.Add(n);
+    //     }
 
-        TraversableNode destNode;
-        do
-        {
-            destNode = neighbors[Random.Range(0, neighbors.Count)] as TraversableNode;
-            neighbors.Remove(destNode);
+    //     TraversableNode destNode;
+    //     do
+    //     {
+    //         destNode = neighbors[Random.Range(0, neighbors.Count)];
+    //         neighbors.Remove(destNode);
 
-        } while(!destNode.isTraversable && neighbors.Count > 0);
+    //     } while(!destNode.isTraversable && neighbors.Count > 0);
 
         
-        goalPositionNode = destNode.isTraversable ? destNode : currentPositionNode;
-    }
+    //     goalPositionNode = destNode.isTraversable ? destNode : currentPositionNode;
+    // }
 }

@@ -5,22 +5,22 @@ using System.Collections.Generic;
 public static class NodeNav
 {
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public static Stack<ITraversable> TwinStarT(ITraversable begNode, ITraversable endNode, bool dualSearch = true)
+    public static Stack<T> TwinStarT<T>(ITraversable begNode, ITraversable endNode, bool dualSearch = true) where T :ITraversable
     {
         bool foundPath = false;
 
         if(dualSearch)
         {
-            Thread backwards = new Thread(() => SoloStar(endNode, begNode, ref foundPath, false, 1f, 2f));
+            Thread backwards = new Thread(() => SoloStar<T>(endNode, begNode, ref foundPath, false, 1f, 2f));
             backwards.Start();
         }
 
-        return SoloStar(begNode, endNode, ref foundPath);
+        return SoloStar<T>(begNode, endNode, ref foundPath);
     }
 
 
 
-    private static Stack<ITraversable> SoloStar(ITraversable begNode, ITraversable endNode, ref bool foundPath, bool canReturn = true, float hMod = 1f, float gMod = 1f)
+    private static Stack<T> SoloStar<T>(ITraversable begNode, ITraversable endNode, ref bool foundPath, bool canReturn = true, float hMod = 1f, float gMod = 1f) where T : ITraversable
     {
         if(begNode == endNode || begNode == null || endNode == null || !endNode.isTraversable) return null;
 
@@ -48,7 +48,7 @@ public static class NodeNav
                     foundPath = true;
                     neighborNode.ReverseOriginChain();
                     neighborNode.origin = currentNode;
-                    Stack<ITraversable> returnStack = TraversableStackPath(endNode);
+                    Stack<T> returnStack = TraversableStackPath<T>(endNode);
                     
                     foreach(ITraversable tn in closedList)
                     {
@@ -66,7 +66,7 @@ public static class NodeNav
                         {
                             neighborNode.origin = currentNode;
                             neighborNode.pathingValues[1] = neighborNode.GetTravelCostToRootOrigin() * gMod;
-                            neighborNode.pathingValues[2] = neighborNode.GetDistanceTo(endNode) * hMod;
+                            neighborNode.pathingValues[2] = (float)neighborNode.GetDistanceTo(endNode) * hMod;
 
                             AddToSortedList<ITraversable>(neighborNode, ref openList);
                         }
@@ -178,19 +178,19 @@ public static class NodeNav
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    private static Stack<ITraversable> TraversableStackPath(ITraversable endNode)
+    private static Stack<T> TraversableStackPath<T>(ITraversable endNode) where T : ITraversable
     {
-        Stack<ITraversable> returnStack = new Stack<ITraversable>();
-        ITraversable currentNode = endNode;
+        Stack<T> returnStack = new Stack<T>();
+        T currentNode = (T)endNode;
 
         currentNode.ValidateOriginChain();
 
-        while(currentNode != null && currentNode.origin != currentNode)
+        while(currentNode != null && !currentNode.origin.Equals(currentNode))
         {
             try
             {
                 returnStack.Push(currentNode);
-                currentNode = currentNode.origin;
+                currentNode = (T)currentNode.origin;
             }
             catch(System.OutOfMemoryException)
             {
@@ -244,5 +244,5 @@ public interface ITraversable : System.IComparable<ITraversable>
     bool CheckOriginChainFor(ITraversable higherOrigin);
 
     float GetTravelCostToRootOrigin();
-    float GetDistanceTo(ITraversable destination);
+    double GetDistanceTo(ITraversable destination);
 }

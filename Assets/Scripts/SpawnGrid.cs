@@ -91,7 +91,7 @@ public class SpawnGrid : MonoBehaviour
 
         foreach (TraversableNode node in gridNodes)
         {
-            Destroy(node.gameObject);
+            Destroy(node);
         }
 
         gridNodes = null;
@@ -159,8 +159,8 @@ public class SpawnGrid : MonoBehaviour
                 gridNodes[i, j] = (gridCell.GetComponent<TraversableNode>());
                 gridNodes[i, j] = gridNodes[i, j] == null ? gridCell.AddComponent<TraversableNode>() : gridNodes[i, j];
                 
-                gridNodes[i, j].xCoord = i;
-                gridNodes[i, j].yCoord = j;
+                gridNodes[i, j].coordinates[0] = i;
+                gridNodes[i, j].coordinates[1] = j;
                 gridNodes[i, j].travelCost = 1;
                 gridNodes[i, j].isTraversable = !isWall;
                 
@@ -170,7 +170,7 @@ public class SpawnGrid : MonoBehaviour
                 {
                     if(j > 0)
                     {
-                        gridNodes[i, j].AddNeighbor(gridNodes[i, j - 1]);
+                        gridNodes[i, j].nodeData.AddNeighbor(gridNodes[i, j - 1].nodeData);
                     }
 
                     if(i > 0)
@@ -178,11 +178,11 @@ public class SpawnGrid : MonoBehaviour
                         int nextJ = j + (hexOffset * 2 - 1);
 
 
-                        gridNodes[i, j].AddNeighbor(gridNodes[i - 1, j]);
+                        gridNodes[i, j].nodeData.AddNeighbor(gridNodes[i - 1, j].nodeData);
 
                         if(nextJ >= 0 && nextJ < rows)
                         {
-                            gridNodes[i, j].AddNeighbor(gridNodes[i - 1, nextJ]);
+                            gridNodes[i, j].nodeData.AddNeighbor(gridNodes[i - 1, nextJ].nodeData);
                         }
                     }
                 }
@@ -196,9 +196,9 @@ public class SpawnGrid : MonoBehaviour
                     Transform childCloud;
 
 
-                    foreach (Node node in gridNodes[i, j].GetNeighborhood(1))
+                    foreach (Node<TraversableNode> node in gridNodes[i, j].nodeData.GetNeighborhood(1))
                     {
-                        if(node.transform.GetChild(0).gameObject.activeInHierarchy)
+                        if(node.nodeType.transform.GetChild(0).gameObject.activeInHierarchy)
                         {
                             cloudEnabled = true;
                             break;

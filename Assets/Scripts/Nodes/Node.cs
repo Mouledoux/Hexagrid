@@ -1,26 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-public class Node
+public class Node<T>
 {
-    private List<Node> m_neighbors = new List<Node>();
+    private T m_nodeType;
+    public T nodeType => m_nodeType;
 
+    private List<Node<T>> m_neighbors = new List<Node<T>>();
     private List<object> m_information = new List<object>();
 
-    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public Node[] GetNeighbors()
+    private Node() {}
+    public Node(T node)
     {
-        Node[] myNeighbors = m_neighbors.ToArray();
+        m_nodeType = node;
+    }
+
+    // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
+    public Node<T>[] GetNeighbors()
+    {
+        Node<T>[] myNeighbors = m_neighbors.ToArray();
         return myNeighbors;
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public Node[] GetNeighborhood(uint a_layers = 1)
+    public Node<T>[] GetNeighborhood(uint a_layers = 1)
     {   
         int index = 0;
         int neighbors = 0;
 
-        List<Node> neighborhood = new List<Node>();
+        List<Node<T>> neighborhood = new List<Node<T>>();
         neighborhood.Add(this);
 
         for(int i = 0; i < a_layers; i++)
@@ -28,7 +36,7 @@ public class Node
             neighbors = neighborhood.Count;
             for(int j = index; j < neighbors; j++)
             {
-                foreach(Node n in neighborhood[j].GetNeighbors())
+                foreach(Node<T> n in neighborhood[j].GetNeighbors())
                 {
                     if(!neighborhood.Contains(n))
                     {
@@ -43,25 +51,25 @@ public class Node
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public Node[] GetNeighborhoodLayers(uint a_innerBand, uint a_bandWidth = 1)
+    public Node<T>[] GetNeighborhoodLayers(uint a_innerBand, uint a_bandWidth = 1)
     {
         //innerBand--;
-        Node[] n1 = GetNeighborhood(a_innerBand + a_bandWidth - 1);
-        Node[] n2 = GetNeighborhood(a_innerBand);
+        Node<T>[] n1 = GetNeighborhood(a_innerBand + a_bandWidth - 1);
+        Node<T>[] n2 = GetNeighborhood(a_innerBand);
 
-        List<Node> neighborhood = new List<Node>();
+        List<Node<T>> neighborhood = new List<Node<T>>();
 
-        foreach (Node n in n1)
+        foreach (Node<T> n in n1)
             neighborhood.Add(n);
 
-        foreach (Node n in n2)
+        foreach (Node<T> n in n2)
             neighborhood.Remove(n);
         
         return neighborhood.ToArray();
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public int AddNeighbor(Node a_newNeighbor)
+    public int AddNeighbor(Node<T> a_newNeighbor)
     {
         if(a_newNeighbor == null)
             return -1;
@@ -78,13 +86,13 @@ public class Node
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public bool CheckIsNeighbor(Node a_node)
+    public bool CheckIsNeighbor(Node<T> a_node)
     {
         return m_neighbors.Contains(a_node);
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public int RemoveNeighbor(Node a_oldNeighbor)
+    public int RemoveNeighbor(Node<T> a_oldNeighbor)
     {
         m_neighbors.Remove(a_oldNeighbor);
         a_oldNeighbor.RemoveNeighbor(this);
@@ -95,7 +103,7 @@ public class Node
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     public int ClearNeighbors()
     {
-        foreach(Node n in m_neighbors)
+        foreach(Node<T> n in m_neighbors)
             n.RemoveNeighbor(this);
         
         m_neighbors.Clear();
@@ -104,12 +112,12 @@ public class Node
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public int TradeNeighbors(Node a_neighbor)
+    public int TradeNeighbors(Node<T> a_neighbor)
     {
         if(a_neighbor == null) return -1;
         else if(!m_neighbors.Contains(a_neighbor)) return -2;
 
-        Node[] myNeighbors;
+        Node<T>[] myNeighbors;
 
 
         // // Remove eachother as neighbors, so they aren't neighbors to themselves
@@ -121,13 +129,13 @@ public class Node
     
 
         ClearNeighbors();                               // Clear this node's neighbors
-        foreach(Node n in a_neighbor.GetNeighbors())    // For each neighbor of my neighbor
+        foreach(Node<T> n in a_neighbor.GetNeighbors())    // For each neighbor of my neighbor
             AddNeighbor(n);                                 // Copy it to this node's neighbors
         AddNeighbor(a_neighbor);                        // Add the neighbor back to this node's neighbors
 
 
         a_neighbor.ClearNeighbors();                    // Clear the neighbor's neighbors
-        foreach(Node n in myNeighbors)                  // For each node in the temp array
+        foreach(Node<T> n in myNeighbors)                  // For each node in the temp array
             a_neighbor.AddNeighbor(n);                        // Copy it to the neighbor's new neighbors
         a_neighbor.AddNeighbor(this);                   // Add this node back to the neighbor's neighbors
 
@@ -159,15 +167,15 @@ public class Node
     }
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public T[] GetInformation<T>()
+    public U[] GetInformation<U>()
     {
-        List<T> returnList = new List<T>();
+        List<U> returnList = new List<U>();
 
         foreach(object info in m_information)
         {
-            if(info.GetType() == typeof(T))
+            if(info.GetType() == typeof(U))
             {
-                returnList.Add((T)info);
+                returnList.Add((U)info);
             }
         }
         return returnList.ToArray();
