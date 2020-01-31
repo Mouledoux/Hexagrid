@@ -169,7 +169,7 @@ public class Node
 
         foreach(object info in m_information)
         {
-            if(info.GetType() == typeof(T) || typeof(T).IsAssignableFrom(info.GetType()))
+            if(typeof(T).IsAssignableFrom(info.GetType()))
             {
                 returnList.Add((T)info);
             }
