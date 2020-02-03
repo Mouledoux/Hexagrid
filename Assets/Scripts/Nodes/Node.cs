@@ -182,9 +182,9 @@ public class Node
         return GetMassNodeInformation<T>(GetNeighbors());
     }
 
-    public T[] GetNeighborhoodInformation<T>()
+    public T[] GetNeighborhoodInformation<T>(uint a_layers = 1)
     {
-        return GetMassNodeInformation<T>(GetNeighborhood());
+        return GetMassNodeInformation<T>(GetNeighborhood(a_layers));
     }
 
     public T[] GetNeighborhoodLayersInformation<T>(uint a_innerBand, uint a_bandWidth = 1)
