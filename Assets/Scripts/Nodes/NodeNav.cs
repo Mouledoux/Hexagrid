@@ -196,7 +196,7 @@ public static class NodeNav
             }
             catch(System.OutOfMemoryException)
             {
-                UnityEngine.Debug.Log(returnStack.Count);
+                //UnityEngine.Debug.Log(returnStack.Count);
             }
         }
 
