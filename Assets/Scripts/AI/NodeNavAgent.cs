@@ -123,7 +123,9 @@ public class NodeNavAgent : MonoBehaviour
         if(!hasPath || nextNode == null || !nextNode.isTraversable)
         {
             if(autoRepath)
+            {
                 goalPositionNode = _goalPositionNode;
+            }
             
             else
             {
@@ -155,13 +157,17 @@ public class NodeNavAgent : MonoBehaviour
 
             currentPositionNode.nodeData.AddInformation(this);
             currentPositionNode.isOccupied = true;
-        }
 
-        if(_nodePathStack.Count == 0)
-        {
-            goalPositionNode = null;
-            _nodePathStack = null;
-            onDestinationReached.Invoke();
+            if(_nodePathStack.Count == 0)
+            {
+                goalPositionNode = null;
+                _nodePathStack = null;
+                onDestinationReached.Invoke();
+            }
+            else
+            {
+                transform.GetChild(0).LookAt(_nodePathStack.Peek().transform.position);
+            }
         }
     }
 
@@ -179,7 +185,6 @@ public class NodeNavAgent : MonoBehaviour
             Vector3 nextPos = nextNode.transform.up * (Mathf.Sin(dist * Mathf.PI));
 
             transform.GetChild(0).transform.localPosition = Vector3.up * 0.2f + nextPos;
-            transform.GetChild(0).LookAt(_nodePathStack.Peek().transform.position);
         }
     }
 

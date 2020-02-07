@@ -146,7 +146,7 @@ public class SpawnGrid : MonoBehaviour
                 isWall = edgesAreWalls && (IsEdge(i, cols) || IsEdge(j, rows));
 
                 pos = new Vector3(((-cols / 2) + i) * xOffset, 0, (((-rows / 2) + j) + (hexOffset * 0.5f)) * zOffset);
-                scale = isWall ? new Vector3(1f, (maxHeight * 4f), 1f) : Vector3.one + (Vector3.up * (int)(valSample * maxHeight));
+                scale = isWall ? new Vector3(1f, (maxHeight + 1f), 1f) : Vector3.one + (Vector3.up * (float)(valSample * maxHeight));
 
 
                 gridCell.name = $"[{i}, {j}]";

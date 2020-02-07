@@ -40,7 +40,7 @@ public class Cow : MonoBehaviour
             
             if(followedAgent != null)
             {
-                if(followedAgent.GetComponent<Cow>().followedAgent == navAgent)
+                if(followedAgent.followedAgent == this)
                     Debug.DrawLine(navAgent.transform.position, followedAgent.transform.position, Color.magenta);
                 else
                     Debug.DrawLine(navAgent.transform.position, followedAgent.transform.position, Color.red);

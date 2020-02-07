@@ -538,7 +538,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
   m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 0, y: 40, z: -70}
+  m_LocalPosition: {x: 0, y: 20, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -5696,12 +5696,12 @@ MonoBehaviour:
     type: 3}
   _rows: 64
   _cols: 64
-  maxHeight: 4
+  maxHeight: 12
   edgesAreWalls: 1
   xOffset: 0.44
   zOffset: 0.5
-  perlinSeed: Hello World!
-  perlinScale: 8
+  perlinSeed: Eric
+  perlinScale: 4
   mapTexture: {fileID: 0}
 --- !u!4 &1329860355
 Transform:
