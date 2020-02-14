@@ -75,7 +75,7 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _HighlightRange: 2
-    - _MaxHeight: 4
+    - _MaxHeight: 10.73
     - _Metallic: 0
     - _MinHeight: 0
     - _OcclusionStrength: 1
@@ -90,6 +90,6 @@ Material:
     - _Color: {r: 1, g: 0.97164285, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MainColor: {r: 0, g: 0, b: 1, a: 1}
-    - _MousePos: {r: 14.08, g: 0, b: 29, a: 0}
+    - _MousePos: {r: -28.16, g: 0, b: 9, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _SubColor: {r: 1, g: 1, b: 1, a: 1}

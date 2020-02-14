@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class SpawnGrid : MonoBehaviour
 {
     public GameObject gridNode;
+    
+    public PerlinTile[] Hexatiles;
 
 
     [Header("Grid Dimensions")]
@@ -39,27 +41,12 @@ public class SpawnGrid : MonoBehaviour
 
 
 
-
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    // private IEnumerator Start()
-    // {
-    //     while(Application.isPlaying)
-    //     {
-    //         if(m_gridNodes != null && m_gridNodes.Length > 0)
-    //         {
-    //             for(int i = 0; i < m_cols; i++)
-    //             {
-    //                 for (int j = 0; j < m_rows; j++)
-    //                 {
-    //                     Vector3 pos = new Vector3(i, 0, j);
-    //                     m_gridNodes[i, j].transform.position = pos * pos.magnitude;
-    //                 }
-    //             }
-    //         }
-    //         yield return null;
-    //     }
-    //     //GenerateNewGrid(cols, m_rows, m_mapTexture == null ? GeneratePerlinTexture(m_perlinSeed, m_perlinScale) : m_mapTexture);
-    // }
+    private void Start()
+    {
+        NormalizeTileHeights(ref Hexatiles);
+    }
+
 
 
 
@@ -146,7 +133,7 @@ public class SpawnGrid : MonoBehaviour
                 isWall = edgesAreWalls && (IsEdge(i, cols) || IsEdge(j, rows));
 
                 pos = new Vector3(((-cols / 2) + i) * xOffset, 0, (((-rows / 2) + j) + (hexOffset * 0.5f)) * zOffset);
-                scale = isWall ? new Vector3(1f, (maxHeight + 1f), 1f) : Vector3.one + (Vector3.up * (float)(valSample * maxHeight));
+                scale = isWall ? new Vector3(1f, (maxHeight + 1f), 1f) : Vector3.one + (Vector3.up * (int)(valSample * maxHeight));
 
 
                 gridCell.name = $"[{i}, {j}]";
@@ -220,6 +207,19 @@ public class SpawnGrid : MonoBehaviour
         }
     }
 
+
+    private void NormalizeTileHeights(ref PerlinTile[] tiles)
+    {
+        float sum = 0;
+        for(int i = 0; i < tiles.Length; i++)
+        {
+            sum += tiles[i].heightOffset;
+        }
+        for(int i = 0; i < tiles.Length; i++)
+        {
+            tiles[i].heightOffset /= sum;
+        }
+    }
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
@@ -390,4 +390,14 @@ public class SpawnGrid : MonoBehaviour
     
     
     #endregion
+}
+
+[System.Serializable]
+public class PerlinTile
+{
+    [SerializeField]
+    public GameObject tilePrefab;
+
+    [SerializeField]
+    public float heightOffset;
 }
