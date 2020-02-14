@@ -16,24 +16,28 @@ public class SpawnGridEditor : Editor
         {
             EditorGUI.indentLevel++;
 
-            for(int i = 0; i < spawnGrid.Hexatiles.Length; i++)
+            for(int i = 0; i < spawnGrid.perlinTiles.Length; i++)
             {
                 EditorGUILayout.BeginHorizontal();
                 
-                spawnGrid.Hexatiles[i].tilePrefab = (GameObject)EditorGUILayout.ObjectField(spawnGrid.Hexatiles[i].tilePrefab, typeof(GameObject), false, new GUILayoutOption[] {GUILayout.Width(EditorGUIUtility.currentViewWidth / 2f)});
-                spawnGrid.Hexatiles[i].heightOffset = EditorGUILayout.Slider(spawnGrid.Hexatiles[i].heightOffset, 0f, 1f);
+                spawnGrid.perlinTiles[i].tilePrefab = (GameObject)EditorGUILayout.ObjectField(spawnGrid.perlinTiles[i].tilePrefab, typeof(GameObject), false, new GUILayoutOption[] {GUILayout.Width(EditorGUIUtility.currentViewWidth / 3f)});
+                
+                spawnGrid.perlinTiles[i].elevation =      (PerlinTile.Elevations)EditorGUILayout.EnumPopup(spawnGrid.perlinTiles[i].elevation);
+                spawnGrid.perlinTiles[i].tempreature =    (PerlinTile.Tempreatures)EditorGUILayout.EnumPopup(spawnGrid.perlinTiles[i].tempreature);
+                spawnGrid.perlinTiles[i].biome =          (PerlinTile.Biomes)EditorGUILayout.EnumPopup(spawnGrid.perlinTiles[i].biome);
+
                 if(GUILayout.Button("X"))
                 {
-                    PerlinTile[] pt = new PerlinTile[spawnGrid.Hexatiles.Length - 1];
+                    PerlinTile[] pt = new PerlinTile[spawnGrid.perlinTiles.Length - 1];
                     for(int j = 0; j < i; j++)
                     {
-                        pt[j] = spawnGrid.Hexatiles[j];
+                        pt[j] = spawnGrid.perlinTiles[j];
                     }
                     for(int j = i + 1; j < pt.Length; j++)
                     {
-                        pt[j-1] = spawnGrid.Hexatiles[j];
+                        pt[j] = spawnGrid.perlinTiles[j];
                     }
-                    spawnGrid.Hexatiles = pt;
+                    spawnGrid.perlinTiles = pt;
                 }
                 EditorGUILayout.EndHorizontal();
             }
@@ -42,12 +46,12 @@ public class SpawnGridEditor : Editor
 
             if(GUILayout.Button("Add tile"))
             {
-                PerlinTile[] pt = new PerlinTile[spawnGrid.Hexatiles.Length + 1];
-                for(int i = 0; i < spawnGrid.Hexatiles.Length; i++)
+                PerlinTile[] pt = new PerlinTile[spawnGrid.perlinTiles.Length + 1];
+                for(int i = 0; i < spawnGrid.perlinTiles.Length; i++)
                 {
-                    pt[i] = spawnGrid.Hexatiles[i];
+                    pt[i] = spawnGrid.perlinTiles[i];
                 }
-                spawnGrid.Hexatiles = pt;
+                spawnGrid.perlinTiles = pt;
             }
         }
 

@@ -668,7 +668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26271d88edc884a4288799c4930922c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridNode: {fileID: 0}
+  perlinTiles: []
   _rows: 0
   _cols: 0
   maxHeight: 1
@@ -5636,7 +5636,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26271d88edc884a4288799c4930922c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridNode: {fileID: 0}
+  perlinTiles: []
   _rows: 0
   _cols: 0
   maxHeight: 1
@@ -5692,11 +5692,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26271d88edc884a4288799c4930922c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridNode: {fileID: 8445584040079579582, guid: 517bcdd30e88ae9449a4d48a36cb5278,
-    type: 3}
+  perlinTiles:
+  - tilePrefab: {fileID: 1560994748941806, guid: 4eff434b792317140a2f08fcfdcb297b,
+      type: 3}
+    b: {fileID: 0}
+    biome: 0
+    elevation: 2
+    tempreature: 0
   _rows: 64
   _cols: 64
-  maxHeight: 12
+  maxHeight: 1
   edgesAreWalls: 1
   xOffset: 0.44
   zOffset: 0.5

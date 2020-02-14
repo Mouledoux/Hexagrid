@@ -4,9 +4,14 @@ using System.Collections.Generic;
 
 public class SpawnGrid : MonoBehaviour
 {
-    public GameObject gridNode;
-    
-    public PerlinTile[] Hexatiles;
+    //[HideInInspector]
+    public PerlinTile[] perlinTiles;
+    private Dictionary<string, PerlinTile> gridTiles = new Dictionary<string, PerlinTile>();
+    private List<PerlinTile.Biomes> setBiomes = new List<PerlinTile.Biomes>();
+    private List<PerlinTile.Elevations> setElevations = new List<PerlinTile.Elevations>();
+    private List<PerlinTile.Tempreatures> setTempreatures = new List<PerlinTile.Tempreatures>();
+
+
 
 
     [Header("Grid Dimensions")]
@@ -44,7 +49,7 @@ public class SpawnGrid : MonoBehaviour
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void Start()
     {
-        NormalizeTileHeights(ref Hexatiles);
+        Initialize();
     }
 
 
@@ -123,17 +128,65 @@ public class SpawnGrid : MonoBehaviour
                 pixX = (int)(((float)i/cols) * txWidth);
                 pixY = (int)(((float)j/rows) * txHeight);
 
-                gridCell = Instantiate(gridNode) as GameObject;
 
                 // biome, temperature, elevation
                 Color.RGBToHSV(a_sampleTexture.GetPixel(pixX, pixY), out hueSample, out satSample, out valSample);
+
+                PerlinTile.Biomes biome = setBiomes[Mathf.RoundToInt((setBiomes.Count - 1) * hueSample)];
+                PerlinTile.Elevations elevation = setElevations[Mathf.RoundToInt((setElevations.Count - 1) * valSample)];
+                PerlinTile.Tempreatures tempreature = setTempreatures[Mathf.RoundToInt((setTempreatures.Count - 1) * satSample)];
+
+                PerlinTile newTile = null;
+                gridCell = null;
+                do
+                { 
+                    if(gridTiles.TryGetValue($"{biome}-{tempreature}-{elevation}", out newTile))
+                    {
+                        gridCell = newTile.tilePrefab;
+                    }
+
+                    if(setElevations.LastIndexOf(elevation) == 0)
+                    {
+                        elevation = setElevations[setElevations.Count -1];
+                        
+                        if(setTempreatures.LastIndexOf(tempreature) == 0)
+                        {
+                            tempreature = setTempreatures[setTempreatures.Count -1];
+
+                            if(setBiomes.LastIndexOf(biome) == 0)
+                            {
+                                biome = setBiomes[(setBiomes.Count - 1)];
+                            }
+                            else
+                            {
+                                biome = setBiomes[(setBiomes.LastIndexOf(biome) - 1)];
+                            }
+                        }
+                        else
+                        {
+                            tempreature = setTempreatures[(setTempreatures.LastIndexOf(tempreature) - 1)];
+                        }
+                    }
+                    else
+                    {
+                        elevation = setElevations[(setElevations.LastIndexOf(elevation) - 1)];
+                    }
+
+                } while(gridCell == null);
+
+
+                gridCell = Instantiate(gridCell);
 
 
                 hexOffset = (i % 2);
                 isWall = edgesAreWalls && (IsEdge(i, cols) || IsEdge(j, rows));
 
-                pos = new Vector3(((-cols / 2) + i) * xOffset, 0, (((-rows / 2) + j) + (hexOffset * 0.5f)) * zOffset);
-                scale = isWall ? new Vector3(1f, (maxHeight + 1f), 1f) : Vector3.one + (Vector3.up * (int)(valSample * maxHeight));
+                pos = new Vector3(
+                    ((-cols / 2) + i) * xOffset,
+                    (valSample * maxHeight),
+                    (((-rows / 2) + j) + (hexOffset * 0.5f)) * zOffset);
+
+                scale = isWall ? new Vector3(1f, (maxHeight + 1f), 1f) : Vector3.one;
 
 
                 gridCell.name = $"[{i}, {j}]";
@@ -174,51 +227,58 @@ public class SpawnGrid : MonoBehaviour
                         }
                     }
                 }
-
-
-
-                // Temperature clouds -----            
-                if(!isWall && satSample > 0.3 && satSample < 0.6)
-                {
-                    // bool cloudEnabled = false;
-                    // Transform childCloud;
-
-
-                    // foreach (Node<TraversableNode> node in gridNodes[i, j].nodeData.GetNeighborhood(1))
-                    // {
-                    //     if(node.nodeType.transform.GetChild(0).gameObject.activeInHierarchy)
-                    //     {
-                    //         cloudEnabled = true;
-                    //         break;
-                    //     }
-                    // }
-
-                    // if(cloudEnabled == false)
-                    // {
-                    //     childCloud = gridCell.transform.GetChild(0);
-                    //     childCloud.gameObject.SetActive(true);
-                    //     childCloud.parent = null;
-                    //     childCloud.transform.position -= (Vector3.up * (childCloud.transform.position.y - maxHeight));
-                    //     childCloud.localScale = new Vector3(0.05f, 0.025f, 0.05f);
-                    //     childCloud.parent = gridCell.transform;
-                    // }
-                }
             }
         }
     }
 
 
+    private void Initialize()
+    {
+        foreach(PerlinTile pt in perlinTiles)
+        {
+            string key = $"{pt.biome}-{pt.tempreature}-{pt.elevation}";
+            if(gridTiles.ContainsKey(key)) continue;
+            else gridTiles.Add(key, pt);
+
+            if(!setBiomes.Contains(pt.biome)) setBiomes.Add(pt.biome);
+            if(!setElevations.Contains(pt.elevation)) setElevations.Add(pt.elevation);
+            if(!setTempreatures.Contains(pt.tempreature)) setTempreatures.Add(pt.tempreature);
+        }
+    }
+
+
+    private GameObject GetTileOfTypes(PerlinTile.Biomes biome, PerlinTile.Elevations elevation, PerlinTile.Tempreatures tempreature, float choiceMod = 0f)
+    {
+        List<PerlinTile> returnTiles = new List<PerlinTile>();
+
+        foreach(PerlinTile pt in perlinTiles)
+            if(pt.biome == biome && pt.elevation == elevation && pt.tempreature == tempreature)
+                returnTiles.Add(pt);
+
+        if(returnTiles.Count == 0)
+        {
+            Debug.LogWarning($"No tile of type(s): {tempreature}, {elevation}, {biome}, in tile array");
+            return null;
+        }
+
+        int returnIndex = (int)(returnTiles.Count / choiceMod);
+        return returnTiles[returnIndex].tilePrefab;
+    }
+
+
     private void NormalizeTileHeights(ref PerlinTile[] tiles)
     {
-        float sum = 0;
-        for(int i = 0; i < tiles.Length; i++)
-        {
-            sum += tiles[i].heightOffset;
-        }
-        for(int i = 0; i < tiles.Length; i++)
-        {
-            tiles[i].heightOffset /= sum;
-        }
+        // float sum = 0;
+        // tiles[0].heightOffset = 0f;
+
+        // for(int i = 1; i < tiles.Length; i++)
+        // {
+        //     sum += tiles[i].heightOffset;
+        // }
+        // for(int i = 0; i < tiles.Length; i++)
+        // {
+        //     tiles[i].heightOffset /= sum;
+        // }
     }
 
 
@@ -398,6 +458,39 @@ public class PerlinTile
     [SerializeField]
     public GameObject tilePrefab;
 
-    [SerializeField]
-    public float heightOffset;
+    public Biomes biome;
+    public Elevations elevation;
+    public Tempreatures tempreature;
+    public enum Biomes
+    {
+        WATER,
+        COAST,
+        LAND,
+        MOUNTAINS,
+    }
+    public enum Elevations
+    {
+        ABYSS,
+        SUBTERRAIN,
+        SEA_LEVEL,
+        ELEVATED,
+        MOUNTAIN,
+        SUMMIT,
+    }
+    public enum Tempreatures
+    {
+        FREEZING,
+        COLD,
+        WARM,
+        HOT,
+        INFERNO,
+    }
+}
+
+
+[CreateAssetMenu(fileName = "NewBiome", menuName = "Biome")]
+public class Biome : ScriptableObject
+{
+    [Range(0f, 1f)]
+    public float rangeToNextBiome;
 }
