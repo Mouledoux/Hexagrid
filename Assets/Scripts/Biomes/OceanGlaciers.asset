@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: OceanGlaciers
+  m_EditorClassIdentifier: Assembly-CSharp::Biome
+  biomeTile: {fileID: 1560994748941806, guid: 4eff434b792317140a2f08fcfdcb297b, type: 3}
+  minBiomeVal: 0
+  maxBiomeVal: 1
+  minElevation: 0
+  maxElevation: 1
+  minTemperature: 0
+  maxTemperature: 0.2
+  subBiomes: []

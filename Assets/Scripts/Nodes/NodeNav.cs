@@ -231,7 +231,6 @@ public interface ITraversable : System.IComparable<ITraversable>
 {
     ITraversable origin {get; set;}
     int[] coordinates {get; set;}
-    float travelCost {get; set;}
     float[] pathingValues {get; set;}
 
     bool isOccupied {get; set;}

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Ocean
+  m_EditorClassIdentifier: Assembly-CSharp::Biome
+  biomeTile: {fileID: 1389125948638888, guid: a9684bd94f9c39149a3724d15b5151a6, type: 3}
+  minBiomeVal: 0
+  maxBiomeVal: 1
+  minElevation: 0
+  maxElevation: 0.2
+  minTemperature: 0
+  maxTemperature: 1
+  subBiomes:
+  - {fileID: 11400000, guid: e3757c86be5d27a43a645ab16ab03a14, type: 2}
+  - {fileID: 11400000, guid: 4bf6078cc591b264d95117a24a674ae5, type: 2}
+  - {fileID: 11400000, guid: 59bfea515d6838a41a3dbe1e88b9e4d6, type: 2}

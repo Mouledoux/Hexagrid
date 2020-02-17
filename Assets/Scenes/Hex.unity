@@ -567,7 +567,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3926b49c5a3c91344a5c845ad2875d1e, type: 3}
   m_Name: 
@@ -668,7 +668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26271d88edc884a4288799c4930922c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  perlinTiles: []
+  worldProfile: {fileID: 0}
   _rows: 0
   _cols: 0
   maxHeight: 1
@@ -5636,7 +5636,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26271d88edc884a4288799c4930922c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  perlinTiles: []
+  worldProfile: {fileID: 0}
   _rows: 0
   _cols: 0
   maxHeight: 1
@@ -5692,13 +5692,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26271d88edc884a4288799c4930922c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  perlinTiles:
-  - tilePrefab: {fileID: 1560994748941806, guid: 4eff434b792317140a2f08fcfdcb297b,
-      type: 3}
-    b: {fileID: 0}
-    biome: 0
-    elevation: 2
-    tempreature: 0
+  worldProfile: {fileID: 11400000, guid: 1328c49776fd95440a9cf16e44e48d04, type: 2}
   _rows: 64
   _cols: 64
   maxHeight: 1

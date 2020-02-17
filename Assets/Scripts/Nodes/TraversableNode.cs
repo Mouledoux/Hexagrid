@@ -37,13 +37,6 @@ public class TraversableNode : MonoBehaviour, ITraversable
         get => m_coordinates;
         set => m_coordinates = value;
     }
-
-    private float m_travelCost;
-    public float travelCost
-    {
-        get => m_travelCost;
-        set => m_travelCost = value;
-    }
     
     // 0 = F value
     // 1 = G value
