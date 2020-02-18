@@ -127,7 +127,8 @@ public class SpawnGrid : MonoBehaviour
                 Color.RGBToHSV(a_sampleTexture.GetPixel(pixX, pixY), out hueSample, out satSample, out valSample);
 
 
-                gridCell = worldProfile.GetSubBiome(hueSample, satSample, valSample).biomeTile;
+                float initBias = float.MaxValue;
+                gridCell = worldProfile.GetSubBiome(hueSample, satSample, valSample, ref initBias).biomeTile;
                 gridCell = gridCell == null ? worldProfile.subBiomes[0].biomeTile : gridCell;
                 gridCell = Instantiate(gridCell);
 

@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2857db8c147f40a49a9468dd9082727e, type: 3}
   m_Name: Land
   m_EditorClassIdentifier: 
-  biomeTile: {fileID: 0}
+  biomeTile: {fileID: 1027144338041134, guid: 8d65fe10dbb32e34aa703943ab85d9c0, type: 3}
   minBiomeVal: 0
-  maxBiomeVal: 0
-  minElevation: 0
-  maxElevation: 0
+  maxBiomeVal: 1
+  minElevation: 0.2
+  maxElevation: 1
   minTemperature: 0
-  maxTemperature: 0
-  subBiomes: []
+  maxTemperature: 1
+  subBiomes:
+  - {fileID: 11400000, guid: b7609613f50e6864aac7aacbac3c4215, type: 2}

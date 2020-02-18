@@ -57,45 +57,49 @@ public class Biome : ScriptableObject
     }
 
 
-    public void Initialize()
+    public Biome GetSubBiome(float biome_, float elevation_, float temperature_, ref float bias_, Biome parentBiome = null)
     {
-        for(int i = 0; i < subBiomes.Length; i++)
+        
+        System.Func<float, float, float, float> getSubOffset = (pMin, pMax, cMod) => (pMin + (pMax - pMin) * cMod);
+
+        float tBiomeMin = minBiomeVal;
+        float tBiomeMax = maxBiomeVal;
+        float tElevationMin = minElevation;
+        float tElevationMax = maxElevation;
+        float tTemperatureMin = minTemperature;
+        float tTemperatureMax = maxTemperature;
+
+        if(parentBiome != null)
         {
-            if(subBiomes[i].minBiomeVal < minBiomeVal) subBiomes[i].minBiomeVal = minBiomeVal;
-            if(subBiomes[i].maxBiomeVal > maxBiomeVal) subBiomes[i].maxBiomeVal = maxBiomeVal;
+            tBiomeMin = getSubOffset(parentBiome.minBiomeVal, parentBiome.maxBiomeVal, minBiomeVal);
+            tBiomeMax = getSubOffset(parentBiome.minBiomeVal, parentBiome.maxBiomeVal, maxBiomeVal);
 
-            if(subBiomes[i].minElevation < minElevation) subBiomes[i].minElevation = minElevation;
-            if(subBiomes[i].maxElevation > maxElevation) subBiomes[i].maxElevation = maxElevation;
+            tElevationMin = getSubOffset(parentBiome.minElevation, parentBiome.maxElevation, minElevation);
+            tElevationMax = getSubOffset(parentBiome.minElevation, parentBiome.maxElevation, maxElevation);
 
-            if(subBiomes[i].minTemperature < minTemperature) subBiomes[i].minTemperature = minTemperature;
-            if(subBiomes[i].maxTemperature > maxTemperature) subBiomes[i].maxTemperature = maxTemperature;
+            tTemperatureMin = getSubOffset(parentBiome.minTemperature, parentBiome.maxTemperature, minTemperature);
+            tTemperatureMax = getSubOffset(parentBiome.minTemperature, parentBiome.maxTemperature, maxTemperature);
         }
-    }
 
-    public Biome GetSubBiome(float biome_, float elevation_, float temperature_, float bias_ = float.MaxValue)
-    {
-        Initialize();
-
-        if(biome_ < minBiomeVal || biome_ > maxBiomeVal ||
-            elevation_ < minElevation || elevation_ > maxElevation ||
-                temperature_ < minTemperature || temperature_ > maxTemperature)
+        if(biome_ < tBiomeMin || biome_ > tBiomeMax ||
+            elevation_ < tElevationMin || elevation_ > tElevationMax ||
+                temperature_ < tTemperatureMin || temperature_ > tTemperatureMax)
                     return null;
 
-        float biomeBias = (maxBiomeVal - minBiomeVal) + (biome_ * 2);
-        float elevationBias = (maxElevation - minElevation) + (elevation_ * 2);
-        float temperatureBias = (maxTemperature - minTemperature) + (temperature_ * 2);
+        float biomeBias = (tBiomeMax - tBiomeMin) + (biome_ * 2);
+        float elevationBias = (tElevationMax - tElevationMin) + (elevation_ * 2);
+        float temperatureBias = (tTemperatureMax - tTemperatureMax) + (temperature_ * 2);
         float bias = biomeBias + elevationBias + temperatureBias;
 
         if(bias <= bias_)
         {
+            Biome sub = null;
             foreach(Biome b in subBiomes)
             {
-                Biome sub = b.GetSubBiome(biome_, elevation_, temperature_, bias);
-                if(sub != null)
-                {
-                    return sub.GetSubBiome(biome_, elevation_, temperature_, bias);
-                }
+                Biome temp = b.GetSubBiome(biome_, elevation_, temperature_, ref bias, b);
+                sub = temp == null ? sub : temp;
             }
+            if(sub != null) return sub;
         }
         else
         {

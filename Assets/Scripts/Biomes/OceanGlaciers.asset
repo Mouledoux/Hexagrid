@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 2857db8c147f40a49a9468dd9082727e, type: 3}
   m_Name: OceanGlaciers
   m_EditorClassIdentifier: Assembly-CSharp::Biome
   biomeTile: {fileID: 1560994748941806, guid: 4eff434b792317140a2f08fcfdcb297b, type: 3}
