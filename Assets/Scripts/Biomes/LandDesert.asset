@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2857db8c147f40a49a9468dd9082727e, type: 3}
+  m_Name: LandDesert
+  m_EditorClassIdentifier: 
+  biomeTile: {fileID: 1165385814476940, guid: 2e0f1312996d68349933ef1d0445cd09, type: 3}
+  minBiomeVal: 0
+  maxBiomeVal: 1
+  minElevation: 0
+  maxElevation: 0.99999994
+  minTemperature: 0.4577465
+  maxTemperature: 1
+  subBiomes:
+  - {fileID: 11400000, guid: 8b01596d51630a643bbcc6ded872f410, type: 2}

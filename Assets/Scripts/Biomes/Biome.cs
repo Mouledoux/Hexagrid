@@ -86,9 +86,9 @@ public class Biome : ScriptableObject
                 temperature_ < tTemperatureMin || temperature_ > tTemperatureMax)
                     return null;
 
-        float biomeBias = (tBiomeMax - tBiomeMin) + (biome_ * 2);
-        float elevationBias = (tElevationMax - tElevationMin) + (elevation_ * 2);
-        float temperatureBias = (tTemperatureMax - tTemperatureMax) + (temperature_ * 2);
+        float biomeBias = (tBiomeMax - tBiomeMin);
+        float elevationBias = (tElevationMax - tElevationMin);
+        float temperatureBias = (tTemperatureMax - tTemperatureMax);
         float bias = biomeBias + elevationBias + temperatureBias;
 
         if(bias <= bias_)

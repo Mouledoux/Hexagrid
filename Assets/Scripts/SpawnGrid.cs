@@ -29,7 +29,9 @@ public class SpawnGrid : MonoBehaviour
 
     [Header("Perlin Generation")]
     public string perlinSeed;
-    public float perlinScale = 8f;
+    public float biomeScale = 2f;
+    public float elevationScale = 2f;
+    public float temperatureScale = 2f;
 
 
     [Header("Custom Map!")]
@@ -43,7 +45,7 @@ public class SpawnGrid : MonoBehaviour
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void Start()
     {
-        Initialize();
+
     }
 
 
@@ -58,12 +60,12 @@ public class SpawnGrid : MonoBehaviour
         {
             if(Input.GetKeyDown(KeyCode.Q))
             {
-                GenerateNewHexGrid(cols, rows, mapTexture == null ? GeneratePerlinTexture(perlinSeed, perlinScale) : mapTexture);
+                GenerateNewHexGrid(cols, rows, mapTexture == null ? GeneratePerlinTexture(perlinSeed, biomeScale, elevationScale, temperatureScale) : mapTexture);
             }
 
             if (Input.GetKeyDown(KeyCode.W))
             {
-                GeneratePerlinTexture(perlinSeed, perlinScale);
+                GeneratePerlinTexture(perlinSeed, biomeScale, elevationScale, temperatureScale);
             }
         }
     }
@@ -119,6 +121,7 @@ public class SpawnGrid : MonoBehaviour
         {
             for (int j = 0; j < rows; j++)
             {
+                hexOffset = (i % 2);
                 pixX = (int)(((float)i/cols) * txWidth);
                 pixY = (int)(((float)j/rows) * txHeight);
 
@@ -126,19 +129,16 @@ public class SpawnGrid : MonoBehaviour
                 // biome, elevation, temperature
                 Color.RGBToHSV(a_sampleTexture.GetPixel(pixX, pixY), out hueSample, out satSample, out valSample);
 
+                isWall = edgesAreWalls && (IsEdge(i, cols) || IsEdge(j, rows));
 
                 float initBias = float.MaxValue;
-                gridCell = worldProfile.GetSubBiome(hueSample, satSample, valSample, ref initBias).biomeTile;
+                gridCell = isWall ? worldProfile.biomeTile : worldProfile.GetSubBiome(hueSample, satSample, valSample, ref initBias).biomeTile;
                 gridCell = gridCell == null ? worldProfile.subBiomes[0].biomeTile : gridCell;
                 gridCell = Instantiate(gridCell);
 
-
-                hexOffset = (i % 2);
-                isWall = edgesAreWalls && (IsEdge(i, cols) || IsEdge(j, rows));
-
                 pos = new Vector3(
                     ((-cols / 2) + i) * xOffset,
-                    (satSample * maxHeight),
+                    ((int)(satSample * maxHeight)) * 0.1f,
                     (((-rows / 2) + j) + (hexOffset * 0.5f)) * zOffset);
 
                 scale = isWall ? new Vector3(1f, (maxHeight + 1f), 1f) : Vector3.one;
@@ -187,55 +187,8 @@ public class SpawnGrid : MonoBehaviour
     }
 
 
-    private void Initialize()
-    {
-        //worldBiome = ScriptableObject.CreateInstance<Biome>();
-        //worldProfile.subBiomes = new Biome[biomes.Length];
-
-        //for(int i = 0; i < biomes.Length; i++)
-        //{
-        //s   worldProfile.subBiomes[i] = biomes[i];
-        //}
-    }
-
-
-    // private GameObject GetTileOfTypes(PerlinTile.Biomes biome, PerlinTile.Elevations elevation, PerlinTile.Tempreatures tempreature, float choiceMod = 0f)
-    // {
-    //     List<PerlinTile> returnTiles = new List<PerlinTile>();
-
-    //     foreach(PerlinTile pt in perlinTiles)
-    //         if(pt.biome == biome && pt.elevation == elevation && pt.tempreature == tempreature)
-    //             returnTiles.Add(pt);
-
-    //     if(returnTiles.Count == 0)
-    //     {
-    //         Debug.LogWarning($"No tile of type(s): {tempreature}, {elevation}, {biome}, in tile array");
-    //         return null;
-    //     }
-
-    //     int returnIndex = (int)(returnTiles.Count / choiceMod);
-    //     return returnTiles[returnIndex].tilePrefab;
-    // }
-
-
-    private void NormalizeTileHeights(ref PerlinTile[] tiles)
-    {
-        // float sum = 0;
-        // tiles[0].heightOffset = 0f;
-
-        // for(int i = 1; i < tiles.Length; i++)
-        // {
-        //     sum += tiles[i].heightOffset;
-        // }
-        // for(int i = 0; i < tiles.Length; i++)
-        // {
-        //     tiles[i].heightOffset /= sum;
-        // }
-    }
-
-
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    private Texture2D GeneratePerlinTexture(string a_seed, float a_scale = 1f)
+    private Texture2D GeneratePerlinTexture(string seed_, float scale1_ = 1f, float scale2_= 1f, float scale3_ = 1f)
     {
         Renderer renderer = GetComponent<Renderer>();
         Texture2D perlinTexture = new Texture2D((int)cols, (int)rows);
@@ -246,16 +199,16 @@ public class SpawnGrid : MonoBehaviour
         int seedLen;
 
 
-        a_seed = a_seed.GetHashCode().ToString();
-        seedLen = a_seed.Length;
+        seed_ = seed_.GetHashCode().ToString();
+        seedLen = seed_.Length;
 
         for(int i = 0; i < perlinTexture.height; i++)
         {
             for(int j = 0; j < perlinTexture.width; j++)
             {
-                sampleH = GetPerlinNoiseValue(j, i, a_seed.Substring(0,             seedLen / 2), a_scale, 1f);
-                sampleS = GetPerlinNoiseValue(j, i, a_seed.Substring(seedLen / 4,   seedLen / 2), a_scale, 1f);
-                sampleV = GetPerlinNoiseValue(j, i, a_seed.Substring(seedLen / 2,   seedLen / 2), a_scale, 1f);
+                sampleH = GetPerlinNoiseValue(j, i, seed_.Substring(0,             seedLen / 2), scale1_, 1f);
+                sampleS = GetPerlinNoiseValue(j, i, seed_.Substring(seedLen / 4,   seedLen / 2), scale2_, 1f);
+                sampleV = GetPerlinNoiseValue(j, i, seed_.Substring(seedLen / 2,   seedLen / 2), scale3_, 1f);
 
                 pixels[(i * perlinTexture.width) + j] = Color.HSVToRGB(sampleH, sampleS, sampleV);
             }
@@ -274,16 +227,16 @@ public class SpawnGrid : MonoBehaviour
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    float GetPerlinNoiseValue(float a_xCoord, float a_yCoord, string a_seed = "", float a_scale = 1f, float a_valueMod = 1f)
+    float GetPerlinNoiseValue(float a_xCoord, float a_yCoord, string seed_ = "", float scale1_ = 1f, float a_valueMod = 1f)
     {   
-        float seedHash = (float)(a_seed.GetHashCode() % (a_seed.Length));
+        float seedHash = (float)(seed_.GetHashCode() % (seed_.Length));
 
 
         a_xCoord /= cols;
         a_yCoord /= rows;
 
-        a_xCoord *= a_scale;
-        a_yCoord *= a_scale;
+        a_xCoord *= scale1_;
+        a_yCoord *= scale1_;
 
         a_xCoord += seedHash;
         a_yCoord += seedHash;
@@ -402,39 +355,4 @@ public class SpawnGrid : MonoBehaviour
     
     
     #endregion
-}
-
-[System.Serializable]
-public class PerlinTile
-{
-    [SerializeField]
-    public GameObject tilePrefab;
-
-    public Biomes biome;
-    public Elevations elevation;
-    public Tempreatures tempreature;
-    public enum Biomes
-    {
-        WATER,
-        COAST,
-        LAND,
-        MOUNTAINS,
-    }
-    public enum Elevations
-    {
-        ABYSS,
-        SUBTERRAIN,
-        SEA_LEVEL,
-        ELEVATED,
-        MOUNTAIN,
-        SUMMIT,
-    }
-    public enum Tempreatures
-    {
-        FREEZING,
-        COLD,
-        WARM,
-        HOT,
-        INFERNO,
-    }
 }

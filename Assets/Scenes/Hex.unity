@@ -676,7 +676,9 @@ MonoBehaviour:
   xOffset: 0
   zOffset: 0
   perlinSeed: 
-  perlinScale: 8
+  biomeScale: 0
+  elevationScale: 0
+  temperatureScale: 0
   mapTexture: {fileID: 0}
 --- !u!4 &962842700
 Transform:
@@ -5644,7 +5646,9 @@ MonoBehaviour:
   xOffset: 0
   zOffset: 0
   perlinSeed: 
-  perlinScale: 8
+  biomeScale: 0
+  elevationScale: 0
+  temperatureScale: 0
   mapTexture: {fileID: 0}
 --- !u!4 &1268912455
 Transform:
@@ -5695,12 +5699,14 @@ MonoBehaviour:
   worldProfile: {fileID: 11400000, guid: 1328c49776fd95440a9cf16e44e48d04, type: 2}
   _rows: 64
   _cols: 64
-  maxHeight: 1
+  maxHeight: 4
   edgesAreWalls: 1
-  xOffset: 0.44
+  xOffset: 0.43
   zOffset: 0.5
-  perlinSeed: Eric
-  perlinScale: 4
+  perlinSeed: new seed
+  biomeScale: 2
+  elevationScale: 4
+  temperatureScale: 8
   mapTexture: {fileID: 0}
 --- !u!4 &1329860355
 Transform:

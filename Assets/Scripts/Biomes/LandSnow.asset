@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2857db8c147f40a49a9468dd9082727e, type: 3}
+  m_Name: LandSnow
+  m_EditorClassIdentifier: 
+  biomeTile: {fileID: 1994693040836722, guid: cc0b6d4b15530d942bffb81f838c93fc, type: 3}
+  minBiomeVal: 0
+  maxBiomeVal: 0.99999994
+  minElevation: 0.23317534
+  maxElevation: 1
+  minTemperature: 0
+  maxTemperature: 0.44366208
+  subBiomes: []
