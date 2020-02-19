@@ -10,7 +10,7 @@ public class BiomeEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        base.OnInspectorGUI();
+        //base.OnInspectorGUI();
         Biome parentBiome = (Biome)target;
 
         EditorGUILayout.BeginHorizontal();
@@ -50,7 +50,7 @@ public class BiomeEditor : Editor
 
         EditorGUILayout.Space();
 
-
+        
         showSubBiomes = EditorGUILayout.Foldout(showSubBiomes, "Sub-Biomes");
         //if(showSubBiomes)
         {
@@ -89,7 +89,7 @@ public class BiomeEditor : Editor
                         EditorGUILayout.BeginHorizontal();
                         {
                             EditorGUILayout.LabelField($"Biome Range", new GUILayoutOption[] {GUILayout.Width(EditorGUIUtility.currentViewWidth / 4)});
-                            EditorGUILayout.MinMaxSlider(ref parentBiome.subBiomes[i].minBiomeVal, ref parentBiome.subBiomes[i].maxBiomeVal, parentBiome.minBiomeVal, parentBiome.maxBiomeVal);
+                            EditorGUILayout.MinMaxSlider(ref parentBiome.subBiomes[i].minBiomeVal, ref parentBiome.subBiomes[i].maxBiomeVal, 0f, 1f);
                         }
                         EditorGUILayout.EndHorizontal();
                         
@@ -97,7 +97,7 @@ public class BiomeEditor : Editor
                         EditorGUILayout.BeginHorizontal();
                         {
                             EditorGUILayout.LabelField($"Elevation Range", new GUILayoutOption[] {GUILayout.Width(EditorGUIUtility.currentViewWidth / 4f)});
-                            EditorGUILayout.MinMaxSlider(ref parentBiome.subBiomes[i].minElevation, ref parentBiome.subBiomes[i].maxElevation, parentBiome.minElevation, parentBiome.maxElevation);
+                            EditorGUILayout.MinMaxSlider(ref parentBiome.subBiomes[i].minElevation, ref parentBiome.subBiomes[i].maxElevation, 0f, 1f);
                         }
                         EditorGUILayout.EndHorizontal();
 
@@ -105,7 +105,7 @@ public class BiomeEditor : Editor
                         EditorGUILayout.BeginHorizontal();
                         {
                             EditorGUILayout.LabelField($"Temperature Range", new GUILayoutOption[] {GUILayout.Width(EditorGUIUtility.currentViewWidth / 4f)});
-                            EditorGUILayout.MinMaxSlider(ref parentBiome.subBiomes[i].minTemperature, ref parentBiome.subBiomes[i].maxTemperature, parentBiome.minTemperature, parentBiome.maxTemperature);
+                            EditorGUILayout.MinMaxSlider(ref parentBiome.subBiomes[i].minTemperature, ref parentBiome.subBiomes[i].maxTemperature, 0f, 1f);
                         }
                         EditorGUILayout.EndHorizontal();
                     

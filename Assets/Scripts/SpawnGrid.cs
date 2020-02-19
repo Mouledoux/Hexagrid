@@ -60,7 +60,7 @@ public class SpawnGrid : MonoBehaviour
         {
             if(Input.GetKeyDown(KeyCode.Q))
             {
-                GenerateNewHexGrid(cols, rows, mapTexture == null ? GeneratePerlinTexture(perlinSeed, biomeScale, elevationScale, temperatureScale) : mapTexture);
+                StartCoroutine(GenerateNewHexGrid(cols, rows, mapTexture == null ? GeneratePerlinTexture(perlinSeed, biomeScale, elevationScale, temperatureScale) : mapTexture));
             }
 
             if (Input.GetKeyDown(KeyCode.W))
@@ -90,7 +90,7 @@ public class SpawnGrid : MonoBehaviour
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    public void GenerateNewHexGrid(uint a_xSize, uint a_ySize, Texture2D a_sampleTexture)
+    public IEnumerator GenerateNewHexGrid(uint a_xSize, uint a_ySize, Texture2D a_sampleTexture)
     {
         GameObject gridCell;
         
@@ -183,6 +183,7 @@ public class SpawnGrid : MonoBehaviour
                     }
                 }
             }
+            yield return null;
         }
     }
 

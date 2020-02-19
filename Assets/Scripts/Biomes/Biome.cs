@@ -88,7 +88,7 @@ public class Biome : ScriptableObject
 
         float biomeBias = (tBiomeMax - tBiomeMin);
         float elevationBias = (tElevationMax - tElevationMin);
-        float temperatureBias = (tTemperatureMax - tTemperatureMax);
+        float temperatureBias = (tTemperatureMax - tTemperatureMin);
         float bias = biomeBias + elevationBias + temperatureBias;
 
         if(bias <= bias_)
@@ -96,7 +96,7 @@ public class Biome : ScriptableObject
             Biome sub = null;
             foreach(Biome b in subBiomes)
             {
-                Biome temp = b.GetSubBiome(biome_, elevation_, temperature_, ref bias, b);
+                Biome temp = b.GetSubBiome(biome_, elevation_, temperature_, ref bias, this);
                 sub = temp == null ? sub : temp;
             }
             if(sub != null) return sub;
