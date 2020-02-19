@@ -132,24 +132,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b52a80423f6464c41bc1e9145b0aa889, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xCoord: 0
-  yCoord: 0
-  onOccupy:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6746956028766197397}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!1001 &8445584040079613726
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -168,7 +150,7 @@ PrefabInstance:
     - target: {fileID: 2300000, guid: bff6e05b618ca48419dc806ca034d493, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: af7f65b2bbec2bd48b017dfd06a45b21, type: 2}
+      objectReference: {fileID: 2100000, guid: 2c790a442c1ae4745b4672c2f5676f3e, type: 2}
     - target: {fileID: 400000, guid: bff6e05b618ca48419dc806ca034d493, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0

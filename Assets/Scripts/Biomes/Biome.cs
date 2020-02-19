@@ -6,6 +6,8 @@ using UnityEngine;
 public class Biome : ScriptableObject
 {
     public GameObject biomeTile;
+    public Material biomeMaterial;
+    public GameObject biomeDeco;
 
 
     [Space]

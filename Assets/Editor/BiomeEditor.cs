@@ -18,6 +18,16 @@ public class BiomeEditor : Editor
         parentBiome.biomeTile = (GameObject)EditorGUILayout.ObjectField(parentBiome.biomeTile, typeof(GameObject), false);
         EditorGUILayout.EndHorizontal();
 
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Biome Material", new GUILayoutOption[] {GUILayout.Width(EditorGUIUtility.currentViewWidth / 5f)});
+        parentBiome.biomeMaterial = (Material)EditorGUILayout.ObjectField(parentBiome.biomeMaterial, typeof(Material), false);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Biome Decoration", new GUILayoutOption[] {GUILayout.Width(EditorGUIUtility.currentViewWidth / 5f)});
+        parentBiome.biomeDeco = (GameObject)EditorGUILayout.ObjectField(parentBiome.biomeDeco, typeof(GameObject), false);
+        EditorGUILayout.EndHorizontal();
+
         EditorGUILayout.Space();
 
         EditorGUILayout.BeginHorizontal();

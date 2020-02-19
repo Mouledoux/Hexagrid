@@ -132,19 +132,22 @@ public class SpawnGrid : MonoBehaviour
                 isWall = edgesAreWalls && (IsEdge(i, cols) || IsEdge(j, rows));
 
                 float initBias = float.MaxValue;
-                gridCell = isWall ? worldProfile.biomeTile : worldProfile.GetSubBiome(hueSample, satSample, valSample, ref initBias).biomeTile;
+                Biome biome = worldProfile.GetSubBiome(hueSample, satSample, valSample, ref initBias);
+
+                gridCell = isWall ? worldProfile.biomeTile : biome.biomeTile;
                 gridCell = gridCell == null ? worldProfile.subBiomes[0].biomeTile : gridCell;
                 gridCell = Instantiate(gridCell);
 
                 pos = new Vector3(
                     ((-cols / 2) + i) * xOffset,
-                    ((int)(satSample * maxHeight)) * 0.1f,
+                    0,
                     (((-rows / 2) + j) + (hexOffset * 0.5f)) * zOffset);
 
-                scale = isWall ? new Vector3(1f, (maxHeight + 1f), 1f) : Vector3.one;
+                scale = isWall ? new Vector3(1f, (maxHeight + 1f), 1f) :
+                Vector3.one + Vector3.up * ((int)(satSample * maxHeight));
 
 
-                gridCell.name = $"[{i}, {j}]";
+                gridCell.name = $"{biome.name}[{i}, {j}]";
                 gridCell.transform.parent = transform;
 
                 gridCell.transform.localPosition = pos * 2f;
@@ -160,6 +163,27 @@ public class SpawnGrid : MonoBehaviour
                 gridNodes[i, j].pathingValues[1] = satSample;
                 gridNodes[i, j].isTraversable = !isWall;
                 
+
+                {
+                    // Set the biome material
+                    Renderer cellRenderer;
+                    if(gridCell.TryGetComponent<Renderer>(out cellRenderer))
+                    {
+                        cellRenderer.material = biome.biomeMaterial;
+                    }
+
+                    // Spawn the biome's decoration
+                    if(biome.biomeDeco != null)
+                    {
+                        Vector3 highpoint = gridCell.transform.position + Vector3.up * gridCell.transform.localScale.y / 8f;
+
+                        GameObject deco = Instantiate(biome.biomeDeco);
+                        deco.transform.position = highpoint;
+                        deco.transform.parent = gridCell.transform;
+                    
+                    }
+                }
+
 
 
                 // Set node neighbors -----
