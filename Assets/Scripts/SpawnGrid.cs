@@ -32,6 +32,10 @@ public class SpawnGrid : MonoBehaviour
     public float biomeScale = 2f;
     public float elevationScale = 2f;
     public float temperatureScale = 2f;
+    
+    [Space]
+    public float perlinOffsetX;
+    public float perlinOffsetY;
 
 
     [Header("Custom Map!")]
@@ -62,12 +66,10 @@ public class SpawnGrid : MonoBehaviour
             {
                 StartCoroutine(GenerateNewHexGrid(cols, rows, mapTexture == null ? GeneratePerlinTexture(perlinSeed, biomeScale, elevationScale, temperatureScale) : mapTexture));
             }
-
-            if (Input.GetKeyDown(KeyCode.W))
-            {
-                GeneratePerlinTexture(perlinSeed, biomeScale, elevationScale, temperatureScale);
-            }
         }
+
+        
+        GeneratePerlinTexture(perlinSeed, biomeScale, elevationScale, temperatureScale);
     }
 
 
@@ -231,9 +233,9 @@ public class SpawnGrid : MonoBehaviour
         {
             for(int j = 0; j < perlinTexture.width; j++)
             {
-                sampleH = GetPerlinNoiseValue(j, i, seed_.Substring(0,             seedLen / 2), scale1_, 1f);
-                sampleS = GetPerlinNoiseValue(j, i, seed_.Substring(seedLen / 4,   seedLen / 2), scale2_, 1f);
-                sampleV = GetPerlinNoiseValue(j, i, seed_.Substring(seedLen / 2,   seedLen / 2), scale3_, 1f);
+                sampleH = GetPerlinNoiseValue(j + perlinOffsetX, i + perlinOffsetY, seed_.Substring(0,             seedLen / 2), scale1_, 1f);
+                sampleS = GetPerlinNoiseValue(j + perlinOffsetX, i + perlinOffsetY, seed_.Substring(seedLen / 4,   seedLen / 2), scale2_, 1f);
+                sampleV = GetPerlinNoiseValue(j + perlinOffsetX, i + perlinOffsetY, seed_.Substring(seedLen / 2,   seedLen / 2), scale3_, 1f);
 
                 pixels[(i * perlinTexture.width) + j] = Color.HSVToRGB(sampleH, sampleS, sampleV);
             }
@@ -252,21 +254,20 @@ public class SpawnGrid : MonoBehaviour
 
 
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-    float GetPerlinNoiseValue(float a_xCoord, float a_yCoord, string seed_ = "", float scale1_ = 1f, float a_valueMod = 1f)
+    float GetPerlinNoiseValue(float xCoord_, float yCoord_, string seed_ = "", float scale1_ = 1f, float valueMod_ = 1f)
     {   
         float seedHash = (float)(seed_.GetHashCode() % (seed_.Length));
 
+        xCoord_ /= cols;
+        yCoord_ /= rows;
 
-        a_xCoord /= cols;
-        a_yCoord /= rows;
+        xCoord_ *= scale1_;
+        yCoord_ *= scale1_;
 
-        a_xCoord *= scale1_;
-        a_yCoord *= scale1_;
+        xCoord_ += seedHash;
+        yCoord_ += seedHash;
 
-        a_xCoord += seedHash;
-        a_yCoord += seedHash;
-
-        return Mathf.Clamp01(Mathf.PerlinNoise(a_xCoord, a_yCoord)) * a_valueMod;
+        return Mathf.Clamp01(Mathf.PerlinNoise(xCoord_, yCoord_)) * valueMod_;
     }
 
 

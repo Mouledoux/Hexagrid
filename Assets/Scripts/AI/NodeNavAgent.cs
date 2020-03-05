@@ -41,6 +41,23 @@ public class NodeNavAgent : MonoBehaviour
 
     // ----- ----- ----- ----- -----
     [SerializeField]
+    private float _stoppingDistance = 1f;
+    public float stoppingDistanceed
+    {
+        get {return _stoppingDistance; }
+        set { _stoppingDistance = value; }
+    }
+
+    // ----- ----- ----- ----- -----
+    [SerializeField]
+    private float _turningRadius = 1f;
+    public float turningRadius
+    {
+        get {return _turningRadius; }
+        set { _turningRadius = value; }
+    }
+    // ----- ----- ----- ----- -----
+    [SerializeField]
     private bool _autoRepath = true;
     public bool autoRepath
     {
@@ -66,10 +83,7 @@ public class NodeNavAgent : MonoBehaviour
         set
         {
             _goalPositionNode = value;
-            System.Threading.Thread forward = new System.Threading.Thread(() =>
-                _nodePathStack = NodeNav.TwinStarT<TraversableNode>(currentPositionNode, _goalPositionNode, useTwinStar));
-            
-            forward.Start();
+            _nodePathStack = NodeNav.TwinStarT<TraversableNode>(currentPositionNode, _goalPositionNode, useTwinStar);
         }
     }
 
@@ -111,9 +125,22 @@ public class NodeNavAgent : MonoBehaviour
     {
         if(CheckForPath())
         {
+            //DEBUG
+            Debug.DrawLine(transform.position + Vector3.up, currentPositionNode.transform.position, Color.blue);
+            Debug.DrawLine(currentPositionNode.transform.position, currentPositionNode.transform.position + Vector3.up, Color.blue);
+
+            Debug.DrawLine(transform.position + Vector3.up, nextNode.transform.position, Color.green);
+            Debug.DrawLine(nextNode.transform.position, nextNode.transform.position + Vector3.up, Color.green);
+
+            Debug.DrawLine(transform.position + Vector3.up, goalPositionNode.transform.position, Color.magenta);
+            Debug.DrawLine(goalPositionNode.transform.position, goalPositionNode.transform.position + Vector3.up, Color.magenta);
+
+
+
             TraversePath();
-            VeggieJump();
+            //VeggieJump();
         }
+        else ClickSetPath();
     }
 
 
@@ -143,12 +170,14 @@ public class NodeNavAgent : MonoBehaviour
     // ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
     private void TraversePath()
     {
-        Vector3 dir = (nextNode.transform.position - transform.position);
+        Vector3 direction = (nextNode.transform.position - transform.position);
+        float distance = Vector3.Distance(transform.position, nextNode.transform.position);
 
-        dir.Normalize();
-        transform.Translate(dir * speed * Time.deltaTime);
+        direction.Normalize();
+        transform.LookAt(nextNode.transform);
+        transform.Translate(Vector3.forward * speed * Time.deltaTime);
 
-        if(Vector3.Distance(transform.position, nextNode.transform.position) <= 0.05f)
+        if((_nodePathStack.Count > 1 && distance <= turningRadius) || distance <= stoppingDistanceed)
         {
             currentPositionNode.nodeData.RemoveInformation(this);
             currentPositionNode.isOccupied = false;
@@ -160,13 +189,14 @@ public class NodeNavAgent : MonoBehaviour
 
             if(_nodePathStack.Count == 0)
             {
+                goalPositionNode.ClearOriginChain();
                 goalPositionNode = null;
                 _nodePathStack = null;
                 onDestinationReached.Invoke();
             }
             else
             {
-                transform.GetChild(0).LookAt(_nodePathStack.Peek().transform.position);
+
             }
         }
     }

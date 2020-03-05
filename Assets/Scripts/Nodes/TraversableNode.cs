@@ -31,8 +31,8 @@ public class TraversableNode : MonoBehaviour, ITraversable
         }
     }
 
-    private int[] m_coordinates = new int[2];
-    public int[] coordinates
+    private float[] m_coordinates = new float[2];
+    public float[] coordinates
     {
         get => m_coordinates;
         set => m_coordinates = value;
@@ -70,6 +70,14 @@ public class TraversableNode : MonoBehaviour, ITraversable
     }
 
 
+    private void Update()
+    {
+        if(origin != null)
+            Debug.DrawLine(transform.position, ((TraversableNode)origin).transform.position, Color.red);
+
+    }
+
+
     public ITraversable GetRootOrigin()
     {
         return origin == m_origin ? this : origin.GetRootOrigin();
@@ -82,6 +90,7 @@ public class TraversableNode : MonoBehaviour, ITraversable
         {
             tn.Add(nd.GetInformation<ITraversable>()[0]);
         }
+
         return tn.ToArray();
     }
 
@@ -146,18 +155,30 @@ public class TraversableNode : MonoBehaviour, ITraversable
 
     public double GetDistanceTo(ITraversable destination)
     {
-        double lhs = (coordinates[0] - destination.coordinates[0]);
-        double rhs = (coordinates[1] - destination.coordinates[1]);
+        double distance = 0;
+        int minCoord = coordinates.Length < destination.coordinates.Length ?
+            coordinates.Length : destination.coordinates.Length;
 
-         lhs *= lhs;
-         rhs *= rhs;
+        for(int i = 0; i < minCoord; i++)
+        {
+            double dif = coordinates[i] - destination.coordinates[i];
+            distance += dif * dif;
+        }
 
-        return System.Math.Sqrt(lhs + rhs);
+        return System.Math.Sqrt(distance);
     }
 
     public int CompareTo(ITraversable obj)
     {
         float dif = pathingValues[0] - obj.pathingValues[0];
         return dif == 0 ? 0 : dif < 0 ? -1 : 1;
+    }
+
+    public void ClearOriginChain()
+    {
+        if(origin.Equals(this)) return;
+        
+        origin.ClearOriginChain();
+        origin = null;
     }
 }
